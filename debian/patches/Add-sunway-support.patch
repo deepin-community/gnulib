@@ -1,0 +1,91 @@
+Description: <add sunway support>
+Author: Miao Changwei <miaochangwei@uniontech.com>
+
+---
+Last-Update: 2022-04-17
+
+--- gnulib-20210822~d383792.orig/lib/sigsegv.c
++++ gnulib-20210822~d383792/lib/sigsegv.c
+@@ -308,6 +308,18 @@ int libsigsegv_version = LIBSIGSEGV_VERS
+    faulting instruction, the previous register values have been lost.  */
+ #  define BOGUS_FAULT_ADDRESS_UPON_STACK_OVERFLOW
+ 
++# elif defined __sw_64__
++
++/* See glibc/sysdeps/unix/sysv/linux/sw_64/sys/ucontext.h
++   and the definition of GET_STACK in
++   glibc/sysdeps/unix/sysv/linux/sw_64/sigcontextinfo.h.
++   Note that the 'mcontext_t' defined in
++   glibc/sysdeps/unix/sysv/linux/sw_64/sys/ucontext.h
++   and the 'struct sigcontext' defined in <asm/sigcontext.h>
++   are actually the same.  */
++
++#  define SIGSEGV_FAULT_STACKPOINTER  ((ucontext_t *) ucp)->uc_mcontext.sc_regs[30]
++
+ # else
+ 
+ /* When adding support for other CPUs here:  */
+@@ -428,7 +440,7 @@ int libsigsegv_version = LIBSIGSEGV_VERS
+ /* _UC_MACHINE_SP is a platform independent macro.
+    Defined in <machine/mcontext.h>, see
+      http://cvsweb.netbsd.org/bsdweb.cgi/src/sys/arch/$arch/include/mcontext.h
+-   Supported on alpha, amd64, i386, ia64, m68k, mips, powerpc, sparc since
++   Supported on alpha, amd64, i386, ia64, m68k, mips, powerpc, sparc, sw_64  since
+    NetBSD 2.0.
+    On i386, _UC_MACHINE_SP is the same as ->uc_mcontext.__gregs[_REG_UESP],
+    and apparently the same value as       ->uc_mcontext.__gregs[_REG_ESP]. */
+@@ -540,6 +552,13 @@ int libsigsegv_version = LIBSIGSEGV_VERS
+ 
+ #  define SIGSEGV_FAULT_STACKPOINTER  scp->sc_sp
+ 
++# elif defined __sw_64__
++
++/* See the definition of 'struct sigcontext' in
++   openbsd-src/sys/arch/sw_64/include/signal.h.  */
++
++#  define SIGSEGV_FAULT_STACKPOINTER  scp->sc_regs[30]
++
+ # elif defined __vax__
+ 
+ /* See the definition of 'struct sigcontext' in
+--- gnulib-20210822~d383792.orig/m4/host-cpu-c-abi.m4
++++ gnulib-20210822~d383792/m4/host-cpu-c-abi.m4
+@@ -451,6 +451,9 @@ EOF
+ #ifndef __sparc64__
+ #undef __sparc64__
+ #endif
++#ifndef __sw_64__
++#undef __sw_64__
++#endif
+ ])
+ 
+ ])
+@@ -468,7 +471,7 @@ AC_DEFUN([gl_HOST_CPU_C_ABI_32BIT],
+        case "$gl_cv_host_cpu_c_abi" in
+          i386 | x86_64-x32 | arm | armhf | arm64-ilp32 | hppa | ia64-ilp32 | mips | mipsn32 | powerpc | riscv*-ilp32* | s390 | sparc)
+            gl_cv_host_cpu_c_abi_32bit=yes ;;
+-         x86_64 | alpha | arm64 | hppa64 | ia64 | mips64 | powerpc64 | powerpc64-elfv2 | riscv*-lp64* | s390x | sparc64 )
++         x86_64 | alpha | arm64 | hppa64 | ia64 | mips64 | powerpc64 | powerpc64-elfv2 | riscv*-lp64* | s390x | sparc64 | sw_64 )
+            gl_cv_host_cpu_c_abi_32bit=no ;;
+          *)
+            gl_cv_host_cpu_c_abi_32bit=unknown ;;
+@@ -658,6 +661,19 @@ changequote([,])dnl
+                    int ok;
+                   #else
+                    error fail
++                  #endif
++                ]])],
++             [gl_cv_host_cpu_c_abi_32bit=no],
++             [gl_cv_host_cpu_c_abi_32bit=yes])
++           ;;
++
++         sw_64* )
++           AC_COMPILE_IFELSE(
++             [AC_LANG_SOURCE(
++                [[#if defined __sw_64__
++                   int ok;
++                  #else
++                   error fail
+                   #endif
+                 ]])],
+              [gl_cv_host_cpu_c_abi_32bit=no],
