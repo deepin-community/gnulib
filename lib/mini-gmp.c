@@ -1,8 +1,9 @@
 /* mini-gmp, a minimalistic implementation of a GNU GMP subset.
 
    Contributed to the GNU project by Niels Möller
+   Additional functionalities and improvements by Marco Bodrato.
 
-Copyright 1991-1997, 1999-2021 Free Software Foundation, Inc.
+Copyright 1991-1997, 1999-2022 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -90,6 +91,7 @@ see https://www.gnu.org/licenses/.  */
 #define gmp_assert_nocarry(x) do { \
     mp_limb_t __cy = (x);	   \
     assert (__cy == 0);		   \
+    (void) (__cy);		   \
   } while (0)
 
 #define gmp_clz(count, x) do {						\
@@ -148,6 +150,7 @@ see https://www.gnu.org/licenses/.  */
       mp_limb_t __x0, __x1, __x2, __x3;					\
       unsigned __ul, __vl, __uh, __vh;					\
       mp_limb_t __u = (u), __v = (v);					\
+      assert (sizeof (unsigned) * 2 >= sizeof (mp_limb_t));		\
 									\
       __ul = __u & GMP_LLIMB_MASK;					\
       __uh = __u >> (GMP_LIMB_BITS / 2);				\
@@ -783,6 +786,7 @@ mpn_invert_3by2 (mp_limb_t u1, mp_limb_t u0)
     mp_limb_t p, ql;
     unsigned ul, uh, qh;
 
+    assert (sizeof (unsigned) * 2 >= sizeof (mp_limb_t));
     /* For notation, let b denote the half-limb base, so that B = b^2.
        Split u1 = b uh + ul. */
     ul = u1 & GMP_LLIMB_MASK;
@@ -1935,9 +1939,8 @@ mpz_neg (mpz_t r, const mpz_t u)
 void
 mpz_swap (mpz_t u, mpz_t v)
 {
-  MP_SIZE_T_SWAP (u->_mp_size, v->_mp_size);
   MP_SIZE_T_SWAP (u->_mp_alloc, v->_mp_alloc);
-  MP_PTR_SWAP (u->_mp_d, v->_mp_d);
+  MPN_PTR_SWAP (u->_mp_d, u->_mp_size, v->_mp_d, v->_mp_size);
 }
 
 
@@ -3096,7 +3099,7 @@ mpz_powm (mpz_t r, const mpz_t b, const mpz_t e, const mpz_t m)
 
   if (en == 0)
     {
-      mpz_set_ui (r, 1);
+      mpz_set_ui (r, mpz_cmpabs_ui (m, 1));
       return;
     }
 

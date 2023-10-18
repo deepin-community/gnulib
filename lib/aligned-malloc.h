@@ -1,6 +1,6 @@
 /* Allocate memory with indefinite extent and specified alignment.
 
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -44,6 +44,12 @@
    Solaris documentation of memalign() it is not specified how a memory block
    returned by memalign() can be freed, but it actually can be freed with
    free().  */
+
+/* This file uses MALLOC_ALIGNMENT, HAVE_POSIX_MEMALIGN, HAVE_ALIGNED_ALLOC,
+   HAVE_MEMALIGN.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 #if !defined ALIGNMENT
 # error "ALIGNMENT is not defined"

@@ -1,12 +1,12 @@
 /* Compute cubic root of double value.
-   Copyright (C) 1997, 2012-2021 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2012-2023 Free Software Foundation, Inc.
 
    Contributed by Dirk Alboth <dirka@uni-paderborn.de> and
    Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,

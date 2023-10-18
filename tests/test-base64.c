@@ -1,10 +1,10 @@
 /* Self tests for base64.
-   Copyright (C) 2004, 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2008-2023 Free Software Foundation, Inc.
    Written by Simon Josefsson.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -20,7 +20,6 @@
 #include "base64.h"
 
 #include <stddef.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
@@ -33,7 +32,7 @@ main (void)
   const char *in = "abcdefghijklmnop";
   const char *b64in = "YWJjZGVmZw==";
   char out[255];
-  size_t len;
+  idx_t len;
   bool ok;
   char *p;
 
@@ -127,7 +126,7 @@ main (void)
   ASSERT (strcmp (p, "YWJjZGVmZ2hpamtsbW5vcA==") == 0);
   free (p);
 
-  len = base64_encode_alloc (in, SIZE_MAX - 5, &p);
+  len = base64_encode_alloc (in, IDX_MAX - 5, &p);
   ASSERT (len == 0);
 
   /* Decode context function */

@@ -1,9 +1,9 @@
 /* Test of rounding to nearest, breaking ties away from zero.
-   Copyright (C) 2007-2021 Free Software Foundation, Inc.
+   Copyright (C) 2007-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -30,12 +30,9 @@
 
 #include <math.h>
 #include <float.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "verify.h"
 
 #ifdef USE_LONG_DOUBLE
 # error Long double not supported.
@@ -100,7 +97,7 @@ main (void)
         /* Combine highbits and lowbits into a floating-point number,
            sign-extending the lowbits to DOUBLE_BITS-NUM_HIGHBITS bits.  */
         union { DOUBLE f; DOUBLE_UINT i; } janus;
-        verify (sizeof janus.f == sizeof janus.i);
+        static_assert (sizeof janus.f == sizeof janus.i);
         janus.i = lowbits | (highbits << (DOUBLE_BITS - NUM_HIGHBITS));
         if (lowbits >> (NUM_LOWBITS - 1))
           janus.i |= ((DOUBLE_UINT) -1

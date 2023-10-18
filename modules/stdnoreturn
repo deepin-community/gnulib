@@ -1,15 +1,22 @@
 Description:
 A <stdnoreturn.h> that nearly conforms to ISO C11.
 
+Notice:
+The module 'stdnoreturn' is deprecated.
+New code should use the '_Noreturn' keyword or the 'noreturn' module.
+
 Files:
 lib/stdnoreturn.in.h
 m4/stdnoreturn.m4
 
 Depends-on:
+gen-header
 snippet/_Noreturn
 
 configure.ac:
 gl_STDNORETURN_H
+gl_CONDITIONAL_HEADER([stdnoreturn.h])
+AC_PROG_MKDIR_P
 
 Makefile.am:
 BUILT_SOURCES += $(STDNORETURN_H)
@@ -18,12 +25,11 @@ BUILT_SOURCES += $(STDNORETURN_H)
 # doesn't have one that works.
 if GL_GENERATE_STDNORETURN_H
 stdnoreturn.h: stdnoreturn.in.h $(top_builddir)/config.status $(_NORETURN_H)
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
-	  sed -e '/definition of _Noreturn/r $(_NORETURN_H)' \
-              < $(srcdir)/stdnoreturn.in.h; \
-	} > $@-t && \
-	mv $@-t $@
+@NMD@	$(AM_V_GEN)$(MKDIR_P) '%reldir%'
+	$(gl_V_at)$(SED_HEADER_STDOUT) \
+	  -e '/definition of _Noreturn/r $(_NORETURN_H)' \
+	  $(srcdir)/stdnoreturn.in.h > $@-t
+	$(AM_V_at)mv $@-t $@
 else
 stdnoreturn.h: $(top_builddir)/config.status
 	rm -f $@

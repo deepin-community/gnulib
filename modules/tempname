@@ -16,11 +16,10 @@ getrandom
 libc-config
 lstat
 mkdir
-stdalign
 stdbool
 stdint
 sys_stat
-time
+time-h
 
 configure.ac:
 gl_FUNC_GEN_TEMPNAME
@@ -33,8 +32,8 @@ Include:
 "tempname.h"
 
 Link:
-$(LIB_GETRANDOM)
-$(LIB_CLOCK_GETTIME)
+$(GETRANDOM_LIB)
+$(CLOCK_TIME_LIB)
 
 License:
 LGPLv2+

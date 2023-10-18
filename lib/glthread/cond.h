@@ -1,5 +1,5 @@
 /* Condition variables for multithreading.
-   Copyright (C) 2005-2021 Free Software Foundation, Inc.
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -48,8 +48,12 @@
 #ifndef _GLTHREAD_COND_H
 #define _GLTHREAD_COND_H
 
+/* This file uses _GL_INLINE_HEADER_BEGIN, _GL_INLINE, HAVE_THREADS_H.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
+
 #include <errno.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -65,10 +69,6 @@
 # else
 #  define c11_threads_in_use() 0
 # endif
-#endif
-
-#ifndef _GL_INLINE_HEADER_BEGIN
- #error "Please include config.h first."
 #endif
 
 _GL_INLINE_HEADER_BEGIN

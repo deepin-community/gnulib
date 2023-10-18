@@ -15,11 +15,11 @@ btowc           [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 builtin-expect  [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 flexmember      [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 idx             [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
-intprops        [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 isblank         [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 iswctype        [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 libc-config     [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 stdbool         [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
+stdckdint       [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 strnlen         [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 wchar           [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 wctype-h        [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
@@ -33,6 +33,8 @@ mbsinit         [test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1]
 
 configure.ac:
 gl_FUNC_FNMATCH_POSIX
+dnl Because of gl_REPLACE_FNMATCH_H:
+gl_CONDITIONAL_HEADER([fnmatch.h])
 if test $HAVE_FNMATCH = 0 || test $REPLACE_FNMATCH = 1; then
   AC_LIBOBJ([fnmatch])
   gl_PREREQ_FNMATCH
@@ -45,7 +47,7 @@ Include:
 <fnmatch.h>
 
 Link:
-$(LIB_MBRTOWC)
+$(MBRTOWC_LIB)
 
 License:
 LGPLv2+

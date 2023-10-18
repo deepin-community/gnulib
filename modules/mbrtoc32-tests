@@ -22,6 +22,7 @@ m4/codeset.m4
 
 Depends-on:
 mbsinit
+btoc32
 c32tob
 setlocale
 localcharset
@@ -45,4 +46,4 @@ TESTS_ENVIRONMENT += \
   LOCALE_JA='@LOCALE_JA@' \
   LOCALE_ZH_CN='@LOCALE_ZH_CN@'
 check_PROGRAMS += test-mbrtoc32 test-mbrtoc32-w32
-test_mbrtoc32_LDADD = $(LDADD) $(LIB_SETLOCALE) $(LIB_MBRTOWC)
+test_mbrtoc32_LDADD = $(LDADD) $(LIBUNISTRING) $(SETLOCALE_LIB) $(MBRTOWC_LIB) $(LIBC32CONV)

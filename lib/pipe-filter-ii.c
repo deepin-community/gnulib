@@ -1,10 +1,10 @@
 /* Filtering of data through a subprocess.
-   Copyright (C) 2001-2003, 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2008-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -21,7 +21,6 @@
 
 #include <errno.h>
 #include <fcntl.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -98,7 +97,7 @@ CloseHandle (HANDLE h)
 # define _endthreadex(x) return (x)
 # define TerminateThread(h, e) DosKillThread (h->tid)
 
-# define GetLastError()  -1
+# define GetLastError()  (-1)
 
 # ifndef ERROR_NO_DATA
 #  define ERROR_NO_DATA 232

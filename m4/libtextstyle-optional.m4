@@ -1,5 +1,5 @@
-# libtextstyle-optional.m4 serial 2
-dnl Copyright (C) 2019-2021 Free Software Foundation, Inc.
+# libtextstyle-optional.m4 serial 5
+dnl Copyright (C) 2019-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -23,12 +23,17 @@ AC_DEFUN([gl_LIBTEXTSTYLE_OPTIONAL],
 [
   gl_LIBTEXTSTYLE([$1])
   if test $HAVE_LIBTEXTSTYLE = yes; then
-    TEXTSTYLE_H=
+    GL_GENERATE_TEXTSTYLE_H=false
   else
-    TEXTSTYLE_H=textstyle.h
+    GL_GENERATE_TEXTSTYLE_H=true
     AC_REQUIRE([AC_C_INLINE])
-    AC_CHECK_FUNCS_ONCE([tcdrain])
+    gl_CHECK_FUNCS_ANDROID([tcdrain], [[#include <termios.h>]])
   fi
-  AC_SUBST([TEXTSTYLE_H])
-  AM_CONDITIONAL([GL_GENERATE_TEXTSTYLE_H], [test -n "$TEXTSTYLE_H"])
+
+  dnl Update the value of the TEXTSTYLE_H variable and the
+  dnl GL_GENERATE_TEXTSTYLE_H conditional.
+  dnl In most modules, the gl_CONDITIONAL_HEADER invocation belongs in the
+  dnl module description, not the .m4 file. But here it's OK, because it does
+  dnl not make sense to AC_REQUIRE([gl_LIBTEXTSTYLE_OPTIONAL]).
+  gl_CONDITIONAL_HEADER([textstyle.h])
 ])

@@ -1,9 +1,9 @@
 /* Test of pselect() substitute.
-   Copyright (C) 2011-2021 Free Software Foundation, Inc.
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -24,6 +24,7 @@ SIGNATURE_CHECK (pselect, int,
                  (int, fd_set *restrict, fd_set *restrict, fd_set *restrict,
                   struct timespec const *restrict, const sigset_t *restrict));
 
+#define TEST_PORT 12347
 #include "test-select.h"
 
 static int

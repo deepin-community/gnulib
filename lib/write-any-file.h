@@ -1,10 +1,10 @@
 /* Determine whether we can write any file.
 
-   Copyright (C) 2007-2021 Free Software Foundation, Inc.
+   Copyright (C) 2007-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published
-   by the Free Software Foundation; either version 3 of the License,
+   by the Free Software Foundation, either version 3 of the License,
    or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -14,7 +14,5 @@
 
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
-
-#include <stdbool.h>
 
 bool can_write_any_file (void);

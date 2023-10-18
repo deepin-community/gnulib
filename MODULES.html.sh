@@ -1,10 +1,10 @@
 #!/bin/sh
 #
-# Copyright (C) 2002-2021 Free Software Foundation, Inc.
+# Copyright (C) 2002-2023 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -24,13 +24,49 @@ PATH=`dirname "$0"`:$PATH; export PATH
 POSIX2001_URL='https://pubs.opengroup.org/onlinepubs/009695399'
 POSIX2008_URL='https://pubs.opengroup.org/onlinepubs/9699919799'
 
+# repo_url_prefix and repo_url_suffix are chosen such that
+#   <A HREF="${repo_url_prefix}FILENAME${repo_url_suffix}">...</A>
+# will allow to open the hyperlink and thus see the contents of FILENAME
+# in the browser.
+#
+# There are two possible ways to access files in the git repository:
+#   - Through gitweb. This is the preferred UI for humans.
+#     repo_url_prefix='https://git.savannah.gnu.org/gitweb/?p=gnulib.git;a=blob_plain;f='
+#     repo_url_suffix=''
+#   - Through cgit.
+#     repo_url_prefix='https://git.savannah.gnu.org/cgit/gnulib.git/plain/'
+#     repo_url_suffix=''
+#
+# Unfortunately, the response headers of gitweb are not right.  For example, for
+# FILENAME = lib/stdlib.in.h, gitweb's response headers are:
+#   Content-Type: text/x-chdr; charset=ISO-8859-1
+#   Content-disposition: inline; filename="lib/stdlib.in.h"
+# whereas cgit's response headers are:
+#   Content-Type: text/plain; charset=UTF-8
+#   Content-Disposition: inline; filename="stdlib.in.h"
+# gitweb's response headers have three problems:
+#   * The content type for .h file is text/x-chdr, for .c files is text/x-csrc.
+#     The effect of this content type is that Firefox (on Ubuntu 22.04), by
+#     default, does not display the contents of the file but instead opens a
+#     download (save) dialog.  This is unwelcome in this context.
+#   * The charset=ISO-8859-1 causes incorrect display of non-ASCII characters
+#     for files such as m4/fnmatch.m4, since all of the gnulib repository is
+#     in UTF-8.
+#   * The filename="lib/stdlib.in.h" causes Firefox to propose a file name
+#     'lib_stdlib.in.h', if the user has chosen to download the file.
+# These problems come from the gitweb implementation, as can be seen from
+# https://repo.or.cz/git.git/blame_incremental/HEAD:/gitweb/gitweb.perl
+# procedure "sub git_blob_plain".  It ends up determining the content type
+# based on some MIME type registry, such as /etc/mime.types.
+#
+# So, we better choose cgit here.
 repo_url_prefix=
 repo_url_suffix=
 if test $# != 0; then
   case "$1" in
     --git-urls)
       # Generate URLs to the official gnulib git repository.
-      repo_url_prefix='https://git.sv.gnu.org/gitweb/?p=gnulib.git;a=blob_plain;f='
+      repo_url_prefix='https://git.savannah.gnu.org/cgit/gnulib.git/plain/'
       repo_url_suffix=''
       ;;
   esac
@@ -41,7 +77,6 @@ repo_url_suffix_repl=`echo "$repo_url_suffix" | sed -e 's,[&],\\\&,'`
 sed_lt='s,<,\&lt;,g'
 sed_gt='s,>,\&gt;,g'
 sed_escape_dot='s,\.,\\.,g'
-sed_escape_slash='s,/,\\/,g'
 trnl='\012'
 sed_alt1='s,$,\\|,'
 sed_alt2='s,^\\|,\\(,'
@@ -1378,7 +1413,7 @@ func_tmpdir ()
   # Use the environment variable TMPDIR, falling back to /tmp. This allows
   # users to specify a different temporary directory, for example, if their
   # /tmp is filled up or too small.
-  : ${TMPDIR=/tmp}
+  : "${TMPDIR=/tmp}"
   {
     # Use the mktemp program if available. If not available, hide the error
     # message.
@@ -1702,6 +1737,7 @@ func_all_modules ()
   func_module eealloc
   func_module free-posix
   func_module malloc-gnu
+  func_module memalign
   func_module realloc-gnu
   func_module reallocarray
   func_module pagealign_alloc
@@ -1729,8 +1765,11 @@ func_all_modules ()
   func_module fprintftime
   func_module nstrftime
   func_module strftime-fixes
+  func_module time
+  func_module time-h
   func_module time_rz
   func_module year2038
+  func_module year2038-recommended
   func_end_table
 
   element="Extra functions based on ANSI C 89"
@@ -1745,9 +1784,17 @@ func_all_modules ()
   func_echo "$element"
 
   func_begin_table
+  func_module aligned-malloc
+  func_module ialloc
+  func_module idx
+  func_module immutable
+  func_module malloc-h
+  func_module ssfmalloc
   func_module xsize
   func_module xalloc
   func_module xalloc-die
+  func_module alignalloc
+  func_module xalignalloc
   func_module alloca
   func_module alloca-opt
   func_module malloca
@@ -1825,7 +1872,9 @@ func_all_modules ()
   func_module strcasestr-simple
   func_module strchrnul
   func_module streq
+  func_module strerrorname_np
   func_module strerror_r-posix
+  func_module string-buffer
   func_module strnlen
   func_module strnlen1
   func_module strndup
@@ -1874,6 +1923,7 @@ func_all_modules ()
   func_begin_table
   func_module mktime-internal
   func_module parse-datetime
+  func_module parse-datetime2
   func_module timegm
   func_module tzset
   func_end_table
@@ -1886,6 +1936,7 @@ func_all_modules ()
 
   func_begin_table
   func_module unlocked-io
+  func_module unlocked-io-internal
   func_module fwriteerror
   func_module vasnprintf
   func_module vasprintf
@@ -1902,7 +1953,19 @@ func_all_modules ()
   func_begin_table
   func_module fatal-signal
   func_module raise
+  func_module sigabbrev_np
+  func_module sigdescr_np
   func_module strsignal
+  func_end_table
+
+  element="Wide-character string handling <wchar.h>"
+  element=`printf "%s" "$element" | sed -e "$sed_lt" -e "$sed_gt"`
+  func_section_wrap ansic_ext_wchar
+  func_wrap H3
+  func_echo "$element"
+
+  func_begin_table
+  func_module wmempcpy
   func_end_table
 
   element="Command-line arguments"
@@ -1943,6 +2006,7 @@ func_all_modules ()
   func_module array-oset
   func_module avltree-oset
   func_module rbtree-oset
+  func_module stack
   func_end_table
 
   element="Cryptographic computations (low-level)"
@@ -1958,13 +2022,20 @@ func_all_modules ()
   func_module crypto/hmac-md5
   func_module crypto/hmac-sha1
   func_module crypto/md2
+  func_module crypto/md2-buffer
   func_module crypto/md4
+  func_module crypto/md4-buffer
   func_module crypto/md5
+  func_module crypto/md5-buffer
   func_module crypto/rijndael
   func_module crypto/sha1
+  func_module crypto/sha1-buffer
   func_module crypto/sha256
+  func_module crypto/sha256-buffer
   func_module crypto/sha512
+  func_module crypto/sha512-buffer
   func_module crypto/sm3
+  func_module crypto/sm3-buffer
   func_end_table
 
   element="Cryptographic computations (high-level)"
@@ -2372,6 +2443,54 @@ func_all_modules ()
   func_module limits-h
   func_end_table
 
+  element="Support for systems lacking draft ISO C 23"
+  func_section_wrap c23_ext
+  func_wrap H2
+  func_echo "$element"
+
+  element="Core language properties"
+  element=`printf "%s" "$element" | sed -e "$sed_lt" -e "$sed_gt"`
+  func_section_wrap c23_core_properties
+  func_wrap H3
+  func_echo "$element"
+
+  func_begin_table
+  func_module alignasof
+  func_module nullptr
+  func_module stdckdint
+  func_end_table
+
+  element="Memory management functions <stdlib.h>"
+  element=`printf "%s" "$element" | sed -e "$sed_lt" -e "$sed_gt"`
+  func_section_wrap ansic_ext_stdlib_memory
+  func_wrap H3
+  func_echo "$element"
+
+  func_begin_table
+  func_module aligned_alloc
+  func_end_table
+
+  element="String handling <string.h>"
+  element=`printf "%s" "$element" | sed -e "$sed_lt" -e "$sed_gt"`
+  func_section_wrap c23_ext_string
+  func_wrap H3
+  func_echo "$element"
+
+  func_begin_table
+  func_module memset_explicit
+  func_end_table
+
+  element="Date and time <time.h>"
+  element=`printf "%s" "$element" | sed -e "$sed_lt" -e "$sed_gt"`
+  func_section_wrap c23_ext_string
+  func_wrap H3
+  func_echo "$element"
+
+  func_begin_table
+  func_module timespec_get
+  func_module timespec_getres
+  func_end_table
+
   element="Support for GNU multiple precision arithmetic"
   func_section_wrap gmp
   func_wrap H2
@@ -2413,7 +2532,10 @@ func_all_modules ()
   func_module arpa_inet
   func_module bind
   func_module calloc-posix
+  func_module chmod
+  func_module chmodat
   func_module chown
+  func_module chownat
   func_module close
   func_module connect
   func_module dirent
@@ -2423,6 +2545,13 @@ func_all_modules ()
   func_module duplocale
   func_module environ
   func_module errno
+  func_module execl
+  func_module execle
+  func_module execlp
+  func_module execv
+  func_module execve
+  func_module execvp
+  func_module execvpe
   func_module fchdir
   func_module fclose
   func_module fcntl-h
@@ -2482,6 +2611,7 @@ func_all_modules ()
   func_module perror
   func_module poll
   func_module popen
+  func_module posix_memalign
   func_module posix_openpt
   func_module posix_spawn
   func_module posix_spawnattr_destroy
@@ -2580,6 +2710,7 @@ func_all_modules ()
   func_module vsprintf-posix
   func_module wcsnrtombs
   func_module wcwidth
+  func_module windows-spawn
   func_module windows-stat-inodes
   func_module windows-stat-override
   func_module windows-stat-timespec
@@ -2595,6 +2726,7 @@ func_all_modules ()
   func_module clock-time
   func_module d-ino
   func_module d-type
+  func_module eloop-threshold
   func_module link-follow
   func_module rmdir-errno
   func_module timer-time
@@ -2610,6 +2742,7 @@ func_all_modules ()
 
   func_begin_table
   func_module chdir-long
+  func_module basename-lgpl
   func_module dirent-safer
   func_module dirname
   func_module dirname-lgpl
@@ -2666,6 +2799,7 @@ func_all_modules ()
   func_module canonicalize
   func_module canonicalize-lgpl
   func_module clean-temp
+  func_module clean-temp-simple
   func_module concat-filename
   func_module copy-file
   func_module fsusage
@@ -2774,6 +2908,7 @@ func_all_modules ()
   func_module closein
   func_module closeout
   func_module fbufmode
+  func_module fopen-gnu
   func_module fopen-safer
   func_module fpending
   func_module fpurge
@@ -2788,6 +2923,7 @@ func_all_modules ()
   func_module getpass
   func_module getpass-gnu
   func_module popen-safer
+  func_module supersede
   func_module stdlib-safer
   func_module tmpfile-safer
   func_module xfreopen
@@ -2814,6 +2950,7 @@ func_all_modules ()
   func_echo "$element"
 
   func_begin_table
+  func_module getumask
   func_module idpriv-drop
   func_module idpriv-droptemp
   func_module priv-set
@@ -2828,6 +2965,7 @@ func_all_modules ()
   func_begin_table
   func_module gethrxtime
   func_module gettime
+  func_module gettime-res
   func_module posixtm
   func_module settime
   func_module usleep
@@ -2855,7 +2993,9 @@ func_all_modules ()
 
   func_begin_table
   func_module threadlib
+  func_module asyncsafe-spin
   func_module lock
+  func_module simple-atomic
   func_module tls
   func_module thread
   func_module yield
@@ -2875,6 +3015,20 @@ func_all_modules ()
   func_module sig2str
   func_module sigpipe
   func_module sigpipe-die
+  func_module sigsegv
+  func_end_table
+
+  element="Terminal I/O"
+  element=`printf "%s" "$element" | sed -e "$sed_lt" -e "$sed_gt"`
+  func_section_wrap posix_ext_terminal_io
+  func_wrap H3
+  func_echo "$element"
+
+  func_begin_table
+  func_module termcap
+  func_module termcap-h
+  func_module terminfo
+  func_module terminfo-h
   func_end_table
 
   element="Internationalization functions"
@@ -2887,6 +3041,7 @@ func_all_modules ()
   func_module gettext
   func_module gettext-h
   func_module propername
+  func_module propername-lite
   func_module iconv
   func_module striconv
   func_module xstriconv
@@ -3486,6 +3641,7 @@ func_all_modules ()
   func_module argp
   func_module argp-version-etc
   func_module argz
+  func_module attribute
   func_module bitrotate
   func_module byteswap
   func_module dfa
@@ -3518,6 +3674,7 @@ func_all_modules ()
   func_module selinux-h
   func_module selinux-at
   func_module sysexits
+  func_module sys_random
   func_module u64
   func_module verror
   func_end_table
@@ -3530,6 +3687,7 @@ func_all_modules ()
   func_begin_table
   func_module absolute-header
   func_module snippet/arg-nonnull
+  func_module bison
   func_module config-h
   func_module configmake
   func_module dummy
@@ -3613,15 +3771,15 @@ func_all_modules ()
 
 func_tmpdir
 trap 'exit_status=$?
-      if test "$signal" != 0; then
-        echo "caught signal $signal" >&2
+      if test "$signal" != EXIT; then
+        echo "caught signal SIG$signal" >&2
       fi
       rm -rf "$tmp"
-      exit $exit_status' 0
-for signal in 1 2 3 13 15; do
+      exit $exit_status' EXIT
+for signal in HUP INT QUIT PIPE TERM; do
   trap '{ signal='$signal'; func_exit 1; }' $signal
 done
-signal=0
+signal=EXIT
 
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">'
 func_begin HTML
@@ -3722,8 +3880,8 @@ func_end HTML
 
 rm -rf "$tmp"
 # Undo the effect of the previous 'trap' command.
-trap '' 0
-trap 'func_exit $?' 1 2 3 13 15
+trap '' EXIT
+trap 'func_exit $?' HUP INT QUIT PIPE TERM
 
 exit 0
 

@@ -1,10 +1,10 @@
 /* Test of sigdescr_np() function.
 
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
+   the Free Software Foundation, either version 3, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -126,12 +126,14 @@ main (void)
   #ifdef SIGDANGER
   ASSERT (strcmp (sigdescr_np (SIGDANGER), "Swap space nearly exhausted") == 0);
   #endif
-  /* Mac OS X, FreeBSD, NetBSD, OpenBSD, Minix, AIX, IRIX, Cygwin, mingw */
+  /* glibc, Mac OS X, FreeBSD, NetBSD, OpenBSD, Minix, AIX, IRIX, Cygwin, mingw */
   #ifdef SIGEMT
-  ASSERT (strcmp (sigdescr_np (SIGEMT), "Instruction emulation needed") == 0);
+  ASSERT (strcmp (sigdescr_np (SIGEMT), "Instruction emulation needed") == 0
+          /* This completely unintelligible message is seen in glibc.  */
+          || strcmp (sigdescr_np (SIGEMT), "EMT trap") == 0);
   #endif
   /* Mac OS X, FreeBSD, NetBSD, OpenBSD, Minix */
-  #ifdef SIGINFO
+  #if defined SIGINFO && SIGINFO != SIGPWR
   ASSERT (strcmp (sigdescr_np (SIGINFO), "Information request") == 0);
   #endif
   /* AIX */

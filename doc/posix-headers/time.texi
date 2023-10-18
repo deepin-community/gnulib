@@ -3,7 +3,7 @@
 
 POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/time.h.html}
 
-Gnulib module: time
+Gnulib module: time-h
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -25,7 +25,8 @@ On some platforms where @code{time_t} defaults to 32-bit but can be
 changed to 64-bit, functions like @code{stat} can fail with
 @code{errno == EOVERFLOW} when a 32-bit timestamp is out of range,
 such as with a file timestamp in the far future or past:
-glibc 2.34.
+glibc 2.34+ atop 32-bit x86 or ARM Linux.
+@xref{Avoiding the year 2038 problem}.
 @end itemize
 
 Portability problems not fixed by Gnulib:
@@ -39,6 +40,8 @@ the functions silently return the low-order 32 bits of the correct
 timestamp.  These platforms will be obsolete when 32-bit @code{time_t}
 rolls around, which will occur in 2038 for the typical case when
 @code{time_t} is signed.
+@xref{Avoiding the year 2038 problem}.
+
 @item
 On some platforms the @code{tv_nsec} member of @code{struct timespec}
 is not of type @code{long}, but is of type @code{long long} instead:

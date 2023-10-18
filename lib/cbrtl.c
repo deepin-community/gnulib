@@ -1,12 +1,12 @@
 /* Compute cubic root of long double value.
-   Copyright (C) 2012-2021 Free Software Foundation, Inc.
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
    Cephes Math Library Release 2.2: January, 1991
    Copyright 1984, 1991 by Stephen L. Moshier
    Adapted for glibc October, 2001.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,

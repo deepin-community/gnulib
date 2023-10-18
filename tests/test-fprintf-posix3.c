@@ -1,9 +1,9 @@
 /* Test of POSIX compatible fprintf() function.
-   Copyright (C) 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -48,6 +48,7 @@ main ()
 # include <sys/resource.h>
 #endif
 
+#include "qemu.h"
 #include "resource-ext.h"
 
 /* Test against a memory leak in the fprintf replacement.  */
@@ -69,6 +70,12 @@ main (int argc, char *argv[])
   uintptr_t initial_rusage_as;
   int arg;
   int result;
+
+  if (is_running_under_qemu_user ())
+    {
+      fprintf (stderr, "Skipping test: cannot trust address space size when running under QEMU\n");
+      return 79;
+    }
 
   /* Limit the amount of malloc()ed memory to MAX_ALLOC_TOTAL or less.  */
 

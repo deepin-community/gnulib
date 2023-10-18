@@ -1,13 +1,23 @@
-#!/usr/bin/python
-# encoding: UTF-8
+# Copyright (C) 2002-2023 Free Software Foundation, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #===============================================================================
 # Define global imports
 #===============================================================================
 import os
 import re
-import sys
-import locale
 import codecs
 import subprocess as sp
 from . import constants
@@ -24,30 +34,16 @@ __copyright__ = constants.__copyright__
 #===============================================================================
 # Define global constants
 #===============================================================================
-PYTHON3 = constants.PYTHON3
-NoneType = type(None)
-APP = constants.APP
 DIRS = constants.DIRS
-ENCS = constants.ENCS
-UTILS = constants.UTILS
-MODES = constants.MODES
-TESTS = constants.TESTS
-compiler = constants.compiler
 joinpath = constants.joinpath
-cleaner = constants.cleaner
-string = constants.string
-isabs = os.path.isabs
 isdir = os.path.isdir
-isfile = os.path.isfile
-normpath = os.path.normpath
-relpath = os.path.relpath
 
 
 #===============================================================================
 # Define GLInfo class
 #===============================================================================
 class GLInfo(object):
-    '''This class is used to get fromatted information about gnulib-tool.
+    '''This class is used to get formatted information about gnulib-tool.
     This information is mainly used in stdout messages, but can be used
     anywhere else. The return values are not the same as for the module,
     but still depends on them.'''
@@ -55,60 +51,78 @@ class GLInfo(object):
     def __repr__(self):
         '''x.__repr__ <==> repr(x)'''
         result = '<pygnulib.GLInfo %s>' % hex(id(self))
-        return(result)
+        return result
 
     def package(self):
         '''Return formatted string which contains name of the package.'''
         result = 'GNU gnulib'
-        return(result)
+        return result
 
     def authors(self):
         '''Return formatted string which contains authors.
         The special __author__ variable is used (type is list).'''
-        result = string()
+        result = ''
         for item in __author__:
-            if item == __author__[-2]:
-                result += '%s ' % item
-            elif item == __author__[-1]:
+            if item == __author__[-1]:
                 result += 'and %s' % item
             else:
                 result += '%s, ' % item
-        return(result)
+        return result
 
     def license(self):
         '''Return formatted string which contains license and its description.'''
-        result = 'License GPLv3+: GNU GPL version 3 or later'
-        result += ' <https://gnu.org/licenses/gpl.html>\n'
-        result += 'This is free software: you are free'
-        result += ' to change and redistribute it.\n'
+        result = 'License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\n'
+        result += 'This is free software: you are free to change and redistribute it.\n'
         result += 'There is NO WARRANTY, to the extent permitted by law.'
-        return(result)
+        return result
 
     def copyright(self):
         '''Return formatted string which contains copyright.
         The special __copyright__ variable is used (type is str).'''
-        result = 'Copyright (C) %s' % __copyright__
-        return(result)
+        copyright = __copyright__
+        # Per the GNU Coding Standards, show only the last year.
+        copyright = re.compile('^[0-9]*-').sub('', copyright)
+        result = 'Copyright (C) %s' % copyright
+        return result
 
     def date(self):
         '''Return formatted string which contains date and time in GMT format.'''
         if isdir(DIRS['git']):
-            counter = int()  # Create counter
-            result = string()  # Create string
-            args = ['git', 'log']
-            result = sp.check_output(args).decode("UTF-8")
-            # Get date as "Fri Mar 21 07:16:51 2008 -0600" from string
-            pattern = re.compile('Date:[\t ]*(.*?)$', re.S | re.M)
-            result = pattern.findall(result)[0]
-            # Turn "Fri Mar 21 07:16:51 2008 -0600" into "Mar 21 2008 07:16:51 -0600"
-            pattern = re.compile('^[^ ]* ([^ ]*) ([0-9]*) ([0-9:]*) ([0-9]*) ')
-            result = pattern.sub('\\1 \\2 \\4 \\3 ', result)
-            # Use GNU date to compute the time in GMT
-            args = ['date', '-d', result, '-u', '+%Y-%m-%d %H:%M:%S']
-            proc = sp.check_output(args)
-            result = string(proc, "UTF-8")
-            result = result.rstrip(os.linesep)
-            return(result)
+            have_git = None
+            try:
+                sp.check_call(['git', '--version'], stdout=sp.DEVNULL)
+                have_git = True
+            except:
+                have_git = False
+            if have_git:
+                have_GNU_date = None
+                try:
+                    sp.check_call(['date', '--version'], stdout=sp.DEVNULL)
+                    have_GNU_date = True
+                except:
+                    have_GNU_date = False
+                if have_GNU_date:
+                    args = ['git', 'log', '-n', '1', 'ChangeLog']
+                    result = sp.check_output(args, cwd=DIRS['root']).decode("UTF-8")
+                    # Get date as "Fri Mar 21 07:16:51 2008 -0600" from string
+                    pattern = re.compile('^Date:[\t ]*(.*?)$', re.M)
+                    result = pattern.findall(result)[0]
+                    # Turn "Fri Mar 21 07:16:51 2008 -0600" into "Mar 21 2008 07:16:51 -0600"
+                    pattern = re.compile('^[^ ]* ([^ ]*) ([0-9]*) ([0-9:]*) ([0-9]*) ')
+                    result = pattern.sub('\\1 \\2 \\4 \\3 ', result)
+                    # Use GNU date to compute the time in GMT
+                    args = ['date', '-d', result, '-u', '+%Y-%m-%d %H:%M:%S']
+                    proc = sp.check_output(args)
+                    result = str(proc, "UTF-8")
+                    result = result.rstrip(os.linesep)
+                    return result
+        # gnulib copy without versioning information.
+        first_changelog_line = None
+        with codecs.open(os.path.join(DIRS['root'], 'ChangeLog'), 'rb', 'UTF-8') as file:
+            line = file.readline()
+            first_changelog_line = line.rstrip()
+        result = re.compile(' .*').sub('', first_changelog_line)
+        return result
 
     def usage(self):
         '''Show help message.'''
@@ -121,7 +135,7 @@ Usage: gnulib-tool --list
        gnulib-tool --update
        gnulib-tool --create-testdir --dir=directory [module1 ... moduleN]
        gnulib-tool --create-megatestdir --dir=directory [module1 ... moduleN]
-       gnulib-tool --test --dir=directory module1 ... moduleN
+       gnulib-tool --test --dir=directory [module1 ... moduleN]
        gnulib-tool --megatest --dir=directory [module1 ... moduleN]
        gnulib-tool --extract-description module
        gnulib-tool --extract-comment module
@@ -186,8 +200,6 @@ General options:
                             directory.
       --local-dir=DIRECTORY  Specify a local override directory where to look
                             up files before looking in gnulib's directory.
-      --cache-modules       Enable module caching optimization.
-      --no-cache-modules    Disable module caching optimization.
       --verbose             Increase verbosity. May be repeated.
       --quiet               Decrease verbosity. May be repeated.
 
@@ -253,7 +265,8 @@ Options for --import, --add/remove-import:
                             placed (default \"tests\").
       --aux-dir=DIRECTORY   Directory relative to --dir where auxiliary build
                             tools are placed (default comes from configure.ac).
-      --lgpl[=2|=3]         Abort if modules aren't available under the LGPL.
+      --lgpl[=2|=3orGPLv2|=3]
+                            Abort if modules aren't available under the LGPL.
                             Also modify license template from GPL to LGPL.
                             The version number of the LGPL can be specified;
                             the default is currently LGPLv3.
@@ -287,15 +300,25 @@ Options for --import, --add/remove-import, --update:
   -S, --more-symlinks       Deprecated; equivalent to --symlink.
 
 Report bugs to <bug-gnulib@gnu.org>.'''
-        return(result)
+        return result
 
     def version(self):
         '''Return formatted string which contains git version.'''
         if isdir(DIRS['git']):
-            version_gen = joinpath(DIRS['build-aux'], 'git-version-gen')
-            args = [version_gen, DIRS['root']]
-            result = sp.check_output(args).decode("UTF-8")
-            result = result.strip()
-            if result == 'UNKNOWN':
-                result = string()
-            return(result)
+            have_git = None
+            try:
+                sp.check_call(['git', '--version'], stdout=sp.DEVNULL)
+                have_git = True
+            except:
+                have_git = False
+            if have_git:
+                version_gen = joinpath(DIRS['build-aux'], 'git-version-gen')
+                args = [version_gen, '/dev/null']
+                result = sp.check_output(args, cwd=DIRS['root']).decode("UTF-8")
+                result = result.strip()
+                result = result.replace('-dirty', '-modified')
+                if result == 'UNKNOWN':
+                    result = ''
+                return result
+        # gnulib copy without versioning information.
+        return ''

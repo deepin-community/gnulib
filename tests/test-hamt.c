@@ -1,9 +1,9 @@
 /* Test of persistent hash array mapped trie implementation.
-   Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -348,7 +348,8 @@ test_iterator (void)
 {
   Hamt *hamt = test_hamt_create ();
   ASSERT (insert_values (&hamt, 10, val_array1, true) == 10);
-  Hamt_iterator iter [1] = {hamt_iterator (hamt)};
+  Hamt_iterator iter[1];
+  iter[0] = hamt_iterator (hamt);
   size_t cnt = 0;
   bool found [10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   Hamt_entry *p;
@@ -375,4 +376,6 @@ main (void)
   test_functional_update ();
   test_destructive_update ();
   test_iterator ();
+
+  return 0;
 }

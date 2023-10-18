@@ -1,5 +1,17 @@
-#!/usr/bin/python
-# encoding: UTF-8
+# Copyright (C) 2002-2023 Free Software Foundation, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''An easy access to pygnulib constants.'''
 
@@ -11,8 +23,11 @@ import re
 import os
 import sys
 import platform
+import shutil
 import tempfile
+import codecs
 import subprocess as sp
+import __main__ as interpreter
 
 
 #===============================================================================
@@ -24,31 +39,10 @@ __author__ = \
         'Bruno Haible',
         'Paul Eggert',
         'Simon Josefsson',
-        'Dmitriy Selyutin',
+        'Dmitry Selyutin',
     ]
 __license__ = 'GNU GPLv3+'
-__copyright__ = '2002-2017 Free Software Foundation, Inc.'
-
-
-#===============================================================================
-# Backward compatibility
-#===============================================================================
-# Check for Python version
-if sys.version_info.major == 2:
-    PYTHON3 = False
-else:
-    PYTHON3 = True
-
-# Create string compatibility
-if not PYTHON3:
-    string = unicode
-else:  # if PYTHON3
-    string = str
-
-# Current working directory
-if not PYTHON3:
-    os.getcwdb = os.getcwd
-    os.getcwd = os.getcwdu
+__copyright__ = '2002-2022 Free Software Foundation, Inc.'
 
 
 #===============================================================================
@@ -63,12 +57,8 @@ MODES = dict()  # Modes
 TESTS = dict()  # Tests
 NL = '''
 '''  # Newline character
-ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyz\
-ABCDEFGHIJKLMNOPQRSTUVWXYZ\
-0123456789'  # Alphanumeric characters
 
 # Set ENCS dictionary
-import __main__ as interpreter
 if not hasattr(interpreter, '__file__'):
     if sys.stdout.encoding != None:
         ENCS['default'] = sys.stdout.encoding
@@ -86,10 +76,6 @@ APP['name'] = sys.argv[0]
 if not APP['name']:
     APP['name'] = 'gnulib-tool.py'
 APP['path'] = os.path.realpath(sys.argv[0])
-if type(APP['name']) is bytes:
-    APP['name'] = string(APP['name'], ENCS['system'])
-if type(APP['path']) is bytes:
-    APP['path'] = string(APP['path'], ENCS['system'])
 
 # Set DIRS dictionary
 DIRS['root'] = os.path.dirname(APP['path'])
@@ -116,7 +102,7 @@ MODES['verbose-min'] = -2
 MODES['verbose-default'] = 0
 MODES['verbose-max'] = 2
 
-# Set TESTS dictionary
+# Define TESTS categories
 TESTS = \
     {
         'tests':             0,
@@ -226,19 +212,17 @@ def execute(args, verbose):
         try:  # Try to run
             retcode = sp.call(args)
         except Exception as error:
-            print(error)
+            sys.stderr.write(str(error) + '\n')
             sys.exit(1)
     else:
         # Commands like automake produce output to stderr even when they succeed.
         # Turn this output off if the command succeeds.
         temp = tempfile.mktemp()
-        if type(temp) is bytes:
-            temp = temp.decode(ENCS['system'])
         xargs = '%s > %s 2>&1' % (' '.join(args), temp)
         try:  # Try to run
             retcode = sp.call(xargs, shell=True)
         except Exception as error:
-            print(error)
+            sys.stderr.write(str(error) + '\n')
             sys.exit(1)
         if retcode == 0:
             os.remove(temp)
@@ -251,74 +235,53 @@ def execute(args, verbose):
             sys.exit(retcode)
 
 
-def compiler(pattern, flags=0):
-    '''Compile regex pattern depending on version of Python.'''
-    if not PYTHON3:
-        pattern = re.compile(pattern, re.UNICODE | flags)
-    else:  # if PYTHON3
-        pattern = re.compile(pattern, flags)
-    return(pattern)
-
-
 def cleaner(sequence):
     '''Clean string or list of strings after using regex.'''
-    if type(sequence) is string:
+    if type(sequence) is str:
         sequence = sequence.replace('[', '')
         sequence = sequence.replace(']', '')
     elif type(sequence) is list:
-        sequence = [value.replace('[', '').replace(']', '')
-                    for value in sequence]
-        sequence = [value.replace('(', '').replace(')', '')
-                    for value in sequence]
-        sequence = [False if value == 'false' else value for value in sequence]
-        sequence = [True if value == 'true' else value for value in sequence]
-        sequence = [value.strip() for value in sequence]
-    return(sequence)
+        sequence = [ value.replace('[', '').replace(']', '')
+                     for value in sequence]
+        sequence = [ value.replace('(', '').replace(')', '')
+                     for value in sequence]
+        sequence = [ False if value == 'false' else value
+                     for value in sequence ]
+        sequence = [ True if value == 'true' else value
+                     for value in sequence ]
+        sequence = [ value.strip()
+                     for value in sequence ]
+    return sequence
 
 
 def joinpath(head, *tail):
-    '''joinpath(head, *tail) -> string
+    '''joinpath(head, *tail) -> str
 
     Join two or more pathname components, inserting '/' as needed. If any
     component is an absolute path, all previous path components will be
-    discarded. The second argument may be string or list of strings.'''
+    discarded.'''
     newtail = list()
-    if type(head) is bytes:
-        head = head.decode(ENCS['default'])
     for item in tail:
-        if type(item) is bytes:
-            item = item.decode(ENCS['default'])
         newtail += [item]
     result = os.path.normpath(os.path.join(head, *tail))
-    if type(result) is bytes:
-        result = result.decode(ENCS['default'])
-    return(result)
+    return result
 
 
 def relativize(dir1, dir2):
-    '''Compute a relative pathname reldir such that dir1/reldir = dir2.'''
+    '''Compute a relative pathname reldir such that dir1/reldir = dir2.
+    dir1 and dir2 must be relative pathnames.'''
     dir0 = os.getcwd()
-    if type(dir1) is bytes:
-        dir1 = dir1.decode(ENCS['default'])
-    if type(dir2) is bytes:
-        dir2 = dir2.decode(ENCS['default'])
     while dir1:
         dir1 = '%s%s' % (os.path.normpath(dir1), os.path.sep)
         dir2 = '%s%s' % (os.path.normpath(dir2), os.path.sep)
-        if dir1.startswith(os.path.sep):
-            first = dir1[:dir1.find(os.path.sep, 1)]
-        else:  # if not dir1.startswith('/')
-            first = dir1[:dir1.find(os.path.sep)]
+        first = dir1[:dir1.find(os.path.sep)]
         if first != '.':
             if first == '..':
-                dir2 = os.path.basename(joinpath(dir0, dir2))
+                dir2 = joinpath(os.path.basename(dir0), dir2)
                 dir0 = os.path.dirname(dir0)
             else:  # if first != '..'
                 # Get first component of dir2
-                if dir2.startswith(os.path.sep):
-                    first2 = dir2[:dir2.find(os.path.sep, 1)]
-                else:  # if not dir1.startswith('/')
-                    first2 = dir2[:dir2.find(os.path.sep)]
+                first2 = dir2[:dir2.find(os.path.sep)]
                 if first == first2:
                     dir2 = dir2[dir2.find(os.path.sep) + 1:]
                 else:  # if first != first2
@@ -326,58 +289,132 @@ def relativize(dir1, dir2):
                 dir0 = joinpath(dir0, first)
         dir1 = dir1[dir1.find(os.path.sep) + 1:]
     result = os.path.normpath(dir2)
-    return(result)
+    return result
+
+
+def relconcat(dir1, dir2):
+    '''Compute a relative pathname dir1/dir2, with obvious simplifications.
+    dir1 and dir2 must be relative pathnames.
+    dir2 is considered to be relative to dir1.'''
+    return os.path.normpath(os.path.join(dir1, dir2))
+
+
+def relinverse(dir):
+    '''Compute the inverse of dir. Namely, a relative pathname consisting only
+    of '..' components, such that dir/relinverse = '.'.
+    dir must be a relative pathname.'''
+    if False:
+        # This should work too.
+        return relativize(dir, '.')
+    else:
+        inverse = ''
+        for component in dir.split('/'):
+            if component != '':
+                inverse += '../'
+        return os.path.normpath(inverse)
+
+
+def copyfile(src, dest):
+    '''Copy file src to file dest. Like shutil.copy, but ignore errors e.g. on
+    VFAT file systems.'''
+    shutil.copyfile(src, dest)
+    try:
+        shutil.copymode(src, dest)
+    except PermissionError:
+        pass
+
+
+def copyfile2(src, dest):
+    '''Copy file src to file dest, preserving modification time. Like
+    shutil.copy2, but ignore errors e.g. on VFAT file systems. This function
+    is to be used for backup files.'''
+    shutil.copyfile(src, dest)
+    try:
+        shutil.copystat(src, dest)
+    except PermissionError:
+        pass
+
+
+def movefile(src, dest):
+    '''Move/rename file src to file dest. Like shutil.move, but gracefully
+    handle common errors.'''
+    try:
+        shutil.move(src, dest)
+    except PermissionError:
+        # shutil.move invokes os.rename, catches the resulting OSError for
+        # errno=EXDEV, attempts a copy instead, and encounters a PermissionError
+        # while doing that.
+        copyfile2(src, dest)
+        os.remove(src)
+
+
+def symlink_relative(src, dest):
+    '''Like ln -s, except use cp -p if ln -s fails.
+    src is either absolute or relative to the directory of dest.'''
+    try:
+        os.symlink(src, dest)
+    except PermissionError:
+        sys.stderr.write('%s: ln -s failed; falling back on cp -p\n' % APP['name'])
+        if src.startswith('/') or (len(src) >= 2 and src[1] == ':'):
+            # src is absolute.
+            cp_src = src
+        else:
+            # src is relative to the directory of dest.
+            last_slash = dest.rfind('/')
+            if last_slash >= 0:
+                cp_src = joinpath(dest[0:last_slash-1], src)
+            else:
+                cp_src = src
+        copyfile2(cp_src, dest)
+
+
+def as_link_value_at_dest(src, dest):
+    '''Compute the symbolic link value to place at dest, such that the
+    resulting symbolic link points to src. src is given relative to the
+    current directory (or absolute).'''
+    if type(src) is not str:
+        raise TypeError('src must be a string, not %s' % (type(src).__name__))
+    if type(dest) is not str:
+        raise TypeError('dest must be a string, not %s' % (type(dest).__name__))
+    if src.startswith('/') or (len(src) >= 2 and src[1] == ':'):
+        return src
+    else:  # if src is not absolute
+        if dest.startswith('/') or (len(dest) >= 2 and dest[1] == ':'):
+            cwd = os.getcwd()
+            return joinpath(cwd, src)
+        else:  # if dest is not absolute
+            destdir = os.path.dirname(dest)
+            if not destdir:
+                destdir = '.'
+            return relativize(destdir, src)
 
 
 def link_relative(src, dest):
     '''Like ln -s, except that src is given relative to the current directory
     (or absolute), not given relative to the directory of dest.'''
-    if type(src) is bytes or type(src) is string:
-        if type(src) is bytes:
-            src = src.decode(ENCS['default'])
-    else:  # if src has not bytes or string type
-        raise(TypeError(
-            'src must be a string, not %s' % (type(src).__name__)))
-    if type(dest) is bytes or type(dest) is string:
-        if type(dest) is bytes:
-            dest = dest.decode(ENCS['default'])
-    else:  # if dest has not bytes or string type
-        raise(TypeError(
-            'dest must be a string, not %s' % (type(dest).__name__)))
-    if src.startswith('/') or (len(src) >= 2 and src[1] == ':'):
-        os.symlink(src, dest)
-    else:  # if src is not absolute
-        if dest.startswith('/') or (len(dest) >= 2 and dest[1] == ':'):
-            if not constants.PYTHON3:
-                cwd = os.getcwdu()
-            else:  # if constants.PYTHON3
-                cwd = os.getcwd()
-            os.symlink(joinpath(cwd, src), dest)
-        else:  # if dest is not absolute
-            destdir = os.path.dirname(dest)
-            if not destdir:
-                destdir = '.'
-            if type(destdir) is bytes:
-                destdir = destdir.decode(ENCS['default'])
-            src = relativize(destdir, src)
-            os.symlink(src, dest)
+    if type(src) is not str:
+        raise TypeError('src must be a string, not %s' % (type(src).__name__))
+    if type(dest) is not str:
+        raise TypeError('dest must be a string, not %s' % (type(dest).__name__))
+    link_value = as_link_value_at_dest(src, dest)
+    symlink_relative(link_value, dest)
 
 
 def link_if_changed(src, dest):
     '''Create a symlink, but avoids munging timestamps if the link is correct.'''
-    if type(src) is bytes:
-        src = src.decode(ENCS['default'])
-    if type(dest) is bytes:
-        dest = dest.decode(ENCS['default'])
-    ln_target = os.path.realpath(src)
-    if not (os.path.islink(dest) and src == ln_target):
-        os.remove(dest)
-        link_relative(src, dest)
+    link_value = as_link_value_at_dest(src, dest)
+    if not (os.path.islink(dest) and os.readlink(dest) == link_value):
+        try:
+            os.remove(dest)
+        except FileNotFoundError:
+            pass
+        # Equivalent to link_relative(src, dest):
+        symlink_relative(link_value, dest)
 
 
 def filter_filelist(separator, filelist,
                     prefix, suffix, removed_prefix, removed_suffix,
-                    added_prefix=string(), added_suffix=string()):
+                    added_prefix='', added_suffix=''):
     '''filter_filelist(*args) -> list
 
     Filter the given list of files. Filtering: Only the elements starting with
@@ -387,13 +424,13 @@ def filter_filelist(separator, filelist,
     listing = list()
     for filename in filelist:
         if filename.startswith(prefix) and filename.endswith(suffix):
-            pattern = compiler('^%s(.*?)%s$' %
-                               (removed_prefix, removed_suffix))
-            result = pattern.sub('%s\\1%s' %
-                                 (added_prefix, added_suffix), filename)
+            pattern = re.compile('^%s(.*)%s$'
+                                 % (removed_prefix, removed_suffix))
+            result = pattern.sub('%s\\1%s'
+                                 % (added_prefix, added_suffix), filename)
             listing += [result]
     result = separator.join(listing)
-    return(result)
+    return result
 
 
 def substart(orig, repl, data):
@@ -404,7 +441,7 @@ def substart(orig, repl, data):
     result = data
     if data.startswith(orig):
         result = repl + data[len(orig):]
-    return(result)
+    return result
 
 
 def subend(orig, repl, data):
@@ -415,7 +452,7 @@ def subend(orig, repl, data):
     result = data
     if data.endswith(orig):
         result = data[:-len(orig)] + repl
-    return(result)
+    return result
 
 
 def nlconvert(text):
@@ -424,17 +461,31 @@ def nlconvert(text):
     text = text.replace('\r\n', '\n')
     if system == 'windows':
         text = text.replace('\n', '\r\n')
-    return(text)
+    return text
 
 
 def nlremove(text):
     '''Remove empty lines from the source text.'''
     text = nlconvert(text)
     text = text.replace('\r\n', '\n')
-    lines = [line for line in text.split('\n') if line != '']
+    lines = [ line
+              for line in text.split('\n')
+              if line != '' ]
     text = '\n'.join(lines)
     text = nlconvert(text)
-    return(text)
+    return text
+
+
+def remove_trailing_slashes(text):
+    '''Remove trailing slashes from a file name, except when the file name
+    consists only of slashes.'''
+    result = text
+    while result.endswith('/'):
+        result = result[:-1]
+        if result == '':
+            result = text
+            break
+    return result
 
 
 def remove_backslash_newline(text):
@@ -443,11 +494,13 @@ def remove_backslash_newline(text):
     line to it.'''
     return text.replace('\\\n', '')
 
+
 def combine_lines(text):
     '''Given a multiline string text, join lines by spaces:
     When a line ends in a backslash, remove the backslash and join the next
     line to it, inserting a space between them.'''
     return text.replace('\\\n', ' ')
+
 
 def combine_lines_matching(pattern, text):
     '''Given a multiline string text, join lines by spaces, when the first
@@ -461,9 +514,9 @@ def combine_lines_matching(pattern, text):
     while match:
         (startpos, pos) = match.span()
         # Look how far the continuation lines extend.
-        pos = text.find('\n',pos)
-        while pos > 0 and text[pos-1] == '\\':
-            pos = text.find('\n',pos+1)
+        pos = text.find('\n', pos)
+        while pos > 0 and text[pos - 1] == '\\':
+            pos = text.find('\n', pos + 1)
         if pos < 0:
             pos = len(text)
         # Perform a combine_lines throughout the continuation lines.

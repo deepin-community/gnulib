@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2001, 2009-2021 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2001, 2009-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -8,7 +8,7 @@
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published
-   by the Free Software Foundation; either version 3 of the License,
+   by the Free Software Foundation, either version 3 of the License,
    or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,

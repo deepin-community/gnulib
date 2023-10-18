@@ -8,17 +8,19 @@ m4/gethostname.m4
 
 Depends-on:
 unistd
-errno           [test $HAVE_SETHOSTNAME = 0]
-fopen-gnu       [test $HAVE_SETHOSTNAME = 0]
+errno           [test $HAVE_SETHOSTNAME = 0 || test $REPLACE_SETHOSTNAME = 1]
+fopen-gnu       [test $HAVE_SETHOSTNAME = 0 || test $REPLACE_SETHOSTNAME = 1]
 
 configure.ac:
 gl_FUNC_SETHOSTNAME
-if test $HAVE_SETHOSTNAME = 0; then
-  AC_LIBOBJ([sethostname])
-fi
+gl_CONDITIONAL([GL_COND_OBJ_SETHOSTNAME],
+               [test $HAVE_SETHOSTNAME = 0 || test $REPLACE_SETHOSTNAME = 1])
 gl_UNISTD_MODULE_INDICATOR([sethostname])
 
 Makefile.am:
+if GL_COND_OBJ_SETHOSTNAME
+lib_SOURCES += sethostname.c
+endif
 
 Include:
 <unistd.h>

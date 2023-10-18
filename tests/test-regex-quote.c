@@ -1,9 +1,9 @@
 /* Test of constructing a regular expression from a literal string.
-   Copyright (C) 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -78,14 +78,16 @@ static void
 test_bre (void)
 {
   check ("aBc", 0, "aBc");
-  check ("(foo[$HOME])", 0, "(foo\\[\\$HOME\\])");
+  check ("(foo[$HOME])", 0, "(foo\\[\\$HOME])");
+  check ("(foo{$HOME})", 0, "(foo{\\$HOME})");
 }
 
 static void
 test_ere (void)
 {
   check ("aBc", REG_EXTENDED, "aBc");
-  check ("(foo[$HOME])", REG_EXTENDED, "\\(foo\\[\\$HOME\\]\\)");
+  check ("(foo[$HOME])", REG_EXTENDED, "\\(foo\\[\\$HOME]\\)");
+  check ("(foo{$HOME})", REG_EXTENDED, "\\(foo\\{\\$HOME}\\)");
 }
 
 int

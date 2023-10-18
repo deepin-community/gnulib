@@ -7,11 +7,11 @@ lib/stat-time.c
 m4/stat-time.m4
 
 Depends-on:
-time
+time-h
 errno
 extensions
 extern-inline
-intprops
+stdckdint
 
 configure.ac:
 gl_STAT_TIME

@@ -10,17 +10,17 @@ Documentation:@*
 @url{https://www.gnu.org/software/libc/manual/html_node/Dynamic-Output.html}.
 @end ifnotinfo
 
-Gnulib module: obstack-printf or obstack-printf-posix
+Gnulib module: obstack-printf or obstack-printf-posix or obstack-printf-gnu
 
 Portability problems fixed by either Gnulib module
-@code{obstack-printf} or @code{obstack-printf-posix}:
+@code{obstack-printf} or @code{obstack-printf-posix} or @code{obstack-printf-gnu}:
 @itemize
 @item
 This function is missing on all non-glibc platforms:
 macOS 11.1, FreeBSD 13.0, NetBSD 9.0, OpenBSD 6.7, Minix 3.1.8, AIX 5.1, HP-UX 11, IRIX 6.5, Solaris 11.4, Cygwin 2.9, mingw, MSVC 14, Android 9.0.
 @end itemize
 
-Portability problems fixed by Gnulib module @code{obstack-printf-posix}:
+Portability problems fixed by either Gnulib module @code{obstack-printf-posix} or @code{obstack-printf-gnu}:
 @itemize
 @item
 This function does not support size specifiers as in C99 (@code{hh}, @code{ll},
@@ -38,6 +38,11 @@ This function does not support the @samp{a} and @samp{A} directives on some
 platforms:
 glibc-2.3.6, NetBSD 9.0, OpenBSD 4.0, AIX 5.2, HP-UX 11,
 IRIX 6.5, Solaris 11.4, Cygwin 1.5.x, mingw, MSVC 14.
+@item
+This function does not support the @samp{b} directive, required by ISO C23,
+on some platforms:
+glibc 2.34, musl libc, macOS 12.5, FreeBSD 13.1, NetBSD 9.0, OpenBSD 7.2,
+AIX 7.2, HP-UX 11, IRIX 6.5, Solaris 11.4, Cygwin 2.9.0, mingw, MSVC 14.
 @item
 This function does not support the @samp{F} directive on some platforms:
 NetBSD 3.0, AIX 5.1, HP-UX 11.23, IRIX 6.5, Solaris 9,
@@ -72,11 +77,22 @@ This function does not support precisions larger than 512 or 1024 in integer,
 floating-point and pointer output on some platforms:
 Solaris 10/x86, mingw, MSVC/clang.
 @item
+This function produces wrong output for the @samp{lc} directive with a NUL
+wide character argument on some platforms:
+glibc 2.35, FreeBSD 13.1, NetBSD 9.0, OpenBSD 7.2, macOS 12.5, AIX 7.2, Solaris 11.4, and others.
+@item
 This function can crash in out-of-memory conditions on some platforms:
 FreeBSD 13.0, NetBSD 5.0.
 @item
 This function does not fully support the @samp{n} directive on some platforms:
 HP-UX 11, mingw, MSVC 14.
+@end itemize
+
+Portability problems fixed by Gnulib module @code{obstack-printf-gnu}:
+@itemize
+@item
+This function does not support the @samp{B} directive on some platforms:
+glibc 2.34, FreeBSD 13.1, NetBSD 9.0, OpenBSD 7.2, macOS 12.5, AIX 7.2, Solaris 11.4, and others.
 @end itemize
 
 Portability problems not fixed by Gnulib:

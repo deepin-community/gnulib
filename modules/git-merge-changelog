@@ -7,7 +7,9 @@ lib/git-merge-changelog.c
 Depends-on:
 c99
 getopt-gnu
+idx
 stdbool
+stdint
 stdlib
 error
 read-file

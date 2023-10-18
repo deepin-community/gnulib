@@ -9,6 +9,7 @@ m4/supersede.m4
 Depends-on:
 c99
 fcntl-h
+stdbool
 sys_stat
 clean-temp
 tempname
@@ -34,8 +35,10 @@ Include:
 "supersede.h"
 
 Link:
-$(LIB_GETRANDOM)
-$(LIB_CLOCK_GETTIME)
+$(LIB_ACL)
+$(QCOPY_ACL_LIB)
+$(GETRANDOM_LIB)
+$(CLOCK_TIME_LIB)
 $(LIBTHREAD)
 
 License:

@@ -1,5 +1,5 @@
 /* Convert 32-bit wide character to multibyte character.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -28,6 +28,10 @@
 #include "localcharset.h"
 #include "streq.h"
 
+#if GL_CHAR32_T_IS_UNICODE
+# include "lc-charset-unicode.h"
+#endif
+
 size_t
 c32rtomb (char *s, char32_t wc, mbstate_t *ps)
 #undef c32rtomb
@@ -42,7 +46,7 @@ c32rtomb (char *s, char32_t wc, mbstate_t *ps)
 
   return c32rtomb (s, wc, ps);
 
-#elif _GL_LARGE_CHAR32_T
+#elif _GL_SMALL_WCHAR_T
 
   if (s == NULL)
     return wcrtomb (NULL, 0, ps);
@@ -111,6 +115,17 @@ c32rtomb (char *s, char32_t wc, mbstate_t *ps)
 #else
 
   /* char32_t and wchar_t are equivalent.  */
+# if GL_CHAR32_T_IS_UNICODE && GL_CHAR32_T_VS_WCHAR_T_NEEDS_CONVERSION
+  if (wc != 0)
+    {
+      wc = unicode_to_locale_encoding (wc);
+      if (wc == 0)
+        {
+          errno = EILSEQ;
+          return (size_t)(-1);
+        }
+    }
+# endif
   return wcrtomb (s, (wchar_t) wc, ps);
 
 #endif

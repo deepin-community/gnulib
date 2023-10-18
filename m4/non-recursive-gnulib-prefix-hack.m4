@@ -1,4 +1,4 @@
-dnl Copyright (C) 2012-2021 Free Software Foundation, Inc.
+dnl Copyright (C) 2012-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -9,9 +9,6 @@ dnl with a value ending in ".h" to reflect that these files are located
 dnl in the directory specified by LIB_DIR.
 AC_DEFUN([gl_NON_RECURSIVE_GNULIB_PREFIX_HACK],
 [
-  # Tell AC_LIBSOURCES where to find source files like alloca.c.
-  AC_CONFIG_LIBOBJ_DIR([$1])
-
   # This hack originated in bison.  It is required when using non-recursive
   # automake rules to build from gnulib-provided lib/ sources.  Hence, LIB_DIR
   # is usually simply "lib".  Those rules use the list of names like "fchdir.o"

@@ -1,6 +1,6 @@
 /* Declarations of functions and data types used for SM3 sum library
    function.
-   Copyright (C) 2017-2021 Free Software Foundation, Inc.
+   Copyright (C) 2017-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -27,10 +27,18 @@
 #ifndef SM3_H
 # define SM3_H 1
 
+/* This file uses HAVE_OPENSSL_SM3.  */
+# if !_GL_CONFIG_H_INCLUDED
+#  error "Please include config.h first."
+# endif
+
 # include <stdio.h>
 # include <stdint.h>
 
 # if HAVE_OPENSSL_SM3
+#  ifndef OPENSSL_API_COMPAT
+#   define OPENSSL_API_COMPAT 0x10101000L /* FIXME: Use OpenSSL 1.1+ API.  */
+#  endif
 #  include <openssl/sm3.h>
 # endif
 
@@ -90,6 +98,7 @@ extern void *sm3_buffer (const char *buffer, size_t len,
                          void *restrict resblock);
 
 # endif
+
 /* Compute SM3 message digest for bytes read from STREAM.  The
    resulting message digest number will be written into the 32 bytes
    beginning at RESBLOCK.  */

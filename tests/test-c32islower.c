@@ -1,9 +1,9 @@
 /* Test of c32islower() function.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -128,7 +128,7 @@ main (int argc, char *argv[])
           /* U+00B2 SUPERSCRIPT TWO */
           is = for_character ("\262", 1);
           ASSERT (is == 0);
-        #if !(defined __GLIBC__ || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
+        #if !(defined __GLIBC__ || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __NetBSD__ || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
           /* U+00B5 MICRO SIGN */
           is = for_character ("\265", 1);
           ASSERT (is == 0);
@@ -202,7 +202,7 @@ main (int argc, char *argv[])
           /* U+00B2 SUPERSCRIPT TWO */
           is = for_character ("\302\262", 2);
           ASSERT (is == 0);
-        #if !(defined __GLIBC__ || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined _AIX || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
+        #if !(defined __GLIBC__ || defined MUSL_LIBC || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined _AIX || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
           /* U+00B5 MICRO SIGN */
           is = for_character ("\302\265", 2);
           ASSERT (is == 0);
@@ -267,6 +267,10 @@ main (int argc, char *argv[])
 
       case '4':
         /* Locale encoding is GB18030.  */
+        #if GL_CHAR32_T_IS_UNICODE && (defined __NetBSD__ || defined __sun)
+        fputs ("Skipping test: The GB18030 converter in this system's iconv is broken.\n", stderr);
+        return 77;
+        #endif
         {
           /* U+00B2 SUPERSCRIPT TWO */
           is = for_character ("\201\060\205\065", 4);

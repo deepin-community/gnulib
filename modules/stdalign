@@ -1,14 +1,22 @@
 Description:
-A <stdalign.h> that nearly conforms to ISO C11 and C++11.
+alignas and alignof that are like C23 and C++11.
+
+Notice:
+The stdalign module is deprecated.
+New code should use the alignasof module, and not include <stdalign.h>.
 
 Files:
 lib/stdalign.in.h
 m4/stdalign.m4
 
 Depends-on:
+alignasof
+gen-header
 
 configure.ac:
 gl_STDALIGN_H
+gl_CONDITIONAL_HEADER([stdalign.h])
+AC_PROG_MKDIR_P
 
 Makefile.am:
 BUILT_SOURCES += $(STDALIGN_H)
@@ -17,11 +25,16 @@ BUILT_SOURCES += $(STDALIGN_H)
 # doesn't have one that works.
 if GL_GENERATE_STDALIGN_H
 stdalign.h: stdalign.in.h $(top_builddir)/config.status
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  cat $(srcdir)/stdalign.in.h; \
-	} > $@-t && \
-	mv $@-t $@
+@NMD@	$(AM_V_GEN)$(MKDIR_P) '%reldir%'
+	$(gl_V_at)$(SED_HEADER_STDOUT) \
+	      -e 's|@''GUARD_PREFIX''@|${gl_include_guard_prefix}|g' \
+	      -e 's|@''HAVE_STDALIGN_H''@|$(HAVE_STDALIGN_H)|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
+	      -e 's|@''NEXT_STDALIGN_H''@|$(NEXT_STDALIGN_H)|g' \
+	      $(srcdir)/stdalign.in.h > $@-t
+	$(AM_V_at)mv $@-t $@
 else
 stdalign.h: $(top_builddir)/config.status
 	rm -f $@
@@ -29,10 +42,9 @@ endif
 MOSTLYCLEANFILES += stdalign.h stdalign.h-t
 
 Include:
-<stdalign.h>
 
 License:
 LGPLv2+
 
 Maintainer:
-Paul Eggert
+all

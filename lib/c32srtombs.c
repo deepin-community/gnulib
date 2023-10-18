@@ -1,9 +1,9 @@
 /* Convert 32-bit wide string to string.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -18,12 +18,13 @@
 
 #include <config.h>
 
+#define IN_C32SRTOMBS
 /* Specification.  */
 #include <uchar.h>
 
 #include <wchar.h>
 
-#if (HAVE_WORKING_MBRTOC32 && !defined __GLIBC__) || _GL_LARGE_CHAR32_T
+#if (HAVE_WORKING_MBRTOC32 && !_GL_WCHAR_T_IS_UCS4) || (GL_CHAR32_T_IS_UNICODE && GL_CHAR32_T_VS_WCHAR_T_NEEDS_CONVERSION) || _GL_SMALL_WCHAR_T
 /* The char32_t encoding of a multibyte character may be different than its
    wchar_t encoding, or char32_t is wider than wchar_t.  */
 
@@ -42,10 +43,11 @@ extern mbstate_t _gl_c32srtombs_state;
 #else
 /* char32_t and wchar_t are equivalent.  */
 
-# include "verify.h"
+static_assert (sizeof (char32_t) == sizeof (wchar_t));
 
-verify (sizeof (char32_t) == sizeof (wchar_t));
-
+# if _GL_WCHAR_T_IS_UCS4
+_GL_EXTERN_INLINE
+# endif
 size_t
 c32srtombs (char *dest, const char32_t **srcp, size_t len, mbstate_t *ps)
 {

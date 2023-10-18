@@ -1,11 +1,11 @@
 /* Memory allocation with expensive empty allocations.
-   Copyright (C) 2003, 2008, 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2008, 2010-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003,
    based on prior work by Jim Meyering.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -29,11 +29,14 @@
    and realloc() this way; on such platforms the workalikes are aliased
    to the original malloc()/realloc() functions.  */
 
-#include <stdlib.h>
-
-#ifndef _GL_INLINE_HEADER_BEGIN
+/* This file uses _GL_INLINE_HEADER_BEGIN, _GL_INLINE, _GL_ATTRIBUTE_ALLOC_SIZE,
+   _GL_ATTRIBUTE_MALLOC.  */
+#if !_GL_CONFIG_H_INCLUDED
  #error "Please include config.h first."
 #endif
+
+#include <stdlib.h>
+
 _GL_INLINE_HEADER_BEGIN
 #ifndef EEALLOC_INLINE
 # define EEALLOC_INLINE _GL_INLINE

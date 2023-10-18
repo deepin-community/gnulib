@@ -1,10 +1,10 @@
 /* Creation of autonomous subprocesses.
-   Copyright (C) 2001-2003, 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2008-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2001.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -17,8 +17,6 @@
 
 #ifndef _EXECUTE_H
 #define _EXECUTE_H
-
-#include <stdbool.h>
 
 /* Execute a command, optionally redirecting any of the three standard file
    descriptors to /dev/null.  Return its exit code.

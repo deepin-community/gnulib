@@ -9,7 +9,7 @@ lib/mbsrtoc32s-state.c
 Depends-on:
 uchar
 wchar
-verify
+assert-h
 mbrtoc32
 strnlen1
 mbsrtowcs       [test $SMALL_WCHAR_T = 0]
@@ -26,7 +26,9 @@ Include:
 <uchar.h>
 
 Link:
-$(LIB_MBRTOWC)
+$(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
+$(MBRTOWC_LIB)
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
 
 License:
 LGPLv2+

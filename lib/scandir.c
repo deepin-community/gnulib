@@ -1,10 +1,10 @@
-/* Copyright (C) 1992-1998, 2000, 2002-2003, 2009-2021 Free Software
+/* Copyright (C) 1992-1998, 2000, 2002-2003, 2009-2023 Free Software
    Foundation, Inc.
    This file is part of the GNU C Library.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -62,8 +62,19 @@
    therefore save some unnecessary recursion in fchdir.c and opendir_safer.c.
    FIXME - if the kernel ever adds support for multi-thread safety for
    avoiding standard fds, then we should use opendir_safer.  */
-# undef opendir
-# undef closedir
+# ifdef GNULIB_defined_DIR
+#  undef DIR
+#  undef opendir
+#  undef closedir
+#  undef readdir
+# else
+#  ifdef GNULIB_defined_opendir
+#   undef opendir
+#  endif
+#  ifdef GNULIB_defined_closedir
+#   undef closedir
+#  endif
+# endif
 #endif
 
 #ifndef SCANDIR_CANCEL

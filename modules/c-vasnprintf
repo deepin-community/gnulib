@@ -22,7 +22,10 @@ m4/math_h.m4
 m4/exponentd.m4
 
 Depends-on:
+assert-h
 attribute
+limits-h
+stdint
 stdio
 isnand-nolibm
 isnanl-nolibm
@@ -39,11 +42,10 @@ xsize
 errno
 memchr
 multiarch
-verify
 
 configure.ac:
 AC_REQUIRE([AC_C_RESTRICT])
-gl_PREREQ_VASNPRINTF_WITH_EXTRAS
+gl_PREREQ_VASNPRINTF_WITH_POSIX_EXTRAS
 
 Makefile.am:
 lib_SOURCES += c-vasnprintf.c

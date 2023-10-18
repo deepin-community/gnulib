@@ -10,9 +10,9 @@ tests/macros.h
 Depends-on:
 fcntl-h
 ignore-value
-intprops
 nanosleep
 openat
+stdckdint
 timespec
 dup
 utimecmp
@@ -22,5 +22,5 @@ configure.ac:
 Makefile.am:
 TESTS += test-fdutimensat
 check_PROGRAMS += test-fdutimensat
-test_fdutimensat_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) \
-  $(LIB_NANOSLEEP) @LIBINTL@
+test_fdutimensat_LDADD = $(LDADD) $(CLOCK_TIME_LIB) \
+  $(NANOSLEEP_LIB) @LIBINTL@

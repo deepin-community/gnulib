@@ -1,5 +1,5 @@
 /* Substitute for <sys/utsname.h>.
-   Copyright (C) 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -34,6 +34,11 @@
 #endif
 
 #define _@GUARD_PREFIX@_SYS_UTSNAME_H
+
+/* This file uses GNULIB_POSIXCHECK, HAVE_RAW_DECL_*.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 /* The definition of _GL_ARG_NONNULL is copied here.  */
 

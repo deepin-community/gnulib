@@ -1,9 +1,9 @@
 /* Test of login_tty() function.
-   Copyright (C) 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -17,7 +17,7 @@
 #include <config.h>
 
 /* Specification.  */
-extern int login_tty (int);
+#include <utmp.h>
 
 #include <errno.h>
 #include <pty.h>
@@ -53,7 +53,8 @@ main ()
   }
 
   /* From here on, we cannot use stderr for error messages any more.
-     If a test fails, just abort.  */
+     If a test fails, write error information into a file named 'err',
+     then abort.  */
 
   /* Check that fd = 0, 1, 2 are now open to the controlling terminal for the
      current process and that it is a session of its own.  */
@@ -61,12 +62,38 @@ main ()
     int fd;
     for (fd = 0; fd < 3; fd++)
       if (!(tcgetpgrp (fd) == getpid ()))
-        abort ();
+        {
+          freopen ("err", "w+", stderr);
+          fprintf (stderr, "tcgetpgrp(%d) = %ld whereas getpid() = %ld\n",
+                   fd, (long) tcgetpgrp (fd), (long) getpid ());
+          fflush (stderr);
+          abort ();
+        }
     for (fd = 0; fd < 3; fd++)
       {
-        int sid = tcgetsid (fd);
-        if (!(sid == -1 ? errno == ENOSYS : sid == getpid ()))
-          abort ();
+        pid_t sid = tcgetsid (fd);
+        if (sid == -1)
+          {
+            if (!(errno == ENOSYS))
+              {
+                freopen ("err", "w+", stderr);
+                fprintf (stderr, "tcgetsid(%d) = -1 and errno = %d\n",
+                         fd, errno);
+                fflush (stderr);
+                abort ();
+              }
+          }
+        else
+          {
+            if (!(sid == getpid ()))
+              {
+                freopen ("err", "w+", stderr);
+                fprintf (stderr, "tcgetsid(%d) = %ld whereas getpid() = %ld\n",
+                         fd, (long) tcgetsid (fd), (long) getpid ());
+                fflush (stderr);
+                abort ();
+              }
+          }
       }
   }
 

@@ -8,7 +8,7 @@ Last-Update: 2019-10-08
  1 file changed, 5 insertions(+)
 
 diff --git a/Makefile b/Makefile
-index ef6f36f..2766f40 100644
+index 85362c8..1953406 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -22,6 +22,11 @@ info html dvi pdf:

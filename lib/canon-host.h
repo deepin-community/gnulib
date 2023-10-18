@@ -1,12 +1,12 @@
 /* Host name canonicalization
 
-   Copyright (C) 2005, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2009-2023 Free Software Foundation, Inc.
 
    Written by Derek Price <derek@ximbiot.com>
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -19,6 +19,11 @@
 
 #ifndef CANON_HOST_H
 # define CANON_HOST_H 1
+
+/* This file uses _GL_ATTRIBUTE_MALLOC.  */
+# if !_GL_CONFIG_H_INCLUDED
+#  error "Please include config.h first."
+# endif
 
 # include <stdlib.h>
 

@@ -1,9 +1,9 @@
 /* vasprintf and asprintf, in C locale.
-   Copyright (C) 2002-2004, 2006-2021 Free Software Foundation, Inc.
+   Copyright (C) 2002-2004, 2006-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -16,6 +16,11 @@
 
 #ifndef _C_VASPRINTF_H
 #define _C_VASPRINTF_H
+
+/* This file uses _GL_ATTRIBUTE_FORMAT.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 /* Get va_list.  */
 #include <stdarg.h>

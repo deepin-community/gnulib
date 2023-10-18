@@ -1,5 +1,5 @@
 /* Non-blocking I/O for pipe or socket descriptors.
-   Copyright (C) 2011-2021 Free Software Foundation, Inc.
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -16,8 +16,6 @@
 
 #ifndef _NONBLOCKING_H
 #define _NONBLOCKING_H
-
-#include <stdbool.h>
 
 /* Non-blocking I/O is an I/O mode by which read(), write() calls avoid
    blocking the current thread.  When non-blocking is enabled:

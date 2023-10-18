@@ -9,7 +9,9 @@ m4/xstrtol.m4
 
 Depends-on:
 assure
-inttypes-incomplete
+intprops
+stdckdint
+stdint
 
 configure.ac:
 gl_XSTRTOL

@@ -4,10 +4,16 @@
 
 POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/mbstowcs.html}
 
-Gnulib module: ---
+Gnulib module: mbstowcs
 
 Portability problems fixed by Gnulib:
 @itemize
+@item
+In the C or POSIX locales, this function can return @code{(size_t) -1}
+and set @code{errno} to @code{EILSEQ}:
+@c https://sourceware.org/bugzilla/show_bug.cgi?id=19932
+@c https://sourceware.org/bugzilla/show_bug.cgi?id=29511
+glibc 2.35.
 @end itemize
 
 Portability problems not fixed by Gnulib:

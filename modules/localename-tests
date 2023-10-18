@@ -10,10 +10,10 @@ setlocale
 strdup
 
 configure.ac:
-AC_CHECK_FUNCS_ONCE([newlocale])
+gl_CHECK_FUNCS_ANDROID([newlocale], [[#include <locale.h>]])
 
 Makefile.am:
 TESTS += test-localename
 check_PROGRAMS += test-localename
-test_localename_LDADD = $(LDADD) $(LIB_SETLOCALE) @INTL_MACOSX_LIBS@ $(LIBTHREAD)
+test_localename_LDADD = $(LDADD) $(SETLOCALE_LIB) @INTL_MACOSX_LIBS@ $(LIBTHREAD)
 

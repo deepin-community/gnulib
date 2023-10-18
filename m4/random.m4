@@ -1,5 +1,5 @@
-# random.m4 serial 4
-dnl Copyright (C) 2012-2021 Free Software Foundation, Inc.
+# random.m4 serial 6
+dnl Copyright (C) 2012-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -19,28 +19,39 @@ AC_DEFUN([gl_FUNC_RANDOM],
        [gl_cv_func_random=yes],
        [gl_cv_func_random=no])
     ])
+  gl_CHECK_FUNCS_ANDROID([initstate], [[#include <stdlib.h>]])
+  gl_CHECK_FUNCS_ANDROID([setstate], [[#include <stdlib.h>]])
   if test $gl_cv_func_random = no; then
     HAVE_RANDOM=0
     HAVE_INITSTATE=0
     HAVE_SETSTATE=0
   else
-    AC_CHECK_FUNCS([initstate setstate])
     if test $ac_cv_func_initstate = no; then
       HAVE_INITSTATE=0
     fi
     if test $ac_cv_func_setstate = no; then
       HAVE_SETSTATE=0
     fi
-    if test $ac_cv_func_initstate = no || test $ac_cv_func_setstate = no; then
-      dnl In order to define initstate or setstate, we need to define all the
-      dnl functions at once.
-      REPLACE_RANDOM=1
-      if test $ac_cv_func_initstate = yes; then
-        REPLACE_INITSTATE=1
-      fi
-      if test $ac_cv_func_setstate = yes; then
-        REPLACE_SETSTATE=1
-      fi
+  fi
+  if test $HAVE_INITSTATE = 0; then
+    case "$gl_cv_onwards_func_initstate" in
+      future*) REPLACE_INITSTATE=1 ;;
+    esac
+  fi
+  if test $HAVE_SETSTATE = 0; then
+    case "$gl_cv_onwards_func_setstate" in
+      future*) REPLACE_SETSTATE=1 ;;
+    esac
+  fi
+  if test $ac_cv_func_initstate = no || test $ac_cv_func_setstate = no; then
+    dnl In order to define initstate or setstate, we need to define all the
+    dnl functions at once.
+    REPLACE_RANDOM=1
+    if test $ac_cv_func_initstate = yes; then
+      REPLACE_INITSTATE=1
+    fi
+    if test $ac_cv_func_setstate = yes; then
+      REPLACE_SETSTATE=1
     fi
   fi
 

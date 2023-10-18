@@ -18,29 +18,55 @@
 -Walloca				we like alloca in small doses
 -Walloca-larger-than=<number>		FIXME: choose something sane?
 -Wampersand				fortran
+-Wanalyzer-allocation-size		enabled by -fanalyzer
+-Wanalyzer-deref-before-check		enabled by -fanalyzer
 -Wanalyzer-double-fclose		enabled by -fanalyzer
 -Wanalyzer-double-free			enabled by -fanalyzer
 -Wanalyzer-exposure-through-output-file	enabled by -fanalyzer
+-Wanalyzer-exposure-through-uninit-copy	enabled by -fanalyzer
+-Wanalyzer-fd-access-mode-mismatch	enabled by -fanalyzer
+-Wanalyzer-fd-double-close		enabled by -fanalyzer
+-Wanalyzer-fd-leak			enabled by -fanalyzer
+-Wanalyzer-fd-phase-mismatch		enabled by -fanalyzer
+-Wanalyzer-fd-type-mismatch		enabled by -fanalyzer
+-Wanalyzer-fd-use-after-close		enabled by -fanalyzer
+-Wanalyzer-fd-use-without-check		enabled by -fanalyzer
 -Wanalyzer-file-leak			enabled by -fanalyzer
 -Wanalyzer-free-of-non-heap		enabled by -fanalyzer
+-Wanalyzer-imprecise-fp-arithmetic	enabled by -fanalyzer
+-Wanalyzer-infinite-recursion		enabled by -fanalyzer
+-Wanalyzer-jump-through-null		enabled by -fanalyzer
 -Wanalyzer-malloc-leak			enabled by -fanalyzer
 -Wanalyzer-mismatching-deallocation	enabled by -fanalyzer
 -Wanalyzer-null-argument		enabled by -fanalyzer
 -Wanalyzer-null-dereference		enabled by -fanalyzer
+-Wanalyzer-out-of-bounds		enabled by -fanalyzer
 -Wanalyzer-possible-null-argument	enabled by -fanalyzer
 -Wanalyzer-possible-null-dereference	enabled by -fanalyzer
+-Wanalyzer-putenv-of-auto-var		enabled by -fanalyzer
 -Wanalyzer-shift-count-negative		enabled by -fanalyzer
 -Wanalyzer-shift-count-overflow		enabled by -fanalyzer
 -Wanalyzer-stale-setjmp-buffer		implied by -fanalyzer
--Wanalyzer-tainted-array-index		FIXME maybe? too much noise
+-Wanalyzer-tainted-allocation-size	FIXME requires -fanalyzer-checker=taint
+-Wanalyzer-tainted-array-index		FIXME requires -fanalyzer-checker=taint
+-Wanalyzer-tainted-assertion		FIXME requires -fanalyzer-checker=taint
+-Wanalyzer-tainted-divisor		FIXME requires -fanalyzer-checker=taint
+-Wanalyzer-tainted-offset		FIXME requires -fanalyzer-checker=taint
+-Wanalyzer-tainted-size			FIXME requires -fanalyzer-checker=taint
+-Wanalyzer-va-arg-type-mismatch		enabled by -fanalyzer
+-Wanalyzer-va-list-exhausted		enabled by -fanalyzer
+-Wanalyzer-va-list-leak			enabled by -fanalyzer
+-Wanalyzer-va-list-use-after-va-end	enabled by -fanalyzer
 -Wanalyzer-too-complex			enabled by -fanalyzer
 -Wanalyzer-unsafe-call-within-signal-handler	enabled by -fanalyzer
 -Wanalyzer-use-after-free		enabled by -fanalyzer
 -Wanalyzer-use-of-pointer-in-stale-stack-frame	enabled by -fanalyzer
+-Wanalyzer-use-of-uninitialized-value	enabled by -fanalyzer
 -Wanalyzer-write-to-const		enabled by -fanalyzer
 -Wanalyzer-write-to-string-literal	enabled by -fanalyzer
 -Warray-bounds				covered by -Warray-bounds=
 -Warray-bounds=<0,2>			handled specially by gl_MANYWARN_ALL_GCC
+-Warray-compare				enabled by -Wall
 -Warray-parameter			enabled by -Wall
 -Warray-parameter=<0,2>			enabled by -Wall
 -Warray-temporaries			fortran
@@ -49,6 +75,8 @@
 -Wattribute-alias=<0,2>			handled specially by gl_MANYWARN_ALL_GCC
 -Wattribute-warning			default
 -Wattributes				default
+-Wbidi-chars				handled specially by gl_MANYWARN_ALL_GCC
+-Wbidi-chars=				handled specially by gl_MANYWARN_ALL_GCC
 -Wbool-compare				enabled by -Wall
 -Wbool-operation			enabled by -Wall
 -Wbuiltin-declaration-mismatch		default
@@ -56,10 +84,15 @@
 -Wc++-compat				only useful for code meant to be compiled by a C++ compiler
 -Wc++0x-compat				c++
 -Wc++11-compat				c++
+-Wc++11-extensions			c++
 -Wc++14-compat				c++
+-Wc++14-extensions			c++
 -Wc++17-compat				c++
+-Wc++17-extensions			c++
 -Wc++1z-compat				c++
 -Wc++20-compat				c++
+-Wc++20-extensions			c++
+-Wc++23-extensions			c++
 -Wc++2a-compat				c++
 -Wc-binding-type			fortran
 -Wc11-c2x-compat			c compatibility
@@ -72,6 +105,7 @@
 -Wcast-result				D
 -Wcatch-value				c++
 -Wcatch-value=<0,3>			c++
+-Wchanges-meaning			c++
 -Wchar-subscripts			enabled by -Wall
 -Wcharacter-truncation			fortran
 -Wchkp					deprecated
@@ -82,15 +116,20 @@
 -Wcomment				enabled by -Wall
 -Wcomments				alias for -Wcomment
 -Wcompare-reals				fortran
+-Wcomplain-wrong-lang			default
 -Wconditionally-supported		c++ and objc++
 -Wconversion				FIXME maybe? too much noise; encourages bad changes
 -Wconversion-extra			fortran
 -Wconversion-null			c++ and objc++
+-Wcoverage-invalid-line-number		default if --coverage
 -Wcoverage-mismatch			default
 -Wcpp					default
 -Wctad-maybe-unsupported		c++ and objc++
 -Wctor-dtor-privacy			c++
 -Wdangling-else				enabled by -Wparentheses
+-Wdangling-pointer			enabled by -Wall
+-Wdangling-pointer=<0,2>		enabled by -Wall
+-Wdangling-reference			c++ and objc++
 -Wdeclaration-after-statement		needed only for pre-C99, so obsolete
 -Wdelete-incomplete			c++ and objc++
 -Wdelete-non-virtual-dtor		c++
@@ -110,6 +149,7 @@
 -Wempty-body				enabled by -Wextra
 -Wenum-compare				enabled by -Wall
 -Wenum-conversion			enabled by -Wextra
+-Wenum-int-mismatch			enabled by -Wall
 -Wendif-labels				default
 -Werror-implicit-function-declaration	deprecated
 -Wexceptions				c++ and objc++
@@ -147,17 +187,21 @@
 -Wimplicit-procedure			fortran
 -Winaccessible-base			c++ and objc++
 -Wincompatible-pointer-types		default
+-Winfinite-recursion			enabled by -Wall
 -Winherited-variadic-ctor		c++
 -Winit-list-lifetime			c++ and objc++
 -Wint-conversion			default
 -Wint-in-bool-context			enabled by -Wall
 -Wint-to-pointer-cast			default
 -Winteger-division			fortran
+-Winterference-size			c++
 -Wintrinsic-shadow			fortran
 -Wintrinsics-std			fortran
+-Winvalid-constexpr			c++
 -Winvalid-imported-macros		c++ and objc++
 -Winvalid-memory-model			default
 -Winvalid-offsetof			c++ and objc++
+-Winvalid-utf8				enabled by -finput-charset=UTF-8
 -Wjump-misses-init			only useful for code meant to be compiled by a C++ compiler
 -Wlarger-than-				gcc --help=warnings artifact
 -Wlarger-than=<byte-size>		FIXME: choose something sane?
@@ -181,6 +225,8 @@
 -Wmissing-noreturn			obsolescent
 -Wmissing-parameter-type		enabled by -Wextra
 -Wmissing-profile			default
+-Wmissing-requires			default, c++
+-Wmissing-template-keyword		default, c++
 -Wmultichar				default
 -Wmultiple-inheritance			c++ and objc++
 -Wmultistatement-macros			enabled by -Wall
@@ -205,8 +251,10 @@
 -Wodr					default
 -Wold-style-cast			c++ and objc++
 -Wold-style-declaration			enabled by -Wextra
+-Wopenacc-parallelism			OpenACC
 -Woverflow				default
 -Woverloaded-virtual			c++
+-Woverloaded-virtual=<0,2>		c++
 -Woverride-init				enabled by -Wextra
 -Woverride-init-side-effects		c++ and objc++
 -Woverwrite-recursive			fortran
@@ -242,6 +290,7 @@
 -Wscalar-storage-order			default
 -Wselector				objc and objc++
 -Wsequence-point			enabled by -Wall
+-Wself-move				c++ and objc++
 -Wshadow-compatible-local		covered by -Wshadow
 -Wshadow-ivar				objc
 -Wshadow-local				covered by -Wshadow
@@ -290,12 +339,14 @@
 -Wtraditional				obsolescent
 -Wtraditional-conversion		obsolescent
 -Wtrigraphs				enabled by -Wall
+-Wtrivial-auto-var-init			subsumed by -Wmaybe-uninitialized
 -Wtsan					default
 -Wtype-limits				enabled by -Wextra
 -Wundeclared-selector			objc and objc++
 -Wundef					FIXME maybe? too many false positives
 -Wundefined-do-loop			fortran
 -Wunderflow				fortran
+-Wunicode				default
 -Wunreachable-code			obsolescent no-op
 -Wunsuffixed-float-constants		triggers warning in gnulib's timespec.h
 -Wunused				enabled by -Wall
@@ -311,6 +362,8 @@
 -Wunused-result				enabled by -Wunused
 -Wunused-value				enabled by -Wunused
 -Wunused-variable			enabled by -Wunused
+-Wuse-after-free			handled specially by gl_MANYWARN_ALL_GCC
+-Wuse-after-free=<0,3>			handled specially by gl_MANYWARN_ALL_GCC
 -Wuse-without-only			fortran
 -Wuseless-cast				c++ and objc++
 -Wvarargs				default
@@ -321,6 +374,7 @@
 -Wvla-parameter				enabled by -Wall
 -Wvolatile				c++ and objc++
 -Wvolatile-register-var			enabled by -Wall
+-Wxor-used-as-pow			default
 -Wzero-as-null-pointer-constant		c++ and objc++
 -Wzero-length-bounds			enabled by -Wall
 -Wzerotrip				fortran

@@ -1,11 +1,11 @@
 #!/bin/sh
 # install-reloc - install a program including a relocating wrapper
-# Copyright (C) 2003-2021 Free Software Foundation, Inc.
+# Copyright (C) 2003-2023 Free Software Foundation, Inc.
 # Written by Bruno Haible <bruno@clisp.org>, 2003.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -237,7 +237,6 @@ func_create_wrapper ()
                "$srcdir"/readlink.c \
                "$srcdir"/stat.c \
                "$srcdir"/canonicalize-lgpl.c \
-               "$srcdir"/malloc/scratch_buffer_dupfree.c \
                "$srcdir"/malloc/scratch_buffer_grow.c \
                "$srcdir"/malloc/scratch_buffer_grow_preserve.c \
                "$srcdir"/malloc/scratch_buffer_set_array_size.c \
@@ -263,7 +262,6 @@ func_create_wrapper ()
         readlink.o \
         stat.o \
         canonicalize-lgpl.o \
-        scratch_buffer_dupfree.o \
         scratch_buffer_grow.o \
         scratch_buffer_grow_preserve.o \
         scratch_buffer_set_array_size.o \

@@ -11,12 +11,12 @@ dirname-lgpl
 fstatat
 hash
 stat-time
-time
+time-h
 utimensat
 intprops
 stdbool
 stdint
-verify
+assert-h
 
 configure.ac:
 gl_UTIMECMP

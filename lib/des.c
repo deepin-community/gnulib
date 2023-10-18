@@ -1,5 +1,5 @@
 /* des.c --- DES and Triple-DES encryption/decryption Algorithm
- * Copyright (C) 1998-1999, 2001-2007, 2009-2021 Free Software Foundation, Inc.
+ * Copyright (C) 1998-1999, 2001-2007, 2009-2023 Free Software Foundation, Inc.
  *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -50,7 +50,7 @@
  *     unsigned char key[8];
  *     unsigned char plaintext[8];
  *     unsigned char ciphertext[8];
- *     unsigned char recoverd[8];
+ *     unsigned char recovered[8];
  *     gl_des_ctx context;
  *
  *     // Fill 'key' and 'plaintext' with some data
@@ -63,7 +63,7 @@
  *     des_ecb_encrypt(&context, plaintext, ciphertext);
  *
  *     // To recover the original plaintext from ciphertext use:
- *     des_ecb_decrypt(&context, ciphertext, recoverd);
+ *     des_ecb_decrypt(&context, ciphertext, recovered);
  *
  *
  * Triple-DES Example
@@ -73,10 +73,10 @@
  *     unsigned char key3[8];
  *     unsigned char plaintext[8];
  *     unsigned char ciphertext[8];
- *     unsigned char recoverd[8];
+ *     unsigned char recovered[8];
  *     gl_3des_ctx context;
  *
- *     // If you would like to use two 64bit keys, fill 'key1' and'key2'
+ *     // If you would like to use two 64bit keys, fill 'key1' and 'key2'
  *     // then setup the encryption context:
  *     gl_3des_set2keys(&context, key1, key2);
  *
@@ -87,7 +87,7 @@
  *     gl_3des_ecb_encrypt(&context, plaintext, ciphertext);
  *
  *     // Decrypting ciphertext to recover the plaintext with Triple-DES
- *     gl_3des_ecb_decrypt(&context, ciphertext, recoverd);
+ *     gl_3des_ecb_decrypt(&context, ciphertext, recovered);
  */
 
 

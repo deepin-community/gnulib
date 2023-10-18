@@ -8,6 +8,10 @@ Gnulib module: stddef
 Portability problems fixed by Gnulib:
 @itemize
 @item
+Some platforms fail to provide @code{unreachable}, which was added in C23:
+GCC 13, clang 15, AIX with xlc 12.1, Solaris with Sun C 5.15, and others.
+
+@item
 Some platforms fail to provide @code{max_align_t}, which was added in C11:
 NetBSD 8.0, Solaris 11.0, and others.
 
@@ -35,6 +39,12 @@ it does not fulfil the expectations of other system header files.
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+@cindex null pointer type
+Some platforms fail to provide @code{nullptr_t},
+which Gnulib cannot usefully emulate:
+GCC 12, Clang 15, and other pre-2023 C compilers.
+
 @item
 Some platforms provide an @code{offsetof} macro that cannot be used in
 arbitrary expressions:

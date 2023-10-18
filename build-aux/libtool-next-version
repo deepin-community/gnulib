@@ -1,10 +1,10 @@
 #! /bin/sh
 #
-# Copyright (C) 2019-2021 Free Software Foundation, Inc.
+# Copyright (C) 2019-2023 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -42,7 +42,7 @@
 #   - It does not enforce that applying the third or fourth rule is only
 #     possible after applying the second rule.
 
-scriptversion=2021-04-11
+scriptversion=2022-01-27
 
 # func_usage
 # outputs to stdout the --help usage message.
@@ -98,7 +98,7 @@ func_tmpdir ()
   # Use the environment variable TMPDIR, falling back to /tmp. This allows
   # users to specify a different temporary directory, for example, if their
   # /tmp is filled up or too small.
-  : ${TMPDIR=/tmp}
+  : "${TMPDIR=/tmp}"
   {
     # Use the mktemp program if available. If not available, hide the error
     # message.

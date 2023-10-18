@@ -1,5 +1,5 @@
 /* Name of system error code.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -304,7 +304,7 @@ strerrorname_np (int errnum)
     case EBADCPU:         return "EBADCPU";
     #endif
     /* Linux, IRIX, Solaris, Cygwin */
-    #if defined EBADE
+    #if defined EBADE && EBADE != ECKSUM
     case EBADE:           return "EBADE";
     #endif
     /* Minix */
@@ -336,7 +336,7 @@ strerrorname_np (int errnum)
     case EBADMODE:        return "EBADMODE";
     #endif
     /* Linux, IRIX, Solaris, Cygwin */
-    #if defined EBADR
+    #if defined EBADR && EBADR != EFRAGS
     case EBADR:           return "EBADR";
     #endif
     /* Minix */
@@ -407,6 +407,10 @@ strerrorname_np (int errnum)
     #if defined ECKPT
     case ECKPT:           return "ECKPT";
     #endif
+    /* Solaris */
+    #if defined ECKSUM
+    case ECKSUM:          return "ECKSUM";
+    #endif
     /* IRIX */
     #if defined ECLOCKCPU
     case ECLOCKCPU:       return "ECLOCKCPU";
@@ -464,7 +468,7 @@ strerrorname_np (int errnum)
     case EDIED:           return "EDIED";
     #endif
     /* IRIX */
-    #if defined EDIRCORRUPTED
+    #if defined EDIRCORRUPTED && EDIRCORRUPTED != EFSCORRUPTED
     case EDIRCORRUPTED:   return "EDIRCORRUPTED";
     #endif
     /* FreeBSD */
@@ -488,7 +492,7 @@ strerrorname_np (int errnum)
     case EDONTREPLY:      return "EDONTREPLY";
     #endif
     /* FreeBSD */
-    #if defined EDOOFUS
+    #if defined EDOOFUS && EDOOFUS != EINVAL
     case EDOOFUS:         return "EDOOFUS";
     #endif
     /* Linux, HP-UX, Cygwin */
@@ -566,6 +570,10 @@ strerrorname_np (int errnum)
     /* Haiku */
     #if defined EFPOS
     case EFPOS:           return "EFPOS";
+    #endif
+    /* Solaris */
+    #if defined EFRAGS
+    case EFRAGS:          return "EFRAGS";
     #endif
     /* IRIX */
     #if defined EFSCORRUPTED
@@ -1016,7 +1024,7 @@ strerrorname_np (int errnum)
     case ENMFILE:         return "ENMFILE";
     #endif
     /* Linux, IRIX, Solaris, Cygwin */
-    #if defined ENOANO
+    #if defined ENOANO && ENOANO != ENOKEY
     case ENOANO:          return "ENOANO";
     #endif
     /* IRIX */

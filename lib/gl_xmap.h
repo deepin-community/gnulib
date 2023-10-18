@@ -1,10 +1,10 @@
 /* Abstract map data type, with out-of-memory checking.
-   Copyright (C) 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2018.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -18,12 +18,15 @@
 #ifndef _GL_XMAP_H
 #define _GL_XMAP_H
 
+/* This file uses _GL_INLINE_HEADER_BEGIN, _GL_INLINE,
+   _GL_ATTRIBUTE_RETURNS_NONNULL.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
+
 #include "gl_map.h"
 #include "xalloc.h"
 
-#ifndef _GL_INLINE_HEADER_BEGIN
- #error "Please include config.h first."
-#endif
 _GL_INLINE_HEADER_BEGIN
 #ifndef GL_XMAP_INLINE
 # define GL_XMAP_INLINE _GL_INLINE

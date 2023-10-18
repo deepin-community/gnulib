@@ -1,9 +1,9 @@
 /* Auxiliary code for filtering of data through a subprocess.
-   Copyright (C) 2012-2021 Free Software Foundation, Inc.
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -21,23 +21,6 @@
 #include "pipe-filter.h"
 
 #include <errno.h>
-#include <fcntl.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdlib.h>
 #include <unistd.h>
-#if defined _WIN32 && ! defined __CYGWIN__
-# include <windows.h>
-#else
-# include <signal.h>
-# include <sys/select.h>
-#endif
-
-#include "error.h"
-#include "spawn-pipe.h"
-#include "wait-process.h"
-#include "gettext.h"
-
-#define _(str) gettext (str)
 
 #include "pipe-filter-aux.h"

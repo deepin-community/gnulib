@@ -1,9 +1,9 @@
 /* Create a temporary file.
-   Copyright (C) 2007, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -22,7 +22,6 @@
 #include <stdio.h>
 
 #include <errno.h>
-#include <stdbool.h>
 
 #if defined _WIN32 && ! defined __CYGWIN__
 /* A native Windows platform.  */

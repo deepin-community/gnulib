@@ -3,6 +3,9 @@ Upstream-Contact: bug-gnulib@gnu.org
  <https://lists.gnu.org/mailman/listinfo/bug-gnulib>
 Source: <https://git.savannah.gnu.org/gitweb/?p=gnulib.git>
  <git://git.savannah.gnu.org/gnulib.git>
+
+Files: *
+Copyright: Free Software Foundation, Inc.
 License: custom-mostly-gpl
  The files in here are mostly copyright (C) Free Software Foundation, and
  are under assorted licenses.  Mostly, but not entirely, GPL.
@@ -24,10 +27,33 @@ License: custom-mostly-gpl
  Detailed copyright information follows, see debian/clscan/README
  in the gnulib source package for information on updating this.
 
+Files: debian/*
+Copyright: 2009-2014 Ian Beckwith <ianb@debian.org>
+           2006-2008 Daniel Baumann <daniel@debian.org>
+License: GPL-2.0-only
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 of the License.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 Files: debian/git-merge-changelog.pod
 Copyright: 2008-2010 Bruno Haible <bruno@clisp.org>
            2014 Ian Beckwith <ianb@debian.org>
-License: GPL-2+
+License: GPL-2.0-or-later
+
+Files: debian/clscan/*
+Copyright:
+ 2009 Ian Beckwith <ianb@erislabs.net>
+License: GPL-2.0-or-later
+
+License: GPL-2.0-or-later
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
@@ -39,24 +65,7 @@ License: GPL-2+
  GNU General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Files: debian/*
-Copyright: 2009-2014 Ian Beckwith <ianb@debian.org>
-           2006-2008 Daniel Baumann <daniel@debian.org>
-License: GPL-2
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
- .
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- .
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software Foundation,
- Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Files: modules/*
 Copyright: 2002-2014 Free Software Foundation, Inc.
@@ -90,9 +99,41 @@ License: other
   GNU Library General Public License Version 2                 LGPL-2
   GNU Lesser General Public License Version 3                  LGPL-3
 
+Files:
+ examples/hello-c-gnulib-automakesubdir-withtests/Makefile.am
+ examples/hello-c-gnulib-automakesubdir-withtests/autoclean.sh
+ examples/hello-c-gnulib-automakesubdir-withtests/autogen.sh
+ examples/hello-c-gnulib-automakesubdir-withtests/configure.ac
+ examples/hello-c-gnulib-automakesubdir-withtests/src/hello.c
+ examples/hello-c-gnulib-automakesubdir/Makefile.am
+ examples/hello-c-gnulib-automakesubdir/autoclean.sh
+ examples/hello-c-gnulib-automakesubdir/autogen.sh
+ examples/hello-c-gnulib-automakesubdir/configure.ac
+ examples/hello-c-gnulib-automakesubdir/src/hello.c
+ examples/hello-c-gnulib-conddeps/Makefile.am
+ examples/hello-c-gnulib-conddeps/autoclean.sh
+ examples/hello-c-gnulib-conddeps/autogen.sh
+ examples/hello-c-gnulib-conddeps/configure.ac
+ examples/hello-c-gnulib-conddeps/hello.c
+ examples/hello-c-gnulib-nonrecursive/Makefile.am
+ examples/hello-c-gnulib-nonrecursive/autoclean.sh
+ examples/hello-c-gnulib-nonrecursive/autogen.sh
+ examples/hello-c-gnulib-nonrecursive/configure.ac
+ examples/hello-c-gnulib-nonrecursive/src/hello.c
+ examples/hello-c-gnulib/Makefile.am
+ examples/hello-c-gnulib/autoclean.sh
+ examples/hello-c-gnulib/autogen.sh
+ examples/hello-c-gnulib/configure.ac
+ examples/hello-c-gnulib/hello.c
+ examples/hello-c-nognulib/Makefile.am
+ examples/hello-c-nognulib/autoclean.sh
+ examples/hello-c-nognulib/autogen.sh
+ examples/hello-c-nognulib/configure.ac
+ examples/hello-c-nognulib/hello.c
+Copyright: unknown
+License: *No copyright* Public domain
 
-Files: m4/musl.m4
- m4/semaphore.m4
+Files: m4/semaphore.m4
 Copyright: 2019-2020 Free Software Foundation, Inc.
 License: FSF Unlimited License (with Retention)
 
@@ -213,7 +254,6 @@ Copyright: 2008-2020 Free Software Foundation, Inc.
 License: FSFULLR [REF05]
 
 Files: m4/00gnulib.m4
- m4/ungetc.m4
 Copyright: 2009-2020 Free Software Foundation, Inc.
 License: FSFULLR [REF05]
 
@@ -221,7 +261,8 @@ Files: m4/asm-underscore.m4
 Copyright: 2010-2020 Free Software Foundation, Inc.
 License: FSFULLR [REF05]
 
-Files: m4/extern-inline.m4
+Files: build-aux/prefix-gnulib-mk
+ m4/extern-inline.m4
  m4/non-recursive-gnulib-prefix-hack.m4
 Copyright: 2012-2020 Free Software Foundation, Inc.
 License: FSFULLR [REF05]
@@ -305,6 +346,172 @@ Files: doc/attribute.texi
 Copyright: 2020 Free Software Foundation, Inc.
 License: GNU Free Documentation License (v1.3)
 
+Files: doc/join-gnu.texi
+Copyright: 2021
+License: GNU Free Documentation License v1.3
+
+Files: tests/mmap-anon-util.h
+ tests/test-sigsegv-catch-segv1.c
+ tests/test-sigsegv-catch-segv2.c
+ tests/test-sigsegv-catch-stackoverflow1.c
+ tests/test-sigsegv-catch-stackoverflow2.c
+Copyright: 2002-2022 Free Software Foundation, Inc.
+License: GNU General Public License v2.0 or later
+
+Files: tests/altstack-util.h
+Copyright: 2010-2022 Free Software Foundation, Inc.
+License: GNU General Public License v2.0 or later
+
+Files: build-aux/increment-serial
+ tests/test-dynarray.c
+ tests/test-string-buffer.c
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: GNU General Public License v2.0 or later
+
+Files: top/autogen.sh
+ top/autopull.sh
+ top/bootstrap
+ top/bootstrap-funclib.sh
+Copyright: 2003-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/atomic-int-gnulib.h
+ tests/atomic-int-isoc.h
+ tests/atomic-int-posix.h
+ tests/test-asyncsafe-spin1.c
+ tests/test-asyncsafe-spin2.c
+ tests/test-pthread-spin.c
+ tests/test-sha1-buffer.c
+ tests/test-sha1-stream.c
+Copyright: 2005, 2008-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-md5-buffer.c
+ tests/test-md5-stream.c
+Copyright: 2005, 2009-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-md2-buffer.c
+ tests/test-md4-buffer.c
+Copyright: 2005, 2010-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/unictype/test-pr_emoji.c
+ tests/unictype/test-pr_emoji_component.c
+ tests/unictype/test-pr_emoji_modifier.c
+ tests/unictype/test-pr_emoji_modifier_base.c
+ tests/unictype/test-pr_emoji_presentation.c
+ tests/unictype/test-pr_extended_pictographic.c
+ tests/unictype/test-pr_regional_indicator.c
+Copyright: 2007-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-posix_spawn-chdir.c
+ tests/test-posix_spawn-dup2-stdin.c
+ tests/test-posix_spawn-dup2-stdout.c
+ tests/test-posix_spawn-fchdir.c
+ tests/test-posix_spawn-inherit0.c
+ tests/test-posix_spawn-inherit1.c
+ tests/test-posix_spawn-open1.c
+ tests/test-posix_spawn-open2.c
+Copyright: 2008-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-execute-child.c
+Copyright: 2009-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-dfa-invalid-char-class.sh
+ tests/test-dfa-match-aux.c
+ tests/test-dfa-match.sh
+Copyright: 2014-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-sm3-buffer.c
+Copyright: 2017-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-sha256-stream.c
+ tests/test-sha512-stream.c
+Copyright: 2018-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: build-aux/vcstocl/projectquirks.py
+ check-AC_LIBOBJ
+ tests/test-aligned-malloc.c
+ tests/test-aligned_alloc.c
+ tests/test-c-dtoastr.c
+ tests/test-c-ldtoastr.c
+ tests/test-chmod.c
+ tests/test-dfa-invalid-merge.sh
+ tests/test-exec-child.c
+ tests/test-execl-main.c
+ tests/test-execl.sh
+ tests/test-execle-main.c
+ tests/test-execle.sh
+ tests/test-execlp-main.c
+ tests/test-execlp.sh
+ tests/test-execute-main.c
+ tests/test-execute-script.c
+ tests/test-execv-main.c
+ tests/test-execv.sh
+ tests/test-execve-main.c
+ tests/test-execve.sh
+ tests/test-execvp-main.c
+ tests/test-execvp.sh
+ tests/test-execvpe-main.c
+ tests/test-execvpe.sh
+ tests/test-fopen-gnu.c
+ tests/test-free.c
+ tests/test-getentropy.c
+ tests/test-getrandom.c
+ tests/test-getumask.c
+ tests/test-libgmp.c
+ tests/test-malloc-h-c++.cc
+ tests/test-malloc-h.c
+ tests/test-memalign.c
+ tests/test-oset-update.h
+ tests/test-posix_memalign.c
+ tests/test-posix_spawn-script.c
+ tests/test-posix_spawnp-script.c
+ tests/test-sigabbrev_np.c
+ tests/test-sigdescr_np.c
+ tests/test-spawn-pipe-script.c
+ tests/test-ssfmalloc.c
+ tests/test-stack.c
+ tests/test-strerrorname_np.c
+ tests/test-supersede-fopen.h
+ tests/test-supersede-open.h
+ tests/test-supersede.c
+ tests/test-sys_random-c++.cc
+ tests/test-sys_random.c
+ tests/test-unicodeio.c
+Copyright: 2020-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-asyncsafe-linked_list-strong.c
+ tests/test-asyncsafe-linked_list-weak.c
+ tests/test-hamt.c
+ tests/test-immutable.c
+ tests/test-simple-atomic.c
+ tests/test-timespec_get.c
+ tests/test-timespec_getres.c
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/test-alignalloc.c
+ tests/test-gettime-res.c
+ tests/test-stdckdint.c
+ tests/test-tempname.c
+ tests/test-termcap.c
+ tests/test-terminfo.c
+Copyright: 2022 Free Software Foundation, Inc.
+License: GNU General Public License v3.0 or later
+
+Files: tests/qemu.h
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: GNU Lesser General Public License v2.1 or later
+
 Files: build-aux/pmccabe.css
  doc/gendocs_template
  doc/gendocs_template_min
@@ -322,7 +529,6 @@ Files: build-aux/pmccabe.css
  lib/file-set.h
  lib/fprintftime.c
  lib/gl_map.c
- lib/gl_omap.c
  lib/gl_set.c
  lib/gl_xlist.c
  lib/gl_xmap.c
@@ -472,14 +678,6 @@ Files: lib/backupfile.h
 Copyright: 1990-1992, 1997-1999, 2003-2004, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/diacrit.c
-Copyright: 1990-1993, 2000, 2006, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: lib/diacrit.h
-Copyright: 1990-1993, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
 Files: lib/xmalloc.c
 Copyright: 1990-2000, 2002-2006, 2008-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
@@ -508,6 +706,10 @@ Files: lib/getcwd.c
 Copyright: 1991-1999, 2004-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
+Files: lib/glob.c
+Copyright: 1991-2020 Free Software Foundation, Inc.
+License: GPL [REF08]
+
 Files: lib/xgetdomainname.h
 Copyright: 1992, 1996, 2000-2001, 2003, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
@@ -518,6 +720,10 @@ License: GPL [REF08]
 
 Files: lib/xgethostname.c
 Copyright: 1992, 1996, 2000-2001, 2003-2006, 2009-2020 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: lib/xgetaname-impl.h
+Copyright: 1992, 1996, 2000-2001, 2003-2006, 2009-2022 Free Software
 License: GPL [REF08]
 
 Files: lib/exclude.h
@@ -558,10 +764,6 @@ License: GPL [REF08]
 
 Files: lib/file-type.c
 Copyright: 1993-1994, 2001-2002, 2004-2006, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: lib/group-member.c
-Copyright: 1994, 1997-1998, 2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: lib/mkdir-p.h
@@ -638,10 +840,16 @@ Files: lib/memcasecmp.c
 Copyright: 1996-1997, 2000, 2003, 2006, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/filenamecat.c
+Files: lib/canonicalize.h
+ lib/filenamecat.c
  lib/human.c
  lib/human.h
 Copyright: 1996-2007, 2009-2020 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: build-aux/config.libpath
+ lib/canonicalize.c
+Copyright: 1996-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: lib/savedir.h
@@ -674,10 +882,6 @@ License: GPL [REF08]
 
 Files: m4/assert.m4
 Copyright: 1998-1999, 2001, 2004, 2008-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: m4/st_dm_mode.m4
-Copyright: 1998-1999, 2001, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: lib/filemode.h
@@ -732,20 +936,16 @@ Files: lib/memcoll.h
 Copyright: 1999, 2003, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: m4/group-member.m4
-Copyright: 1999-2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
 Files: m4/link-follow.m4
 Copyright: 1999-2001, 2004-2006, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/timevar.c
-Copyright: 2000, 2002, 2004, 2006, 2009-2015, 2018-2020 Free Software
+Files: lib/fpending.h
+Copyright: 2000, 2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/timevar.h
-Copyright: 2000, 2002, 2004, 2009-2015, 2018-2020 Free Software
+Files: lib/fpending.c
+Copyright: 2000, 2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: m4/ftruncate.m4
@@ -827,8 +1027,15 @@ Files: lib/areadlinkat-with-size.c
 Copyright: 2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/w32spawn.h
-Copyright: 2001, 2003-2020 Free Software Foundation, Inc.
+Files: lib/os2-spawn.c
+ lib/os2-spawn.h
+Copyright: 2001, 2003-2022 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: lib/dup-safer-flag.c
+ lib/dup-safer.c
+ lib/fopen-safer.c
+Copyright: 2001, 2004-2006, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: lib/mbmemcasecoll.c
@@ -838,10 +1045,6 @@ License: GPL [REF08]
 
 Files: lib/sh-quote.h
 Copyright: 2001-2002, 2004, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: lib/bitsetv.c
-Copyright: 2001-2002, 2004-2006, 2009-2015, 2018-2020 Free Software
 License: GPL [REF08]
 
 Files: lib/xsetenv.c
@@ -909,7 +1112,6 @@ Copyright: 2001-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: lib/execute.c
- lib/findprog-in.c
  lib/spawn-pipe.c
  lib/xconcat-filename.c
 Copyright: 2001-2004, 2006-2020 Free Software Foundation, Inc.
@@ -926,6 +1128,7 @@ License: GPL [REF08]
 Files: build-aux/javacomp.sh.in
  build-aux/javaexec.sh.in
  lib/system-quote.h
+ top/maint.mk
 Copyright: 2001-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
@@ -939,14 +1142,6 @@ License: GPL [REF08]
 
 Files: lib/c-stack.h
 Copyright: 2002, 2004, 2008-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: lib/bitset/array.h
- lib/bitset/list.h
- lib/bitset/table.h
- lib/bitset/vector.h
- lib/bitsetv.h
-Copyright: 2002, 2004, 2009-2015, 2018-2020 Free Software Foundation,
 License: GPL [REF08]
 
 Files: m4/settime.m4
@@ -1015,26 +1210,16 @@ Files: m4/getusershell.m4
 Copyright: 2002-2003, 2006, 2008-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/bitset/array.c
-Copyright: 2002-2003, 2006, 2009-2015, 2018-2020 Free Software
-License: GPL [REF08]
-
 Files: m4/rpmatch.m4
 Copyright: 2002-2003, 2007-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: m4/getdomainname.m4
- m4/libsigsegv.m4
 Copyright: 2002-2003, 2008-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: m4/unicodeio.m4
 Copyright: 2002-2003, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: lib/bitset/base.h
- lib/bitset/list.c
-Copyright: 2002-2004, 2006, 2009-2015, 2018-2020 Free Software
 License: GPL [REF08]
 
 Files: lib/xmemcoll.c
@@ -1055,18 +1240,6 @@ Files: m4/c-stack.m4
 Copyright: 2002-2004, 2008-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/bitset.h
- lib/bitset/stats.h
-Copyright: 2002-2004, 2009-2015, 2018-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: lib/bitset.c
- lib/bitset/stats.c
- lib/bitset/table.c
- lib/bitset/vector.c
-Copyright: 2002-2006, 2009-2015, 2018-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
 Files: lib/posixver.c
  m4/backupfile.m4
  m4/human.m4
@@ -1085,7 +1258,8 @@ Files: lib/xnanosleep.c
 Copyright: 2002-2007, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: m4/readutmp.m4
+Files: build-aux/announce-gen
+ m4/readutmp.m4
 Copyright: 2002-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
@@ -1106,13 +1280,13 @@ Files: lib/getdomainname.c
 Copyright: 2003, 2006, 2008, 2010-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/free.c
-Copyright: 2003, 2006, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
 Files: lib/xmalloca.c
  lib/xstrndup.c
 Copyright: 2003, 2006-2007, 2009-2020 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: lib/eealloc.h
+Copyright: 2003, 2008, 2010-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: m4/execute.m4
@@ -1125,15 +1299,9 @@ Files: lib/classpath.h
  lib/csharpexec.h
  lib/xstrndup.h
  m4/copy-file.m4
- m4/findprog-in.m4
  m4/getnline.m4
- m4/sig_atomic_t.m4
  m4/xstrndup.m4
 Copyright: 2003, 2009-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
-Files: m4/fatal-signal.m4
-Copyright: 2003-2004, 2006, 2008-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: lib/c-strtod.c
@@ -1142,12 +1310,7 @@ Files: lib/c-strtod.c
 Copyright: 2003-2004, 2006, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/fatal-signal.c
-Copyright: 2003-2004, 2006-2020 Free Software Foundation, Inc.
-License: GPL [REF08]
-
 Files: lib/c-strtod.h
- lib/fatal-signal.h
  lib/getnline.h
 Copyright: 2003-2004, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
@@ -1157,7 +1320,6 @@ Copyright: 2003-2005, 2007, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: m4/csharpexec.m4
- m4/free.m4
 Copyright: 2003-2005, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
@@ -1178,6 +1340,8 @@ Files: build-aux/csharpcomp.sh.in
  build-aux/csharpexec.sh.in
  build-aux/gendocs.sh
  build-aux/install-reloc
+ build-aux/reloc-ldflags
+ build-aux/relocatable.sh.in
  lib/csharpcomp.c
  lib/csharpexec.c
  lib/progreloc.c
@@ -1223,8 +1387,7 @@ Files: lib/utimecmp.c
 Copyright: 2004-2007, 2009-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: build-aux/gnupload
- lib/chdir-long.c
+Files: lib/chdir-long.c
  lib/fdopendir.c
  lib/openat.c
  m4/fchmodat.m4
@@ -1236,12 +1399,17 @@ Files: build-aux/gnupload
 Copyright: 2004-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
+Files: m4/chmod.m4
+Copyright: 2004-2022 Free Software Foundation, Inc.
+License: GPL [REF08]
+
 Files: lib/pagealign_alloc.h
 Copyright: 2005, 2008, 2010-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: lib/fcntl--.h
  lib/fcntl-safer.h
+ lib/fprintftime.h
  lib/gethrxtime.h
  lib/readline.h
  lib/stdlib-safer.h
@@ -1286,6 +1454,7 @@ Files: lib/gethrxtime.c
  lib/stdlib--.h
  m4/cycle-check.m4
  m4/fcntl-safer.m4
+ m4/glob.m4
  m4/pagealign_alloc.m4
  m4/unlinkdir.m4
 Copyright: 2005-2007, 2009-2020 Free Software Foundation, Inc.
@@ -1295,15 +1464,11 @@ Files: m4/fts.m4
 Copyright: 2005-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/gl_avltree_list.c
- lib/gl_avltreehash_list.c
+Files: lib/gl_avltreehash_list.c
  lib/gl_hash_map.c
  lib/gl_hash_set.c
- lib/gl_linked_list.c
- lib/gl_linkedhash_list.c
  lib/gl_linkedhash_map.c
  lib/gl_linkedhash_set.c
- lib/gl_rbtree_list.c
  lib/gl_rbtreehash_list.c
  lib/propername.h
 Copyright: 2006, 2008-2020 Free Software Foundation, Inc.
@@ -1313,32 +1478,13 @@ Files: lib/at-func.c
  lib/at-func2.c
  lib/fchmodat.c
  lib/fstatat.c
- lib/gl_anyavltree_list1.h
- lib/gl_anyhash1.h
- lib/gl_anyhash2.h
- lib/gl_anyhash_primes.h
- lib/gl_anylinked_list1.h
- lib/gl_anyrbtree_list1.h
- lib/gl_anytree_list1.h
- lib/gl_array_list.h
  lib/gl_array_map.h
- lib/gl_array_omap.h
- lib/gl_array_oset.h
  lib/gl_array_set.h
- lib/gl_avltree_list.h
- lib/gl_avltree_omap.h
- lib/gl_avltree_oset.h
  lib/gl_avltreehash_list.h
- lib/gl_carray_list.h
  lib/gl_hash_map.h
  lib/gl_hash_set.h
- lib/gl_linked_list.h
- lib/gl_linkedhash_list.h
  lib/gl_linkedhash_map.h
  lib/gl_linkedhash_set.h
- lib/gl_rbtree_list.h
- lib/gl_rbtree_omap.h
- lib/gl_rbtree_oset.h
  lib/gl_rbtreehash_list.h
  lib/gl_sublist.h
  lib/javaversion.h
@@ -1359,28 +1505,10 @@ Files: lib/clean-temp.h
 Copyright: 2006, 2011-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/gl_oset.c
-Copyright: 2006-2007, 2009-2013 Free Software Foundation, Inc.
-License: GPL [REF08]
-
 Files: lib/fchownat.c
- lib/gl_anyavltree_list2.h
- lib/gl_anyrbtree_list2.h
- lib/gl_anytree_omap.h
- lib/gl_anytree_oset.h
  lib/gl_anytreehash_list1.h
  lib/gl_anytreehash_list2.h
- lib/gl_array_omap.c
- lib/gl_array_oset.c
- lib/gl_avltree_omap.c
- lib/gl_avltree_ordered.h
- lib/gl_avltree_oset.c
  lib/gl_map.h
- lib/gl_omap.h
- lib/gl_oset.h
- lib/gl_rbtree_omap.c
- lib/gl_rbtree_ordered.h
- lib/gl_rbtree_oset.c
  lib/gl_set.h
  lib/savewd.c
  lib/verror.c
@@ -1396,20 +1524,11 @@ Files: lib/term-style-control.c
 Copyright: 2006-2008, 2017, 2019 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: lib/gl_list.c
-Copyright: 2006-2013 Free Software Foundation, Inc.
-License: GPL [REF08]
-
 Files: build-aux/ldd.sh.in
  build-aux/vc-list-files
  lib/dirchownmod.c
- lib/gl_anylinked_list2.h
- lib/gl_anytree_list2.h
- lib/gl_array_list.c
  lib/gl_array_map.c
  lib/gl_array_set.c
- lib/gl_carray_list.c
- lib/gl_list.h
  lib/gl_list.hh
  lib/gl_map.hh
  lib/gl_omap.hh
@@ -1436,6 +1555,10 @@ Files: lib/closein.c
  m4/mpsort.m4
  m4/write-any-file.m4
 Copyright: 2007, 2009-2020 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: lib/hash-triple-simple.c
+Copyright: 2007, 2009-2022 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: build-aux/git-version-gen
@@ -1541,6 +1664,10 @@ Files: lib/c-snprintf.h
 Copyright: 2012-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
+Files: build-aux/relocatable.pl.in
+Copyright: 2013, 2015-2020 Free Software Foundation, Inc.
+License: GPL [REF08]
+
 Files: lib/acl-errno-valid.c
 Copyright: 2013-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
@@ -1556,6 +1683,9 @@ License: GPL [REF08]
 
 Files: lib/backup-find.c
  lib/backup-rename.c
+ lib/glob_internal.h
+ lib/glob_pattern_p.c
+ lib/globfree.c
  lib/renameat.c
  lib/renameatu.h
  lib/truncate.c
@@ -1565,7 +1695,6 @@ License: GPL [REF08]
 
 Files: build-aux/libtool-reloc
  lib/term-style-control.h
- lib/xhash.c
  lib/xstdopen.c
  lib/xstdopen.h
  m4/libtextstyle-optional.m4
@@ -1573,15 +1702,39 @@ Files: build-aux/libtool-reloc
 Copyright: 2019 Free Software Foundation, Inc.
 License: GPL [REF08]
 
-Files: build-aux/vcs_to_changelog.py
- build-aux/vcstocl/frontend_c.py
+Files: build-aux/vcstocl/frontend_c.py
  build-aux/vcstocl/misc_util.py
  build-aux/vcstocl/vcs_git.py
 Copyright: 2019-2020 Free Software Foundation, Inc.
 License: GPL [REF08]
 
+Files: build-aux/vcs-to-changelog.py
+Copyright: 2019-2022 Free Software Foundation, Inc.
+License: GPL [REF08]
+
 Files: lib/lchmod.c
 Copyright: 2020 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: lib/c-dtoastr.c
+ lib/c-ldtoastr.c
+ lib/getumask.c
+ lib/stack.h
+ lib/supersede.c
+ lib/supersede.h
+ m4/getumask.m4
+ m4/supersede.m4
+Copyright: 2020-2022 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: lib/hamt.c
+ lib/hamt.h
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: GPL [REF08]
+
+Files: lib/chmod.c
+ lib/xalignalloc.c
+Copyright: 2022 Free Software Foundation, Inc.
 License: GPL [REF08]
 
 Files: config/argz.mk
@@ -1590,10 +1743,6 @@ License: GPL-2+
 
 Files: build-aux/compile
 Copyright: 1999-2020 Free Software Foundation, Inc.
-License: GPL-2+
-
-Files: lib/dup3.c
-Copyright: 2009-2020 Free Software Foundation, Inc.
 License: GPL-2+
 
 Files: build-aux/ar-lib
@@ -1614,33 +1763,6 @@ License: GPL-3+
 
 Files: tests/test-regex.c
 Copyright: 1996-2001, 2003-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: lib/canonicalize.h
-Copyright: 1996-2007, 2009-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: build-aux/config.libpath
- lib/canonicalize.c
-Copyright: 1996-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: lib/dup2.c
-Copyright: 1999, 2004-2007, 2009-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: lib/fpending.h
-Copyright: 2000, 2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: lib/fpending.c
-Copyright: 2000, 2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: lib/dup-safer-flag.c
- lib/dup-safer.c
- lib/fopen-safer.c
-Copyright: 2001, 2004-2006, 2009-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
 Files: lib/timevar.def
@@ -1678,27 +1800,12 @@ Files: pygnulib/GLConfig.py
 Copyright: 2002-2017 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: build-aux/announce-gen
- gnulib-tool.py
+Files: gnulib-tool.py
 Copyright: 2002-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: lib/eealloc.h
-Copyright: 2003, 2008, 2010-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
 Files: build-aux/bootstrap
- build-aux/reloc-ldflags
- build-aux/relocatable.sh.in
 Copyright: 2003-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: lib/fprintf.c
-Copyright: 2004, 2006-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
-Files: lib/dummy.c
-Copyright: 2004, 2007, 2009-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
 Files: tests/unistr/test-u-strstr.h
@@ -1723,10 +1830,6 @@ Files: tests/test-mtx.c
 Copyright: 2005, 2008-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: lib/fprintftime.h
-Copyright: 2005, 2009-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
 Files: tests/test-gc-arcfour.c
  tests/test-gc-arctwo.c
  tests/test-gc-des.c
@@ -1743,8 +1846,6 @@ Files: tests/test-gc-arcfour.c
  tests/test-gc-sha512.c
  tests/test-hmac-sha256.c
  tests/test-hmac-sha512.c
- tests/test-md2.c
- tests/test-md4.c
 Copyright: 2005, 2010-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
@@ -1788,8 +1889,7 @@ Files: tests/unictype/test-categ_longname.c
 Copyright: 2007-2009, 2011 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: lib/fopen.c
- tests/test-ceil1.c
+Files: tests/test-ceil1.c
  tests/test-ceil2.c
  tests/test-creat.c
  tests/test-floor1.c
@@ -1831,8 +1931,6 @@ Files: tests/test-btoc32.c
  tests/test-memcasecmp.c
  tests/test-memcoll.c
  tests/test-parse-datetime.c
- tests/test-posix_spawn4.c
- tests/test-posix_spawn5.c
  tests/test-pthread-cond.c
  tests/test-quotearg-simple.c
  tests/test-quotearg.h
@@ -1848,7 +1946,6 @@ Copyright: 2008-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
 Files: build-aux/run-test
- lib/duplocale.c
  tests/nap.h
  tests/signature.h
  tests/test-chown.c
@@ -1915,8 +2012,7 @@ Files: tests/unigbrk/test-uc-gbrk-prop.h
 Copyright: 2010 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: lib/forkpty.c
- tests/minus-zero.h
+Files: tests/minus-zero.h
  tests/test-_Exit.c
  tests/test-acos.c
  tests/test-acosf.c
@@ -2211,7 +2307,6 @@ Copyright: 2011 Free Software Foundation, Inc.
 License: GPL-3+
 
 Files: check-copyright
- lib/dup.c
  tests/infinity.h
  tests/socket-client.h
  tests/socket-server.h
@@ -2330,8 +2425,7 @@ Files: check-copyright
 Copyright: 2011-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: build-aux/prefix-gnulib-mk
- tests/randomd.c
+Files: tests/randomd.c
  tests/randomf.c
  tests/randoml.c
  tests/test-cbrt-ieee.c
@@ -2443,18 +2537,11 @@ Files: build-aux/prefix-gnulib-mk
 Copyright: 2012-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: build-aux/relocatable.pl.in
-Copyright: 2013, 2015-2020 Free Software Foundation, Inc.
-License: GPL-3+
-
 Files: tests/test-count-trailing-zeros.c
 Copyright: 2013-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
-Files: tests/dfa-invalid-char-class.sh
- tests/dfa-match-aux.c
- tests/dfa-match.sh
- tests/test-qsort_r.c
+Files: tests/test-qsort_r.c
 Copyright: 2014-2020 Free Software Foundation, Inc.
 License: GPL-3+
 
@@ -2479,7 +2566,6 @@ Files: tests/null-ptr.h
  tests/test-noreturn-c++.cc
  tests/test-noreturn.c
  tests/test-rwlock1.c
- tests/test-sm3.c
  tests/test-strfmon_l.c
  tests/test-truncate.c
  tests/test-utime-h.c
@@ -2499,8 +2585,6 @@ Files: tests/bench-digest.h
  tests/test-digest.h
  tests/test-localcharset.c
  tests/test-once.c
- tests/test-sha256.c
- tests/test-sha512.c
 Copyright: 2018 Free Software Foundation, Inc.
 License: GPL-3+
 
@@ -2668,13 +2752,11 @@ Copyright: 2005, 2007-2020 Free Software Foundation, Inc.
 License: GPL-3+ [REF10]
 
 Files: tests/test-lock.c
- tests/test-sha1.c
  tests/test-tls.c
 Copyright: 2005, 2008-2020 Free Software Foundation, Inc.
 License: GPL-3+ [REF10]
 
 Files: tests/test-getpass.c
- tests/test-md5.c
  tests/test-verify.c
 Copyright: 2005, 2009-2020 Free Software Foundation, Inc.
 License: GPL-3+ [REF10]
@@ -3135,9 +3217,6 @@ Files: build-aux/ncftpput-ftp
  tests/test-parse-duration.c
  tests/test-perror.c
  tests/test-poll.c
- tests/test-posix_spawn1.c
- tests/test-posix_spawn2.c
- tests/test-posix_spawn3.c
  tests/test-quotearg.c
  tests/test-random_r.c
  tests/test-rawmemchr.c
@@ -3345,10 +3424,6 @@ Files: tests/test-alignof.c
 Copyright: 2009-2020 Free Software Foundation, Inc.
 License: GPL-3+ [REF10]
 
-Files: top/maint.mk
-Copyright: 2001-2020 Free Software Foundation, Inc.
-License: GPL-3+ [REF11]
-
 Files: MODULES.html.sh
 Copyright: 2002-2020 Free Software Foundation, Inc.
 License: GPL-3+ [REF11]
@@ -3393,9 +3468,88 @@ Files: doc/COPYING.LESSERv3
 Copyright: 2007 Free Software Foundation, Inc.
 License: GPLVerbatim [REF15]
 
+Files: lib/sigsegv.in.h
+Copyright: 1998-2022 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: m4/libsigsegv.m4
+Copyright: 2002-2003, 2008-2020 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: m4/sigaltstack.m4
+ m4/stack-direction.m4
+Copyright: 2002-2022 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: lib/stackvma.c
+ lib/stackvma.h
+Copyright: 2003-2006 Paolo Bonzini <bonzini@gnu.org> / 2002-2022 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: build-aux/gnupload
+Copyright: 2004-2020 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: lib/sigsegv.c
+Copyright: 2018 Nylon Chen <nylon7@andestech.com> / 1993-2022 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: m4/musl.m4
+Copyright: 2019-2020 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: m4/sigsegv.m4
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: GPLv2+ [REF16]
+
+Files: lib/timevar.c
+Copyright: 2000, 2002, 2004, 2006, 2009-2015, 2018-2020 Free Software
+License: GPLv3+ [REF17]
+
+Files: lib/timevar.h
+Copyright: 2000, 2002, 2004, 2009-2015, 2018-2020 Free Software
+License: GPLv3+ [REF17]
+
+Files: lib/bitsetv.c
+Copyright: 2001-2002, 2004-2006, 2009-2015, 2018-2020 Free Software
+License: GPLv3+ [REF17]
+
+Files: lib/bitset/array.h
+ lib/bitset/list.h
+ lib/bitset/table.h
+ lib/bitset/vector.h
+ lib/bitsetv.h
+Copyright: 2002, 2004, 2009-2015, 2018-2020 Free Software Foundation,
+License: GPLv3+ [REF17]
+
+Files: lib/bitset/array.c
+Copyright: 2002-2003, 2006, 2009-2015, 2018-2020 Free Software
+License: GPLv3+ [REF17]
+
+Files: lib/bitset/base.h
+ lib/bitset/list.c
+Copyright: 2002-2004, 2006, 2009-2015, 2018-2020 Free Software
+License: GPLv3+ [REF17]
+
+Files: lib/bitset.h
+ lib/bitset/stats.h
+Copyright: 2002-2004, 2009-2015, 2018-2020 Free Software Foundation, Inc.
+License: GPLv3+ [REF17]
+
+Files: lib/bitset.c
+ lib/bitset/stats.c
+ lib/bitset/table.c
+ lib/bitset/vector.c
+Copyright: 2002-2006, 2009-2015, 2018-2020 Free Software Foundation, Inc.
+License: GPLv3+ [REF17]
+
+Files: lib/xhash.c
+Copyright: 2019 Free Software Foundation, Inc.
+License: GPLv3+ [REF17]
+
 Files: tests/test-roundf2.c
 Copyright: unknown
-License: LGPL [REF16]
+License: LGPL [REF18]
 
 Files: lib/isapipe.h
  lib/mbfile.c
@@ -3403,72 +3557,68 @@ Files: lib/isapipe.h
  lib/strtoumax.c
  lib/timespec.c
 Copyright: unknown
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/random.c
 Copyright: 1983 Regents of the University of California / 1995-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/cbrtl.c
 Copyright: 1984, 1991 Stephen L. Moshier / 2012-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/obstack.c
  lib/obstack.h
 Copyright: 1988-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
-
-Files: lib/error.c
-Copyright: 1990-1998, 2000-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/memrchr.c
 Copyright: 1991, 1993, 1996-1997, 1999-2000, 2003-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strcspn.c
 Copyright: 1991, 1994, 1996-1997, 2002-2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/putenv.c
 Copyright: 1991, 1994, 1997-1998, 2000, 2003-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strtoul.c
 Copyright: 1991, 1997, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/atoll.c
 Copyright: 1991, 1997-1998, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strtol.c
 Copyright: 1991-1992, 1994-1999, 2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/fsusage.c
 Copyright: 1991-1992, 1996, 1998-1999, 2002-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strtod.c
 Copyright: 1991-1992, 1997, 1999, 2003, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/fsusage.h
 Copyright: 1991-1992, 1997, 2003-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/nstrftime.c
 Copyright: 1991-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/alphasort.c
 Copyright: 1992, 1997-1998, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/scandir.c
 Copyright: 1992-1998, 2000, 2002-2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/acosl.c
  lib/asinl.c
@@ -3476,66 +3626,54 @@ Files: lib/acosl.c
  lib/sinl.c
  lib/tanl.c
 Copyright: 1993 by Sun Microsystems, Inc. All rights reserved
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/filevercmp.c
  lib/filevercmp.h
 Copyright: 1995 Ian Jackson <iwj10@cus.cam.ac.uk> / 2001 Anthony Towns <aj@azure.humbug.org.au> / 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strtoll.c
 Copyright: 1995-1997, 1999, 2001, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strtoull.c
 Copyright: 1995-1997, 1999, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
-
-Files: lib/tsearch.c
-Copyright: 1995-1997, 2000, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
-
-Files: lib/error.h
-Copyright: 1995-1997, 2003, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/argp-help.c
  lib/argp-parse.c
  lib/argp.h
 Copyright: 1995-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/getsubopt.c
 Copyright: 1996-1997, 1999, 2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/nstrftime.m4
 Copyright: 1996-1997, 1999-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
-
-Files: m4/error.m4
-Copyright: 1996-1998, 2001-2004, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/argp-ba.c
  lib/argp-pv.c
  lib/argp-pvh.c
  m4/obstack.m4
 Copyright: 1996-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/argp-eexst.c
 Copyright: 1997, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/cbrt.c
  lib/cbrtf.c
 Copyright: 1997, 2012-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/fsusage.m4
 Copyright: 1997-1998, 2000-2001, 2003-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/argp-fmtstream.c
  lib/argp-fmtstream.h
@@ -3543,44 +3681,44 @@ Files: lib/argp-fmtstream.c
  lib/argp-namefrob.h
  lib/argp-xinl.c
 Copyright: 1997-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/mbspcasecmp.c
 Copyright: 1998-1999, 2005-2008, 2010-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/mbmemcasecmp.c
  lib/mbscasecmp.c
  lib/mbsncasecmp.c
 Copyright: 1998-1999, 2005-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/tmpdir.c
 Copyright: 1999, 2001-2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strtoimax.c
 Copyright: 1999, 2001-2004, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/mbscspn.c
  lib/mbspbrk.c
  lib/mbsspn.c
  lib/mbstok_r.c
 Copyright: 1999, 2002, 2006-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/version-etc.h
 Copyright: 1999, 2003, 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/sincosl.c
 Copyright: 1999, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/trigl.c
 Copyright: 1999, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/wcpcpy-impl.h
  lib/wcpncpy-impl.h
@@ -3603,183 +3741,184 @@ Files: lib/wcpcpy-impl.h
  lib/wcsstr-impl.h
  lib/wcstok-impl.h
  lib/wcswidth-impl.h
- lib/wmemchr-impl.h
  lib/wmemcmp-impl.h
  lib/wmemcpy-impl.h
  lib/wmemmove-impl.h
  lib/wmemset-impl.h
 Copyright: 1999, 2011-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/mbrlen.c
 Copyright: 1999-2000, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/version-etc-fsf.c
 Copyright: 1999-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/longlong.m4
 Copyright: 1999-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/version-etc.c
 Copyright: 1999-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/timespec.h
 Copyright: 2000, 2002, 2004-2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/timespec.m4
 Copyright: 2000-2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
+
+Files: m4/termcap.m4
+ m4/terminfo.m4
+Copyright: 2000-2022 Free Software Foundation, Inc.
+License: LGPL [REF19]
 
 Files: lib/atanl.c
  lib/logl.c
 Copyright: 2001 Stephen L. Moshier <moshier@na-net.ornl.gov>
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/host-os.m4
 Copyright: 2001, 2003-2004, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/mbuiter.h
 Copyright: 2001, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/mbfile.h
 Copyright: 2001, 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
-
-Files: m4/vararrays.m4
-Copyright: 2001, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/tmpdir.m4
 Copyright: 2001-2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/tmpdir.h
 Copyright: 2001-2002, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/tzset.c
 Copyright: 2001-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/c-strstr.h
 Copyright: 2001-2003, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/strtoll.m4
  m4/strtoull.m4
 Copyright: 2002, 2004, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/strftime.h
 Copyright: 2002, 2004, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/gettime.m4
 Copyright: 2002, 2004-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/gettime.c
 Copyright: 2002, 2004-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/strtoul.m4
 Copyright: 2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/memrchr.m4
 Copyright: 2002-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/strtol.m4
 Copyright: 2002-2003, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/strtod.m4
  m4/strtold.m4
 Copyright: 2002-2003, 2006-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/sqrtl.c
 Copyright: 2002-2003, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/ldexpl.c
 Copyright: 2002-2003, 2007-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/trigl.h
  m4/strcspn.m4
 Copyright: 2002-2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/strtoimax.m4
  m4/strtoumax.m4
 Copyright: 2002-2004, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/canon-host.m4
 Copyright: 2002-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/putenv.m4
 Copyright: 2002-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/tzset.m4
 Copyright: 2003, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/utimes.m4
 Copyright: 2003-2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/utimens.c
  m4/argp.m4
  m4/utimens.m4
 Copyright: 2003-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
-Files: lib/sprintf.c
+Files: lib/fprintf.c
+ lib/sprintf.c
  lib/vfprintf.c
  lib/vsprintf.c
 Copyright: 2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/getsubopt.m4
 Copyright: 2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/mbfile.m4
 Copyright: 2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/argp-pin.c
  lib/canon-host.h
  lib/crc.h
 Copyright: 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/crc.c
 Copyright: 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/c-strstr.c
  lib/canon-host.c
  lib/mbscasestr.c
  lib/mbsstr.c
 Copyright: 2005-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/isapipe.c
 Copyright: 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/i-ring.c
  lib/i-ring.h
@@ -3792,17 +3931,23 @@ Files: lib/i-ring.c
  m4/isapipe.m4
  m4/no-c++.m4
 Copyright: 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/fchdir.c
  m4/fchdir.m4
- m4/tsearch.m4
 Copyright: 2006-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
+
+Files: lib/termcap.h
+ lib/terminfo.h
+ lib/tparm.c
+ lib/tputs.c
+Copyright: 2006-2022 Free Software Foundation, Inc.
+License: LGPL [REF19]
 
 Files: lib/fma.c
 Copyright: 2007, 2009, 2011-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/ceilf.c
  lib/ceill.c
@@ -3833,7 +3978,7 @@ Files: lib/ceilf.c
  m4/roundl.m4
  m4/tmpfile.m4
 Copyright: 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/ceil.c
  lib/floor.c
@@ -3844,11 +3989,11 @@ Files: lib/ceil.c
  m4/trunc.m4
  m4/truncf.m4
 Copyright: 2007, 2010-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: m4/truncl.m4
 Copyright: 2007-2008, 2010-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/fbufmode.c
  lib/freadable.c
@@ -3880,7 +4025,7 @@ Files: lib/fbufmode.c
  m4/vsnprintf-posix.m4
  m4/vsprintf-posix.m4
 Copyright: 2007-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/wcsrtombs-impl.h
  lib/wcsrtombs.c
@@ -3888,7 +4033,7 @@ Files: lib/wcsrtombs-impl.h
  m4/mbrlen.m4
  m4/mbsnrtowcs.m4
 Copyright: 2008, 2010-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/c32srtombs-state.c
  lib/mbsnrtowcs-impl.h
@@ -3901,14 +4046,20 @@ Files: lib/c32srtombs-state.c
  m4/wcsrtombs.m4
  m4/wctob.m4
 Copyright: 2008-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
+
+Files: m4/curses.m4
+Copyright: 2008-2022 Free Software Foundation, Inc.
+License: LGPL [REF19]
 
 Files: lib/setlocale.c
 Copyright: 2009, 2011-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/accept4.c
  lib/dprintf.c
+ lib/dup3.c
+ lib/duplocale.c
  lib/futimens.c
  lib/mbmemcasecmp.h
  lib/mkfifo.c
@@ -3933,11 +4084,12 @@ Files: lib/accept4.c
  m4/vdprintf.m4
  m4/version-etc.m4
 Copyright: 2009-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/_Exit.c
  lib/astrxfrm.c
  lib/astrxfrm.h
+ lib/forkpty.c
  lib/login_tty.c
  lib/tcgetsid.c
  m4/_Exit.m4
@@ -3978,7 +4130,7 @@ Files: lib/_Exit.c
  m4/truncf-ieee.m4
  m4/truncl-ieee.m4
 Copyright: 2010-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/acosf.c
  lib/asinf.c
@@ -4052,7 +4204,6 @@ Files: lib/acosf.c
  lib/wctrans.c
  lib/wctype-impl.h
  lib/wctype.c
- lib/wmemchr.c
  lib/wmemcmp.c
  lib/wmemcpy.c
  lib/wmemmove.c
@@ -4141,13 +4292,12 @@ Files: lib/acosf.c
  m4/wcsxfrm.m4
  m4/wctrans.m4
  m4/wctype.m4
- m4/wmemchr.m4
  m4/wmemcmp.m4
  m4/wmemcpy.m4
  m4/wmemmove.m4
  m4/wmemset.m4
 Copyright: 2011-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/exp2.c
  lib/expm1.c
@@ -4216,30 +4366,25 @@ Files: lib/exp2.c
  m4/remainderl-ieee.m4
  m4/remainderl.m4
 Copyright: 2012-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/time-internal.h
  lib/time_rz.c
  m4/time_rz.m4
 Copyright: 2015-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/get_progname_of.c
- lib/getprogname.c
- lib/getprogname.h
- m4/getprogname.m4
 Copyright: 2016-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/omp-init.c
- lib/reallocarray.c
  lib/utime.c
  lib/xbinary-io.c
  lib/xbinary-io.h
- m4/reallocarray.m4
  m4/utime.m4
 Copyright: 2017-2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/get_ppid_of.c
  lib/get_ppid_of.h
@@ -4248,7 +4393,7 @@ Files: lib/get_ppid_of.c
  lib/strtold.c
  m4/omp_h.m4
 Copyright: 2019 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
 
 Files: lib/c32snrtombs.c
  lib/c32srtombs.c
@@ -4256,7 +4401,23 @@ Files: lib/c32snrtombs.c
  lib/c32tob.c
  lib/mbsnrtoc32s.c
 Copyright: 2020 Free Software Foundation, Inc.
-License: LGPL [REF17]
+License: LGPL [REF19]
+
+Files: lib/getentropy.c
+ m4/getentropy.m4
+Copyright: 2020-2022 Free Software Foundation, Inc.
+License: LGPL [REF19]
+
+Files: lib/gettime-res.c
+ lib/string-buffer.c
+ lib/string-buffer.h
+ lib/timespec_get.c
+ lib/timespec_getres.c
+ m4/expm1f-ieee.m4
+ m4/timespec_get.m4
+ m4/timespec_getres.m4
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: LGPL [REF19]
 
 Files: doc/relocatable.texi
  lib/allocator.c
@@ -4269,6 +4430,7 @@ Files: doc/relocatable.texi
  lib/fchown-stub.c
  lib/ffsl.c
  lib/ffsll.c
+ lib/gl_omap.c
  lib/iconv_open-aix.gperf
  lib/iconv_open-hpux.gperf
  lib/iconv_open-irix.gperf
@@ -4305,24 +4467,24 @@ Files: doc/relocatable.texi
  lib/wctype-h.c
  lib/xsize.c
 Copyright: unknown
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/random_r.c
 Copyright: 1983 Regents of the University of California / 1995-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/regex.h
 Copyright: 1985, 1989-1993, 1995-1998, 2000-2003, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getopt.c
  lib/getopt1.c
 Copyright: 1987-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/rmdir.c
 Copyright: 1988, 1990, 1999, 2003-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getopt-cdefs.in.h
  lib/getopt-core.h
@@ -4332,476 +4494,520 @@ Files: lib/getopt-cdefs.in.h
  lib/getopt.in.h
  lib/getopt_int.h
 Copyright: 1989-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/dirname-lgpl.c
 Copyright: 1990, 1998, 2000-2001, 2003-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/basename-lgpl.c
 Copyright: 1990, 1998-2001, 2003-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/stripslash.c
 Copyright: 1990, 2001, 2003-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/euidaccess.c
 Copyright: 1990-1991, 1995, 1998, 2000, 2003-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getugroups.c
 Copyright: 1990-1991, 1998-2000, 2003-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/error.c
+Copyright: 1990-1998, 2000-2007, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/xalloc-oversized.h
 Copyright: 1990-2000, 2003-2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/memcmp.c
 Copyright: 1991, 1993, 1995, 1997-1998, 2003, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/memchr.c
  lib/memchr2.c
 Copyright: 1991, 1993, 1996-1997, 1999-2000, 2003-2004, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strpbrk.c
 Copyright: 1991, 1994, 2000, 2002-2003, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strsignal.c
 Copyright: 1991, 1994-2002, 2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strdup.c
 Copyright: 1991, 1996-1998, 2002-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strtok_r.c
 Copyright: 1991, 1996-1999, 2001, 2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/memset.c
 Copyright: 1991, 2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/cloexec.c
 Copyright: 1991, 2004-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/fnmatch.in.h
 Copyright: 1991-1993, 1996-1999, 2001-2003, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/fnmatch_loop.c
 Copyright: 1991-1993, 1996-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/fnmatch.c
 Copyright: 1991-1993, 1996-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/memmem.c
  lib/strstr.c
 Copyright: 1991-1994, 1996-1998, 2000, 2004, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/tempname.c
 Copyright: 1991-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/glob-libc.h
- lib/glob.c
  lib/qsort.c
 Copyright: 1991-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/stpcpy.c
 Copyright: 1992, 1995, 1997-1998, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unsetenv.c
 Copyright: 1992, 1995-2002, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/setenv.c
 Copyright: 1992, 1995-2003, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/pathmax.h
 Copyright: 1992, 1999, 2001, 2003, 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/gethostname.c
 Copyright: 1992, 2003, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/largefile.m4
 Copyright: 1992-1996, 1998-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getpass.c
 Copyright: 1992-2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/cdefs.h
  lib/ieee754.in.h
 Copyright: 1992-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/stpncpy.c
 Copyright: 1993, 1995-1997, 2002-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getndelim2.c
 Copyright: 1993, 1996-1998, 2000, 2003-2004, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/full-write.c
 Copyright: 1993-1994, 1997-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/safe-read.c
 Copyright: 1993-1994, 1998, 2002-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mktime.c
 Copyright: 1993-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: m4/mprotect.m4
+Copyright: 1993-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/getdelim.c
 Copyright: 1994, 1996-1998, 2001, 2003, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/timegm.c
 Copyright: 1994, 1997, 2003-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/group-member.c
+Copyright: 1994, 1997-1998, 2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: doc/parse-datetime.texi
 Copyright: 1994-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: build-aux/snippet/link-warning.h
 Copyright: 1995, 1997, 2000, 2002-2003, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/parse-datetime.h
 Copyright: 1995, 1997-1998, 2003-2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/minmax.h
 Copyright: 1995, 1998, 2001, 2003, 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/alloca.in.h
 Copyright: 1995, 1999, 2001-2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/stdlib.in.h
 Copyright: 1995, 2001-2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/c-strcase.h
 Copyright: 1995-1996, 2001, 2003, 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/string.in.h
 Copyright: 1995-1996, 2001-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/md5.h
 Copyright: 1995-1997, 1999-2001, 2004-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/md5.c
 Copyright: 1995-1997, 1999-2001, 2005-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/md5-stream.c
+Copyright: 1995-1997, 1999-2001, 2005-2006, 2008-2022 Free Software
+License: LGPL-2+ [REF20]
 
 Files: lib/md2.c
  lib/md4.c
 Copyright: 1995-1997, 1999-2003, 2005-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/md2-stream.c
+ lib/md4-stream.c
+Copyright: 1995-1997, 1999-2003, 2005-2006, 2008-2022 Free Software
+License: LGPL-2+ [REF20]
+
+Files: lib/tsearch.c
+Copyright: 1995-1997, 2000, 2006-2007, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
+
+Files: lib/error.h
+Copyright: 1995-1997, 2003, 2006, 2008-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/gettext.h
 Copyright: 1995-1998, 2000-2002, 2004-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/argz.c
 Copyright: 1995-1998, 2000-2002, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/argz.in.h
 Copyright: 1995-2000, 2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/lcmessage.m4
 Copyright: 1995-2002, 2004-2005, 2008-2014, 2016 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/nls.m4
 Copyright: 1995-2003, 2005-2006, 2008-2014, 2016 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/gettext.m4
  m4/po.m4
 Copyright: 1995-2014, 2016 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/localename.c
 Copyright: 1995-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getgroups.c
 Copyright: 1996, 1999, 2003, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/inet_pton.c
 Copyright: 1996,1999 Internet Software Consortium / 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/getgroups.m4
 Copyright: 1996-1997, 1999-2004, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/filenamecat.h
 Copyright: 1996-1997, 2003, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strndup.c
 Copyright: 1996-1998, 2001-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: m4/error.m4
+Copyright: 1996-1998, 2001-2004, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/inet_ntop.c
 Copyright: 1996-1999 by Internet Software Consortium / 2005-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/siglist.h
 Copyright: 1996-1999, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/regex.m4
 Copyright: 1996-2001, 2003-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/progtest.m4
 Copyright: 1996-2003, 2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/filenamecat-lgpl.c
 Copyright: 1996-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/canonicalize-lgpl.c
 Copyright: 1996-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/d-ino.m4
 Copyright: 1997, 1999-2001, 2003-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/d-type.m4
 Copyright: 1997, 1999-2004, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/gai_strerror.c
 Copyright: 1997, 2001-2002, 2004-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getaddrinfo.c
 Copyright: 1997, 2001-2002, 2004-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/realloc.c
 Copyright: 1997, 2003-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/chown.c
 Copyright: 1997, 2004-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/malloc.c
 Copyright: 1997-1998, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/pwrite.c
 Copyright: 1997-1999, 2002, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/hard-locale.c
 Copyright: 1997-1999, 2002-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/chown.m4
 Copyright: 1997-2001, 2003-2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/lstat.m4
 Copyright: 1997-2001, 2003-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
-
-Files: m4/inttypes-pri.m4
-Copyright: 1997-2002, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/lstat.c
 Copyright: 1997-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strverscmp.c
 Copyright: 1997-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/dirname.h
 Copyright: 1998, 2001, 2003-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/basename-lgpl.h
+Copyright: 1998, 2001, 2003-2006, 2009-2022 Free Software Foundation,
+License: LGPL-2+ [REF20]
 
 Files: m4/lchown.m4
 Copyright: 1998, 2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/ptsname.c
  lib/ptsname_r.c
 Copyright: 1998, 2002, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unlockpt.c
 Copyright: 1998, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/stat-time.m4
 Copyright: 1998-1999, 2001, 2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/hash.h
 Copyright: 1998-1999, 2001, 2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mkostemp.c
  lib/mkostemps.c
  lib/mkstemp.c
  lib/mkstemps.c
 Copyright: 1998-1999, 2001, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/des.c
 Copyright: 1998-1999, 2001-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/lchown.c
 Copyright: 1998-1999, 2002, 2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/c-strcasecmp.c
  lib/c-strncasecmp.c
 Copyright: 1998-1999, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strcasecmp.c
  lib/strncasecmp.c
 Copyright: 1998-1999, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/pt_chown.c
  lib/pty-private.h
 Copyright: 1998-1999, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/grantpt.c
 Copyright: 1998-2002, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/getline.m4
 Copyright: 1998-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/hash.c
 Copyright: 1998-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/check-version.c
 Copyright: 1998-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mkdtemp.c
 Copyright: 1999, 2001-2003, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/asnprintf.c
  lib/unistr/u32-cpy.c
 Copyright: 1999, 2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strncat.c
 Copyright: 1999, 2002, 2006, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/asprintf.c
 Copyright: 1999, 2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/vasprintf.c
 Copyright: 1999, 2002, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/hard-locale.h
 Copyright: 1999, 2003-2004, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/dup2.c
+Copyright: 1999, 2004-2007, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
+
+Files: lib/wmemchr-impl.h
+Copyright: 1999, 2011-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/nanosleep.c
 Copyright: 1999-2000, 2002, 2004-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unistr/u8-mblen.c
 Copyright: 1999-2000, 2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/parse-datetime.y
 Copyright: 1999-2000, 2002-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: m4/group-member.m4
+Copyright: 1999-2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: m4/nanosleep.m4
 Copyright: 1999-2001, 2003-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/base32.c
  lib/base64.c
 Copyright: 1999-2001, 2004-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/iconv.c
 Copyright: 1999-2001, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mbrtowc-impl-utf8.h
  lib/mbrtowc-impl.h
  lib/mbrtowc.c
 Copyright: 1999-2002, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unistr/u8-mbtouc-unsafe.c
  lib/unistr/u8-mbtouc.c
  lib/unistr/u8-mbtoucr.c
 Copyright: 1999-2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/physmem.h
 Copyright: 2000, 2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/spawn.in.h
 Copyright: 2000, 2003-2004, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/spawnattr_setflags.c
 Copyright: 2000, 2004, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/spawn_int.h
  lib/spawnattr_getschedparam.c
 Copyright: 2000, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/spawn.c
  lib/spawn_faction_addclose.c
@@ -4823,292 +5029,309 @@ Files: lib/spawn.c
  lib/spawnattr_setsigmask.c
  lib/spawnp.c
 Copyright: 2000, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/md2.h
  lib/md4.h
 Copyright: 2000-2001, 2003, 2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/sha1.h
 Copyright: 2000-2001, 2003, 2005-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/physmem.c
 Copyright: 2000-2001, 2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/sha1.c
 Copyright: 2000-2001, 2003-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/sha1-stream.c
+Copyright: 2000-2001, 2003-2006, 2008-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: m4/time_h.m4
 Copyright: 2000-2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/dosname.h
 Copyright: 2000-2001, 2004-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
-
-Files: m4/glibc21.m4
-Copyright: 2000-2002, 2004, 2008, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/codeset.m4
 Copyright: 2000-2002, 2006, 2008-2014, 2016 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/iconv.m4
 Copyright: 2000-2002, 2007-2014, 2016-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/mbstate_t.m4
 Copyright: 2000-2002, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/arctwo.h
 Copyright: 2000-2003, 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/arcfour.c
 Copyright: 2000-2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/c-ctype.h
 Copyright: 2000-2003, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/localcharset.h
 Copyright: 2000-2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/arcfour.h
 Copyright: 2000-2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/localcharset.c
  lib/spawni.c
 Copyright: 2000-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/fnmatch.m4
 Copyright: 2000-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/uniwidth/width0.h
+ lib/uniwidth/width2.h
+Copyright: 2000-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/binary-io.h
 Copyright: 2001, 2003, 2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/rename.m4
 Copyright: 2001, 2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mkdir.c
 Copyright: 2001, 2003, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/hash-pjw.c
 Copyright: 2001, 2003, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/hash-pjw.h
 Copyright: 2001, 2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/mkdir.m4
 Copyright: 2001, 2003-2004, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/areadlink.h
  lib/careadlinkat.c
 Copyright: 2001, 2003-2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/areadlink-with-size.c
  lib/areadlink.c
  m4/getcwd.m4
  m4/mkstemp.m4
 Copyright: 2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/windows-spawn.c
+ lib/windows-spawn.h
+Copyright: 2001, 2003-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/mbiter.h
 Copyright: 2001, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mbchar.h
 Copyright: 2001, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/anytostr.c
  lib/dirfd.c
 Copyright: 2001, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mbchar.c
 Copyright: 2001, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: m4/vararrays.m4
+Copyright: 2001, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: m4/mbrtowc.m4
 Copyright: 2001-2002, 2004-2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/stdint.in.h
 Copyright: 2001-2002, 2004-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/uniwidth.in.h
 Copyright: 2001-2002, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unistr.in.h
 Copyright: 2001-2002, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unistr/u8-mbtouc-aux.c
  lib/unistr/u8-mbtouc-unsafe-aux.c
 Copyright: 2001-2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/uniwidth/width.c
  m4/signalblocking.m4
 Copyright: 2001-2002, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/c-strcaseeq.h
  lib/streq.h
 Copyright: 2001-2002, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/uninorm.in.h
 Copyright: 2001-2002, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/gettimeofday.m4
 Copyright: 2001-2003, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/rename.c
 Copyright: 2001-2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/gettimeofday.c
- lib/localtime-buffer.c
- lib/localtime-buffer.h
 Copyright: 2001-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/sys_wait.in.h
  lib/waitpid.c
 Copyright: 2001-2003, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/mkdtemp.m4
 Copyright: 2001-2003, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/poll.c
  lib/stdbool.in.h
 Copyright: 2001-2003, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/poll.in.h
 Copyright: 2001-2003, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/findprog.h
  lib/uninorm/decomposition-table.h
 Copyright: 2001-2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/striconv.h
 Copyright: 2001-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/concat-filename.c
+ lib/findprog-in.c
  lib/findprog-lgpl.c
  lib/findprog.c
  m4/environ.m4
  m4/setenv.m4
 Copyright: 2001-2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/concat-filename.h
  lib/filename.h
 Copyright: 2001-2004, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/dirfd.m4
 Copyright: 2001-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/inttostr.h
 Copyright: 2001-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/iconveh.h
  lib/striconveh.h
 Copyright: 2001-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/striconv.c
 Copyright: 2001-2007, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/intprops.h
  lib/striconveh.c
  m4/stdint.m4
 Copyright: 2001-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/intprops-internal.h
+Copyright: 2001-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: m4/localcharset.m4
 Copyright: 2002, 2004, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strptime.c
  m4/getpagesize.m4
 Copyright: 2002, 2004-2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/striconveha.c
  lib/uniconv.in.h
  m4/dup2.m4
 Copyright: 2002, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/striconveha.h
 Copyright: 2002, 2005, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/rmdir.m4
 Copyright: 2002, 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unistr/u32-uctomb.c
  lib/unistr/u8-uctomb.c
  lib/unitypes.in.h
  m4/safe-write.m4
 Copyright: 2002, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unictype.in.h
  m4/strcase.m4
  m4/strverscmp.m4
 Copyright: 2002, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/uninorm/composition.c
 Copyright: 2002, 2006, 2009, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/safe-read.h
  lib/unictype/combiningclass.c
  lib/unistr/u8-strlen.c
 Copyright: 2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unictype/bidi_of.c
 Copyright: 2002, 2006, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/uniconv/u8-conv-from-enc.c
  lib/uniconv/u8-strconv-from-enc.c
@@ -5123,20 +5346,20 @@ Files: lib/uniconv/u8-conv-from-enc.c
  lib/unistr/u8-to-u32.c
  lib/unistr/u8-uctomb-aux.c
 Copyright: 2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/stpcpy.m4
 Copyright: 2002, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/strerror.m4
  m4/strerror_r.m4
 Copyright: 2002, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/gethostname.m4
 Copyright: 2002, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/exitfail.h
  lib/full-read.h
@@ -5145,15 +5368,15 @@ Files: lib/exitfail.h
  m4/memset.m4
  m4/tm_gmtoff.m4
 Copyright: 2002, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/ansi-c++.m4
 Copyright: 2002-2003, 2005, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/physmem.m4
 Copyright: 2002-2003, 2005-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/raise.c
  m4/getpass.m4
@@ -5161,44 +5384,44 @@ Files: lib/raise.c
  m4/pathmax.m4
  m4/safe-read.m4
 Copyright: 2002-2003, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/exitfail.c
  m4/mktime.m4
  m4/stpncpy.m4
  m4/strnlen.m4
 Copyright: 2002-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/strndup.m4
 Copyright: 2002-2003, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/vasprintf.m4
 Copyright: 2002-2003, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/strpbrk.m4
 Copyright: 2002-2003, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/math.in.h
 Copyright: 2002-2003, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/full-read.c
  lib/full-write.h
 Copyright: 2002-2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/alloca.m4
  m4/strtok_r.m4
 Copyright: 2002-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/strsep.m4
 Copyright: 2002-2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/vasnprintf.h
  m4/memcmp.m4
@@ -5206,20 +5429,20 @@ Files: lib/vasnprintf.h
  m4/snprintf.m4
  m4/vsnprintf.m4
 Copyright: 2002-2004, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/memchr.m4
  m4/strncat.m4
 Copyright: 2002-2004, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/libgcrypt.m4
 Copyright: 2002-2004, 2011, 2014, 2018 g10 Code GmbH
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/gc.h
 Copyright: 2002-2005, 2007-2008, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/getopt.m4
  m4/md4.m4
@@ -5227,17 +5450,16 @@ Files: m4/getopt.m4
  m4/parse-datetime.m4
  m4/sha1.m4
 Copyright: 2002-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/gc-pbkdf2-sha1.c
  lib/gc-pbkdf2.c
  m4/clock_time.m4
- m4/dirname.m4
  m4/filenamecat.m4
  m4/read-file.m4
  m4/stdbool.m4
 Copyright: 2002-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/gc-gnulib.c
  lib/gc-libgcrypt.c
@@ -5249,147 +5471,169 @@ Files: lib/gc-gnulib.c
  m4/euidaccess.m4
  m4/strdup.m4
 Copyright: 2002-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/sysexits.m4
 Copyright: 2003, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/relocatable.h
 Copyright: 2003, 2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/size_max.m4
 Copyright: 2003, 2005-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/poll.m4
  m4/relocatable-lib.m4
 Copyright: 2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/locale-fr.m4
  m4/locale-ja.m4
  m4/locale-zh.m4
 Copyright: 2003, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/getndelim2.m4
 Copyright: 2003, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/free.c
+Copyright: 2003, 2006, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/malloca.c
 Copyright: 2003, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/time_r.c
 Copyright: 2003, 2006-2007, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/sysexits.in.h
  m4/extensions.m4
  m4/time_r.m4
 Copyright: 2003, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/mempcpy.c
  m4/readlink.m4
  m4/strchrnul.m4
  m4/timegm.m4
 Copyright: 2003, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strchrnul.c
  m4/rawmemchr.m4
 Copyright: 2003, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/xsize.h
 Copyright: 2003, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/eaccess.m4
  m4/eealloc.m4
+ m4/findprog-in.m4
  m4/findprog.m4
+ m4/sig_atomic_t.m4
 Copyright: 2003, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: m4/fatal-signal.m4
+Copyright: 2003-2004, 2006, 2008-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/alignof.h
  lib/getndelim2.h
 Copyright: 2003-2004, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/malloca.m4
  m4/mempcpy.m4
 Copyright: 2003-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/fatal-signal.c
+Copyright: 2003-2004, 2006-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: m4/xsize.m4
 Copyright: 2003-2004, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/fatal-signal.h
+Copyright: 2003-2004, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
+
+Files: m4/free.m4
+Copyright: 2003-2005, 2009-2020 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/arctwo.c
  lib/relocatable.c
 Copyright: 2003-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/malloca.h
  lib/readlink.c
  m4/canonicalize.m4
 Copyright: 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/unistd.in.h
 Copyright: 2003-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/errno_h.m4
 Copyright: 2004, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/base32.m4
  m4/base64.m4
  m4/sockpfaf.m4
 Copyright: 2004, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/snprintf.c
  lib/vsnprintf.c
 Copyright: 2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/strsep.c
 Copyright: 2004, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/stdio.in.h
 Copyright: 2004, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/cloexec.h
  lib/getpass.h
 Copyright: 2004, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/base32.h
  lib/base64.h
  m4/inttostr.m4
 Copyright: 2004-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/calloc.c
 Copyright: 2004-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/intlmacosx.m4
 Copyright: 2004-2014, 2016 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/argz.m4
  m4/calloc.m4
  m4/getaddrinfo.m4
 Copyright: 2004-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/byteswap.in.h
  lib/des.h
@@ -5411,18 +5655,18 @@ Files: lib/byteswap.in.h
  m4/gc-sha512.m4
  m4/mmap-anon.m4
 Copyright: 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/glthread/tls.h
  m4/strcasestr.m4
 Copyright: 2005, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: m4/mbiter.m4
  m4/sha256.m4
  m4/tls.m4
 Copyright: 2005, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/c-strcasestr.h
  lib/check-version.h
@@ -5433,7 +5677,7 @@ Files: lib/c-strcasestr.h
  lib/strnlen1.h
  m4/minmax.m4
 Copyright: 2005, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/arpa_inet.in.h
  lib/sha256.c
@@ -5443,7 +5687,12 @@ Files: lib/arpa_inet.in.h
  m4/inet_ntop.m4
  m4/sha512.m4
 Copyright: 2005-2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/sha256-stream.c
+ lib/sha512-stream.c
+Copyright: 2005-2006, 2008-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/hmac-md5.c
  lib/hmac-sha1.c
@@ -5458,21 +5707,20 @@ Files: lib/hmac-md5.c
  lib/verify.h
  m4/arctwo.m4
 Copyright: 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getline.c
  lib/glob.in.h
  lib/strnlen.c
  m4/getdelim.m4
  m4/getlogin_r.m4
- m4/glob.m4
  m4/mbchar.m4
 Copyright: 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/getlogin_r.c
 Copyright: 2005-2007, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/c-strcasestr.c
  lib/glthread/cond.h
@@ -5507,23 +5755,45 @@ Files: lib/c-strcasestr.c
  lib/windows-timedrwlock.c
  lib/windows-tls.c
  lib/windows-tls.h
- m4/gc-random.m4
  m4/gc.m4
  m4/lock.m4
  m4/sys_socket_h.m4
  m4/threadlib.m4
  m4/yield.m4
 Copyright: 2005-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
-Files: m4/arpa_inet_h.m4
+Files: lib/gl_avltree_list.c
+ lib/gl_linked_list.c
+ lib/gl_linkedhash_list.c
+ lib/gl_rbtree_list.c
+ m4/arpa_inet_h.m4
  m4/double-slash-root.m4
  m4/inet_pton.m4
  m4/stdarg.m4
 Copyright: 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
-Files: lib/read-file.c
+Files: lib/gl_anyavltree_list1.h
+ lib/gl_anyhash1.h
+ lib/gl_anyhash2.h
+ lib/gl_anyhash_primes.h
+ lib/gl_anylinked_list1.h
+ lib/gl_anyrbtree_list1.h
+ lib/gl_anytree_list1.h
+ lib/gl_array_list.h
+ lib/gl_array_omap.h
+ lib/gl_array_oset.h
+ lib/gl_avltree_list.h
+ lib/gl_avltree_omap.h
+ lib/gl_avltree_oset.h
+ lib/gl_carray_list.h
+ lib/gl_linked_list.h
+ lib/gl_linkedhash_list.h
+ lib/gl_rbtree_list.h
+ lib/gl_rbtree_omap.h
+ lib/gl_rbtree_oset.h
+ lib/read-file.c
  lib/read-file.h
  lib/same-inode.h
  lib/tempname.h
@@ -5532,22 +5802,49 @@ Files: lib/read-file.c
  m4/flexmember.m4
  m4/memxor.m4
 Copyright: 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
-Files: m4/fcntl_h.m4
+Files: lib/gl_oset.c
+Copyright: 2006-2007, 2009-2013 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
+
+Files: lib/gl_anyavltree_list2.h
+ lib/gl_anyrbtree_list2.h
+ lib/gl_anytree_omap.h
+ lib/gl_anytree_oset.h
+ lib/gl_array_omap.c
+ lib/gl_array_oset.c
+ lib/gl_avltree_omap.c
+ lib/gl_avltree_ordered.h
+ lib/gl_avltree_oset.c
+ lib/gl_omap.h
+ lib/gl_oset.h
+ lib/gl_rbtree_omap.c
+ lib/gl_rbtree_ordered.h
+ lib/gl_rbtree_oset.c
+ m4/fcntl_h.m4
  m4/selinux-context-h.m4
  m4/selinux-selinux-h.m4
  m4/tempname.m4
 Copyright: 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/wcwidth.c
 Copyright: 2006-2007, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/gl_list.c
+Copyright: 2006-2013 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/closedir.c
  lib/dirent.in.h
  lib/fcntl.in.h
+ lib/gl_anylinked_list2.h
+ lib/gl_anytree_list2.h
+ lib/gl_array_list.c
+ lib/gl_carray_list.c
+ lib/gl_list.h
  lib/inttypes.in.h
  lib/opendir.c
  lib/signal.in.h
@@ -5559,11 +5856,18 @@ Files: lib/closedir.c
  m4/netinet_in_h.m4
  m4/sys_select_h.m4
  m4/sys_stat_h.m4
+ m4/tsearch.m4
  m4/unistd_h.m4
  m4/wctype_h.m4
  m4/wcwidth.m4
 Copyright: 2006-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/clean-temp-private.h
+ lib/clean-temp-simple.c
+ lib/clean-temp-simple.h
+Copyright: 2006-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/float+.h
  lib/frexpl.c
@@ -5606,17 +5910,18 @@ Files: lib/float+.h
  m4/strptime.m4
  m4/sys_time_h.m4
 Copyright: 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/stdio-impl.h
  m4/exponentf.m4
 Copyright: 2007-2008, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/count-one-bits.h
  lib/creat.c
  lib/fflush.c
  lib/float.in.h
+ lib/fopen.c
  lib/fpucw.h
  lib/fpurge.c
  lib/freadahead.c
@@ -5677,14 +5982,14 @@ Files: lib/count-one-bits.h
  m4/string_h.m4
  m4/wchar_h.m4
 Copyright: 2007-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/btowc.c
  m4/hostent.m4
  m4/mbsinit.m4
  m4/servent.m4
 Copyright: 2008, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/accept.c
  lib/bind.c
@@ -5778,11 +6083,11 @@ Files: lib/accept.c
  m4/wcrtomb.m4
  m4/write.m4
 Copyright: 2008-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/uninorm/composition-table.gperf
 Copyright: 2009 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/amemxfrm.c
  lib/amemxfrm.h
@@ -5818,7 +6123,6 @@ Files: lib/amemxfrm.c
  lib/uninorm/u32-normalize.c
  lib/unlink.c
  lib/usleep.c
- m4/ctype.m4
  m4/fcntl.m4
  m4/fnmatch_h.m4
  m4/isblank.m4
@@ -5841,10 +6145,15 @@ Files: lib/amemxfrm.c
  m4/sys_utsname_h.m4
  m4/times.m4
  m4/uname.m4
+ m4/ungetc.m4
  m4/unlink.m4
  m4/usleep.m4
 Copyright: 2009-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: m4/ctype_h.m4
+Copyright: 2009-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/c++defs.h
  lib/getlogin.c
@@ -5878,13 +6187,14 @@ Files: lib/c++defs.h
  m4/waitpid.m4
  m4/warn-on-use.m4
 Copyright: 2010-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/_Noreturn.h
  lib/allocator.h
  lib/assert.in.h
  lib/careadlinkat.h
  lib/dirent-private.h
+ lib/dup.c
  lib/fdatasync.c
  lib/fdopen.c
  lib/ffs.c
@@ -5917,10 +6227,10 @@ Files: lib/_Noreturn.h
  lib/unictype/joiningtype_of.c
  lib/wctomb-impl.h
  lib/wctomb.c
+ lib/wmemchr.c
  m4/assert_h.m4
  m4/closedir.m4
  m4/dup.m4
- m4/dup2-obsolete.m4
  m4/fdopen.m4
  m4/ffs.m4
  m4/ffsl.m4
@@ -5928,7 +6238,6 @@ Files: lib/_Noreturn.h
  m4/fstat.m4
  m4/iswblank.m4
  m4/mbtowc.m4
- m4/memchr-obsolete.m4
  m4/msvc-inval.m4
  m4/msvc-nothrow.m4
  m4/nonblocking.m4
@@ -5946,8 +6255,9 @@ Files: lib/_Noreturn.h
  m4/sys_uio_h.m4
  m4/timer_time.m4
  m4/wctomb.m4
+ m4/wmemchr.m4
 Copyright: 2011-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/count-leading-zeros.h
  lib/execinfo.in.h
@@ -5969,7 +6279,11 @@ Files: lib/count-leading-zeros.h
  m4/stdnoreturn.m4
  m4/sys_resource_h.m4
 Copyright: 2012-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/eloop-threshold.h
+Copyright: 2012-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/count-trailing-zeros.h
  lib/gl_openssl.h
@@ -5977,13 +6291,13 @@ Files: lib/count-trailing-zeros.h
  m4/gl-openssl.m4
  m4/secure_getenv.m4
 Copyright: 2013-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/assure.h
  lib/qsort_r.c
  m4/qsort_r.m4
 Copyright: 2014-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/malloc/scratch_buffer.h
  lib/malloc/scratch_buffer_grow.c
@@ -5991,26 +6305,27 @@ Files: lib/malloc/scratch_buffer.h
  lib/malloc/scratch_buffer_set_array_size.c
  m4/intl-thread-locale.m4
 Copyright: 2015-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/explicit_bzero.c
  lib/flexmember.h
+ lib/getprogname.c
+ lib/getprogname.h
  lib/limits.in.h
  lib/mktime-internal.h
  m4/builtin-expect.m4
+ m4/getprogname.m4
  m4/limits-h.m4
 Copyright: 2016-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/binary-io.c
  lib/ctime.c
- lib/glob_internal.h
- lib/glob_pattern_p.c
- lib/globfree.c
  lib/libc-config.h
  lib/localtime.c
  lib/monetary.in.h
  lib/noreturn.h
+ lib/reallocarray.c
  lib/sm3.c
  lib/sm3.h
  lib/stat-w32.c
@@ -6023,11 +6338,11 @@ Files: lib/binary-io.c
  m4/ctime.m4
  m4/explicit_bzero.m4
  m4/gc-sm3.m4
- m4/localtime-buffer.m4
  m4/localtime.m4
  m4/monetary_h.m4
  m4/open-cloexec.m4
  m4/pthread_rwlock_rdlock.m4
+ m4/reallocarray.m4
  m4/sm3.m4
  m4/strfmon_l.m4
  m4/strftime-fixes.m4
@@ -6035,16 +6350,26 @@ Files: lib/binary-io.c
  m4/wcsftime.m4
  m4/windows-stat-inodes.m4
  m4/windows-stat-timespec.m4
- m4/year2038.m4
 Copyright: 2017-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/malloc/dynarray-skeleton.c
+ lib/malloc/dynarray.h
+ lib/malloc/dynarray_at_failure.c
+ lib/malloc/dynarray_emplace_enlarge.c
+ lib/malloc/dynarray_finalize.c
+ lib/malloc/dynarray_resize.c
+ lib/malloc/dynarray_resize_clear.c
+ lib/sm3-stream.c
+Copyright: 2017-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/af_alg.c
  lib/af_alg.h
  lib/sys-limits.h
  m4/af_alg.m4
 Copyright: 2018 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/lc-charset-dispatch.c
  lib/lc-charset-dispatch.h
@@ -6059,7 +6384,7 @@ Files: lib/lc-charset-dispatch.c
  m4/posixcheck.m4
  m4/sh-filename.m4
 Copyright: 2018-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/access.c
  lib/copy-file-range.c
@@ -6084,9 +6409,8 @@ Files: lib/access.c
  m4/pthread_mutex_timedlock.m4
  m4/sched_yield.m4
  m4/thrd.m4
- m4/threads.m4
 Copyright: 2019 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
 
 Files: lib/iconv_open-zos.gperf
  lib/mbtowc-lock.c
@@ -6096,9 +6420,14 @@ Files: lib/iconv_open-zos.gperf
  lib/setlocale_null.h
  lib/uchar.in.h
  m4/setlocale_null.m4
- m4/uchar.m4
 Copyright: 2019-2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/nl_langinfo-lock.c
+ m4/threads_h.m4
+ m4/uchar_h.m4
+Copyright: 2019-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: lib/attribute.h
  lib/btoc32.c
@@ -6112,7 +6441,76 @@ Files: lib/attribute.h
  m4/iswdigit.m4
  m4/iswxdigit.m4
 Copyright: 2020 Free Software Foundation, Inc.
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
+
+Files: lib/aligned-malloc.h
+ lib/aligned_alloc.c
+ lib/asyncsafe-spin.c
+ lib/asyncsafe-spin.h
+ lib/execl.c
+ lib/execle.c
+ lib/execlp.c
+ lib/execv.c
+ lib/execve.c
+ lib/execvp.c
+ lib/execvpe.c
+ lib/getrandom.c
+ lib/idx.h
+ lib/malloc.in.h
+ lib/malloc/scratch_buffer_dupfree.c
+ lib/memalign.c
+ lib/posix_memalign.c
+ lib/se-label.c
+ lib/se-label.in.h
+ lib/sigabbrev_np.c
+ lib/sigdescr_np.c
+ lib/simple-atomic.c
+ lib/ssfmalloc-bitmap.h
+ lib/ssfmalloc.h
+ lib/strerrorname_np.c
+ lib/sys_random.in.h
+ lib/thread-optim.h
+ lib/wmempcpy.c
+ m4/aligned_alloc.m4
+ m4/execl.m4
+ m4/execle.m4
+ m4/execlp.m4
+ m4/execv.m4
+ m4/execve.m4
+ m4/execvp.m4
+ m4/execvpe.m4
+ m4/getrandom.m4
+ m4/malloc-align.m4
+ m4/malloc_h.m4
+ m4/memalign.m4
+ m4/pid_t.m4
+ m4/posix_memalign.m4
+ m4/selinux-label-h.m4
+ m4/sigabbrev_np.m4
+ m4/sigdescr_np.m4
+ m4/sparcv8+.m4
+ m4/strerrorname_np.m4
+ m4/sys_random_h.m4
+ m4/wmempcpy.m4
+Copyright: 2020-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
+
+Files: lib/dynarray.h
+ lib/ialloc.c
+ lib/ialloc.h
+ lib/immutable.c
+ lib/immutable.h
+ lib/simple-atomic.h
+ m4/immutable.m4
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
+
+Files: lib/alignalloc.c
+ lib/alignalloc.h
+ lib/stdckdint.in.h
+ m4/alignalloc.m4
+Copyright: 2022 Free Software Foundation, Inc.
+License: LGPL-2+ [REF20]
 
 Files: tests/unigbrk/test-uc-grapheme-breaks.c
  tests/uniwbrk/test-uc-wordbreaks.c
@@ -6130,29 +6528,29 @@ Files: tests/unigbrk/test-u16-grapheme-breaks.c
  tests/unigbrk/test-u8-grapheme-prev.c
  tests/unigbrk/test-uc-is-grapheme-break.c
 Copyright: 2010-2020 Free Software Foundation, Inc.
-License: LGPL-3+ [REF19]
+License: LGPL-3+ [REF21]
 
 Files: tests/unictype/test-combiningclass_byname.c
  tests/unictype/test-joininggroup_byname.c
  tests/unictype/test-joininggroup_name.c
  tests/unictype/test-joiningtype_name.c
 Copyright: 2011 Free Software Foundation, Inc
-License: LGPL-3+ [REF19]
+License: LGPL-3+ [REF21]
 
 Files: tests/unictype/test-joininggroup_of.c
  tests/unictype/test-joiningtype_byname.c
  tests/unictype/test-joiningtype_longname.c
  tests/unictype/test-joiningtype_of.c
 Copyright: 2011 Free Software Foundation, Inc.
-License: LGPL-3+ [REF19]
+License: LGPL-3+ [REF21]
 
 Files: tests/test-tsearch.c
 Copyright: 1997, 2000-2001, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-3+ [REF20]
+License: LGPL-3+ [REF22]
 
 Files: tests/test-array-mergesort.c
 Copyright: 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ [REF20]
+License: LGPL-3+ [REF22]
 
 Files: lib/libunistring.valgrind
  lib/unicase/cased.h
@@ -6315,20 +6713,24 @@ Files: lib/libunistring.valgrind
  lib/unigbrk/gbrkprop.h
  lib/uniname/uninames.h
 Copyright: unknown
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: lib/mini-gmp.c
+Copyright: 1991-1997, 1999-2021 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/inttypes_h.m4
  m4/stdint_h.m4
 Copyright: 1997-2004, 2006, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/intmax_t.m4
 Copyright: 1997-2004, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistdio/u-printf-parse.h
 Copyright: 1999, 2002, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistdio/u-asnprintf.h
  lib/unistdio/u-asprintf.h
@@ -6363,7 +6765,7 @@ Files: lib/unistdio/u-asnprintf.h
  lib/unistdio/ulc-snprintf.c
  lib/unistdio/ulc-sprintf.c
 Copyright: 1999, 2002, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistr/u-cpy.h
  lib/unistr/u-move.h
@@ -6430,13 +6832,13 @@ Files: lib/unistr/u-cpy.h
  lib/unistr/u8-strspn.c
  lib/unistr/u8-strtok.c
 Copyright: 1999, 2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistr/u-strstr.h
  lib/unistr/u16-strstr.c
  lib/unistr/u8-strstr.c
 Copyright: 1999, 2002, 2006, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistdio/u-printf-args.c
  lib/unistdio/u16-u16-vasnprintf.c
@@ -6478,29 +6880,29 @@ Files: lib/unistdio/u-printf-args.c
  lib/unistr/u8-strchr.c
  lib/unistr/u8-strrchr.c
 Copyright: 1999, 2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistdio/u-vasprintf.h
  lib/unistdio/u-vsnprintf.h
  lib/unistdio/u-vsprintf.h
 Copyright: 1999, 2002, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/printf-parse.h
 Copyright: 1999, 2002-2003, 2005, 2007, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/printf-args.c
 Copyright: 1999, 2002-2003, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/printf-args.h
 Copyright: 1999, 2002-2003, 2006-2007, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/vasnprintf.c
 Copyright: 1999, 2002-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistdio/u16-printf-parse.c
  lib/unistdio/u32-printf-parse.c
@@ -6512,66 +6914,79 @@ Files: lib/unistdio/u16-printf-parse.c
  lib/unistr/u8-strmblen.c
  lib/unistr/u8-strmbtouc.c
 Copyright: 1999-2000, 2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/printf-parse.c
 Copyright: 1999-2000, 2002-2003, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistr/u16-mbtouc-unsafe.c
  lib/unistr/u16-mbtouc.c
  lib/unistr/u16-mbtoucr.c
 Copyright: 1999-2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/uniwbrk/wbrkprop.h
 Copyright: 2000-2002, 2004, 2007-2009 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unilbrk/lbrkprop1.h
 Copyright: 2000-2002, 2004, 2008 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unilbrk/lbrkprop2.h
 Copyright: 2000-2002, 2004, 2008-2011 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/uniname.in.h
 Copyright: 2000-2002, 2005, 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unictype/bitmap.h
  lib/unictype/identsyntaxmap.h
  lib/uniname/uniname.c
 Copyright: 2000-2002, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/uniname/gen-uninames.lisp
 Copyright: 2000-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: lib/unictype/pr_emoji.h
+ lib/unictype/pr_emoji_component.h
+ lib/unictype/pr_emoji_modifier.h
+ lib/unictype/pr_emoji_modifier_base.h
+ lib/unictype/pr_emoji_presentation.h
+ lib/unictype/pr_extended_pictographic.h
+Copyright: 2000-2022 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/uniwidth/cjk.h
 Copyright: 2001-2002, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/uniwidth/u16-strwidth.c
  lib/uniwidth/u32-strwidth.c
  lib/uniwidth/u32-width.c
  lib/uniwidth/u8-strwidth.c
 Copyright: 2001-2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistr/u16-mbtouc-aux.c
  lib/unistr/u16-mbtouc-unsafe-aux.c
  lib/uniwidth/u16-width.c
  lib/uniwidth/u8-width.c
 Copyright: 2001-2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unilbrk.in.h
  lib/uniwbrk.in.h
 Copyright: 2001-2003, 2005-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: lib/unilbrk/internal.h
+Copyright: 2001-2003, 2005-2022 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unigbrk/u8-grapheme-breaks.c
  lib/unigbrk/ulc-grapheme-breaks.c
@@ -6590,16 +7005,16 @@ Files: lib/unigbrk/u8-grapheme-breaks.c
  lib/uniwbrk/ulc-wordbreaks.c
  lib/uniwbrk/wordbreak-property.c
 Copyright: 2001-2003, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistr/u16-uctomb.c
 Copyright: 2002, 2005-2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unictype/pr_test.c
  lib/unistdio.in.h
 Copyright: 2002, 2005-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unicase/simple-mapping.h
  lib/unicase/tocasefold.c
@@ -6633,14 +7048,14 @@ Files: lib/unicase/simple-mapping.h
  lib/unistr/u8-strncmp.c
  lib/unistr/u8-strncpy.c
 Copyright: 2002, 2006, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unictype/bidi_byname.c
  lib/unictype/bidi_longname.c
  lib/unictype/bidi_name.c
  lib/unictype/bidi_test.c
 Copyright: 2002, 2006, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unicase/cased.c
  lib/unicase/ignorable.c
@@ -6812,7 +7227,16 @@ Files: lib/unicase/cased.c
  lib/unistr/u32-to-u16.c
  lib/unistr/u8-to-u16.c
 Copyright: 2002, 2006-2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: lib/unictype/pr_emoji.c
+ lib/unictype/pr_emoji_component.c
+ lib/unictype/pr_emoji_modifier.c
+ lib/unictype/pr_emoji_modifier_base.c
+ lib/unictype/pr_emoji_presentation.c
+ lib/unictype/pr_extended_pictographic.c
+Copyright: 2002, 2006-2007, 2009-2022 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unictype/categ_LC.c
  lib/unictype/categ_longname.c
@@ -6820,43 +7244,43 @@ Files: lib/unictype/categ_LC.c
  lib/unictype/combiningclass_longname.c
  lib/unictype/combiningclass_name.c
 Copyright: 2002, 2006-2007, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/uniconv/u-conv-to-enc.h
  lib/uniconv/u16-conv-to-enc.c
 Copyright: 2002, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unicase.in.h
 Copyright: 2002, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/wchar_t.m4
 Copyright: 2002-2003, 2008-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/vasnprintf.m4
 Copyright: 2002-2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/printf.m4
  m4/wint_t.m4
 Copyright: 2003, 2007-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unistdio/ulc-fprintf.c
  lib/unistdio/ulc-vfprintf.c
 Copyright: 2004, 2006-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/str-kmp.h
 Copyright: 2005-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/absolute-header.m4
  tests/macros.h
 Copyright: 2006-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unictype/block_test.c
  lib/unictype/blocks.c
@@ -6871,19 +7295,19 @@ Files: lib/unictype/block_test.c
  lib/unistr/u32-mbsnlen.c
  lib/unistr/u8-mbsnlen.c
 Copyright: 2007, 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unictype/pr_byname.c
 Copyright: 2007, 2011-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/exponentd.m4
 Copyright: 2007-2008, 2010-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/math_h.m4
 Copyright: 2007-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unicase/casefold.h
  lib/unicase/caseprop.h
@@ -7009,7 +7433,7 @@ Files: lib/unicase/casefold.h
  lib/uniwbrk/wbrktable.h
  m4/libunistring.m4
 Copyright: 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unigbrk.in.h
  lib/unigbrk/u-grapheme-breaks.h
@@ -7027,7 +7451,11 @@ Files: lib/unigbrk.in.h
  m4/libunistring-base.m4
  m4/libunistring-optional.m4
 Copyright: 2010-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: lib/mini-gmp.h
+Copyright: 2011-2015, 2017, 2019-2021 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/unictype/combiningclass_byname.c
  lib/unictype/joininggroup_byname.c
@@ -7038,11 +7466,15 @@ Files: lib/unictype/combiningclass_byname.c
  lib/unictype/joiningtype_longname.c
  lib/unictype/joiningtype_name.c
 Copyright: 2011-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: m4/mbrtoc32.m4
 Copyright: 2014-2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: lib/mini-gmp-gnulib.c
+Copyright: 2018-2022 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: lib/c32is-impl.h
  lib/c32isalnum.c
@@ -7058,11 +7490,19 @@ Files: lib/c32is-impl.h
  lib/c32isupper.c
  lib/c32isxdigit.c
 Copyright: 2020 Free Software Foundation, Inc.
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: m4/libgmp.m4
+Copyright: 2020-2022 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
+
+Files: lib/unictype/pr_regional_indicator.c
+Copyright: 2021-2022 Free Software Foundation, Inc.
+License: LGPL-3+ or GPL-2+ [REF23]
 
 Files: tests/test-safe-alloc.c
 Copyright: 2009-2020 Free Software Foundation, Inc.
-License: LGPL-3.1+ [REF22]
+License: LGPL-3.1+ [REF24]
 
 Files: tests/uniname/NameAliases.txt
  tests/uniwbrk/WordBreakTest.txt
@@ -7071,45 +7511,49 @@ License: Unicode-TOU
 
 Files: tests/uninorm/NormalizationTest.txt
 Copyright: 2016 Unicode®, Inc.
-License: Unicode-TOU [REF23]
+License: Unicode-TOU [REF25]
 
 Files: tests/unigbrk/GraphemeBreakTest.txt
 Copyright: 2016 Unicode®, Inc.
-License: Unicode-TOU [REF24]
+License: Unicode-TOU [REF26]
 
 Files: config/srclist.txt
  tests/test-libtextstyle-default.css
 Copyright: unknown
 License: public-domain
 
+Files: lib/dummy.c
+Copyright: 2004, 2007, 2009-2020 Free Software Foundation, Inc.
+License: public-domain
+
 Files: lib/alloca.c
-Copyright: none (in the public domain)
-License: public-domain [REF25]
-
-Files: lib/memmove.c
-Copyright: none (in the public domain)
-License: public-domain [REF26]
-
-Files: build-aux/mkinstalldirs
 Copyright: none (in the public domain)
 License: public-domain [REF27]
 
+Files: lib/memmove.c
+Copyright: none (in the public domain)
+License: public-domain [REF28]
+
+Files: build-aux/mkinstalldirs
+Copyright: none (in the public domain)
+License: public-domain [REF29]
+
 Files: doc/regexprops-generic.texi
 Copyright: 1994, 1996, 1998, 2000-2001, 2003-2007, 2009-2020 Free Software Foundation, Inc.
-License: public-domain [REF28]
+License: public-domain [REF30]
 
 Files: m4/atexit.m4
  m4/memmove.m4
 Copyright: 2002, 2009-2020 Free Software Foundation, Inc.
-License: public-domain [REF29]
+License: public-domain [REF31]
 
 Files: lib/atexit.c
 Copyright: none (in the public domain)
-License: public-domain [REF30]
+License: public-domain [REF32]
 
 Files: build-aux/install-sh
 Copyright: 1994 X Consortium
-License: public-domain and X11 [REF31]
+License: public-domain and X11 [REF33]
 
 License: FSFAP [REF01]
  Copying and distribution of this file,
@@ -7307,7 +7751,43 @@ License: GPLVerbatim [REF15]
  verbatim copies of this license document,
  but changing it is not allowed.
 
-License: LGPL [REF16]
+License: GPLv2+ [REF16]
+ This program is free software:
+ you can redistribute it and/or modify it
+ under the terms of the GNU General Public License
+ as published by the Free Software Foundation;
+ either version 2 of the License, or (at your option) any later version.
+ .
+ This program is distributed
+ in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY;
+ without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.
+ If not, see <https://www.gnu.org/licenses/>.
+
+License: GPLv3+ [REF17]
+ This program is free software:
+ you can redistribute it and/or modify it
+ under the terms of the GNU General Public License
+ as published by the Free Software Foundation;
+ either version 3 of the License, or (at your option) any later version.
+ .
+ This program is distributed
+ in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY;
+ without even the implied warranty
+ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.
+ If not, see <https://www.gnu.org/licenses/>.
+
+License: LGPL [REF18]
  This program is free software:
  you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public License
@@ -7325,7 +7805,7 @@ License: LGPL [REF16]
  along with this program.
  If not, see <http://www.gnu.org/licenses/>.
 
-License: LGPL [REF17]
+License: LGPL [REF19]
  This program is free software:
  you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public License
@@ -7343,7 +7823,7 @@ License: LGPL [REF17]
  along with this program.
  If not, see <https://www.gnu.org/licenses/>.
 
-License: LGPL-2+ [REF18]
+License: LGPL-2+ [REF20]
  This program is free software;
  you can redistribute it and/or modify it
  under the terms of the GNU Library General Public License
@@ -7361,7 +7841,7 @@ License: LGPL-2+ [REF18]
  along with this program.
  If not, see <https://www.gnu.org/licenses/>.
 
-License: LGPL-3+ [REF19]
+License: LGPL-3+ [REF21]
  This program is free software:
  you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public License
@@ -7379,7 +7859,7 @@ License: LGPL-3+ [REF19]
  along with this program.
  If not, see <http://www.gnu.org/licenses/>.
 
-License: LGPL-3+ [REF20]
+License: LGPL-3+ [REF22]
  This program is free software:
  you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public License
@@ -7397,7 +7877,7 @@ License: LGPL-3+ [REF20]
  along with this program.
  If not, see <http://www.gnu.org/licenses/>.
 
-License: LGPL-3+ or GPL-2 [REF21]
+License: LGPL-3+ or GPL-2+ [REF23]
  This program is free software:
  you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public License
@@ -7433,7 +7913,7 @@ License: LGPL-3+ or GPL-2 [REF21]
  along with this program.
  If not, see <https://www.gnu.org/licenses/>.
 
-License: LGPL-3.1+ [REF22]
+License: LGPL-3.1+ [REF24]
  This library is free software;
  you can redistribute it and/or modify it
  under the terms of the GNU Lesser General Public
@@ -7451,26 +7931,26 @@ License: LGPL-3.1+ [REF22]
  along with this library;
  if not, see <http://www.gnu.org/licenses/>.
 
-License: Unicode-TOU [REF23]
+License: Unicode-TOU [REF25]
  For terms of use, see http://www.unicode.org/terms_of_use.html
 
-License: Unicode-TOU [REF24]
+License: Unicode-TOU [REF26]
  For terms of use, see http://www.unicode.org/terms_of_use.html
  For documentation, see http://www.unicode.org/reports/tr44/
 
-License: public-domain [REF25]
+License: public-domain [REF27]
  (Mostly) portable public-domain implementation -- D A Gwyn
 
-License: public-domain [REF26]
+License: public-domain [REF28]
  In the public domain.
  By David MacKenzie <djm@gnu.ai.mit.edu>.
 
-License: public-domain [REF27]
+License: public-domain [REF29]
  Original author: Noah Friedman <friedman@prep.ai.mit.edu>
  Created: 1993-05-16
  Public domain.
 
-License: public-domain [REF28]
+License: public-domain [REF30]
  Permission is granted
  to copy, distribute and/or modify this document
  under the terms of the GNU Free Documentation License,
@@ -7482,17 +7962,17 @@ License: public-domain [REF28]
  in the ``GNU Free Documentation License'' file
  as part of this distribution.
 
-License: public-domain [REF29]
+License: public-domain [REF31]
  This file is free software;
  the Free Software Foundation gives unlimited permission
  to copy and/or distribute it,
  with or without modifications,
  as long as this notice is preserved.
 
-License: public-domain [REF30]
+License: public-domain [REF32]
  This function is in the public domain.  --Mike Stump.
 
-License: public-domain and X11 [REF31]
+License: public-domain and X11 [REF33]
  Permission is hereby granted,
  free of charge,
  to any person obtaining a copy

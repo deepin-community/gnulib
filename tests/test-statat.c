@@ -1,9 +1,9 @@
 /* Tests of statat and lstatat.
-   Copyright (C) 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -17,6 +17,10 @@
 #include <config.h>
 
 #include "openat.h"
+
+#if 4 < __GNUC__ + (3 <= __GNUC_MINOR__)
+# pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 
 #include "signature.h"
 SIGNATURE_CHECK (statat, int, (int, char const *, struct stat *));

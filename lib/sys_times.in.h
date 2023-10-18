@@ -1,5 +1,5 @@
 /* Provide a sys/times.h header file.
-   Copyright (C) 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2008-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -31,6 +31,11 @@
 # endif
 
 # define _@GUARD_PREFIX@_SYS_TIMES_H
+
+/* This file uses GNULIB_POSIXCHECK, HAVE_RAW_DECL_*.  */
+# if !_GL_CONFIG_H_INCLUDED
+#  error "Please include config.h first."
+# endif
 
 /* Get clock_t.
    But avoid namespace pollution on glibc systems.  */

@@ -1,12 +1,12 @@
 /* Line breaking of UTF-32 strings.
-   Copyright (C) 2001-2003, 2006-2021 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2006-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2001.
 
    This file is free software.
    It is dual-licensed under "the GNU LGPLv3+ or the GNU GPLv2+".
    You can redistribute it and/or modify it under either
      - the terms of the GNU Lesser General Public License as published
-       by the Free Software Foundation; either version 3, or (at your
+       by the Free Software Foundation, either version 3, or (at your
        option) any later version, or
      - the terms of the GNU General Public License as published by the
        Free Software Foundation; either version 2, or (at your option)
@@ -28,20 +28,22 @@
 /* Specification.  */
 #include "unilbrk.h"
 
+#include "unilbrk/internal.h"
+#include "unilbrk/lbrktables.h"
 #include "uniwidth.h"
 
-int
-u32_width_linebreaks (const uint32_t *s, size_t n,
-                      int width, int start_column, int at_end_columns,
-                      const char *o, const char *encoding,
-                      char *p)
+static int
+u32_width_linebreaks_internal (const uint32_t *s, size_t n,
+                              int width, int start_column, int at_end_columns,
+                              const char *o, const char *encoding, int cr,
+                              char *p)
 {
   const uint32_t *s_end;
   char *last_p;
   int last_column;
   int piece_width;
 
-  u32_possible_linebreaks (s, n, encoding, p);
+  u32_possible_linebreaks_loop (s, n, encoding, cr, p);
 
   s_end = s + n;
   last_p = NULL;
@@ -55,7 +57,8 @@ u32_width_linebreaks (const uint32_t *s, size_t n,
       if (o != NULL && *o != UC_BREAK_UNDEFINED)
         *p = *o;
 
-      if (*p == UC_BREAK_POSSIBLE || *p == UC_BREAK_MANDATORY)
+      if (*p == UC_BREAK_POSSIBLE
+          || *p == UC_BREAK_MANDATORY || *p == UC_BREAK_CR_BEFORE_LF)
         {
           /* An atomic piece of text ends here.  */
           if (last_p != NULL && last_column + piece_width > width)
@@ -66,7 +69,7 @@ u32_width_linebreaks (const uint32_t *s, size_t n,
             }
         }
 
-      if (*p == UC_BREAK_MANDATORY)
+      if (*p == UC_BREAK_MANDATORY || *p == UC_BREAK_CR_BEFORE_LF)
         {
           /* uc is a line break character.  */
           /* Start a new piece at column 0.  */
@@ -111,4 +114,33 @@ u32_width_linebreaks (const uint32_t *s, size_t n,
     }
 
   return last_column + piece_width;
+}
+
+#if defined IN_LIBUNISTRING
+/* For backward compatibility with older versions of libunistring.  */
+
+# undef u32_width_linebreaks
+
+int
+u32_width_linebreaks (const uint32_t *s, size_t n,
+                      int width, int start_column, int at_end_columns,
+                      const char *o, const char *encoding,
+                      char *p)
+{
+  return u32_width_linebreaks_internal (s, n,
+                                        width, start_column, at_end_columns,
+                                        o, encoding, -1, p);
+}
+
+#endif
+
+int
+u32_width_linebreaks_v2 (const uint32_t *s, size_t n,
+                         int width, int start_column, int at_end_columns,
+                         const char *o, const char *encoding,
+                         char *p)
+{
+  return u32_width_linebreaks_internal (s, n,
+                                        width, start_column, at_end_columns,
+                                        o, encoding, LBP_CR, p);
 }

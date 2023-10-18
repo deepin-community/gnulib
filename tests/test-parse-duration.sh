@@ -5,8 +5,6 @@ test -z "$VERBOSE" || set -x
 prog=test-parse-duration
 
 exe=`pwd`/${prog}${EXEEXT}
-nl='
-'
 
 # func_tmpdir
 # creates a temporary directory.
@@ -17,7 +15,7 @@ func_tmpdir ()
   # Use the environment variable TMPDIR, falling back to /tmp. This allows
   # users to specify a different temporary directory, for example, if their
   # /tmp is filled up or too small.
-  : ${TMPDIR=/tmp}
+  : "${TMPDIR=/tmp}"
   {
     # Use the mktemp program if available. If not available, hide the error
     # message.
@@ -62,7 +60,8 @@ cat > "${tmpf}" <<- _EOF_
 exec 3< "${tmpf}"
 while read line <&3
 do
-    v=`${CHECKER} ${exe} "${line}"` || { ls -l "${tmpf}"; die "Failed: ${exe} '${line}'"; }
+    v=`${CHECKER} ${exe} "${line}" | LC_ALL=C tr -d '\r'` \
+      || { ls -l "${tmpf}"; die "Failed: ${exe} '${line}'"; }
     test $v -eq 38898367 || die $v is not 38898367
 done
 exec 3>&-

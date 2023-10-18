@@ -1,10 +1,10 @@
 /* Locale-specific case-ignoring memory comparison.
-   Copyright (C) 2001, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2009-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2001.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published
-   by the Free Software Foundation; either version 3 of the License,
+   by the Free Software Foundation, either version 3 of the License,
    or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -159,7 +159,7 @@ mbmemcasecoll (const char *s1, size_t s1len, const char *s2, size_t s2len,
   t1 = memory;
   t2 = memory + t1len + 1;
 
-  /* Csae-fold the two argument strings.  */
+  /* Case-fold the two argument strings.  */
   if (MB_CUR_MAX > 1)
     {
       t1len = apply_towlower (s1, s1len, t1, t1len);

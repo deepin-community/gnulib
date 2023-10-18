@@ -1,5 +1,5 @@
 /* Ordered set data type implemented by a binary tree.
-   Copyright (C) 2006-2007, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2006-2007, 2009-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
    This file is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@
 #include "gl_anytree_oset.h"
 
 /* For debugging.  */
+extern void gl_rbtree_oset_check_invariants (gl_oset_t);
 void
 gl_rbtree_oset_check_invariants (gl_oset_t set)
 {

@@ -1,9 +1,9 @@
 /* Test of <threads.h> substitute.
-   Copyright (C) 2019-2021 Free Software Foundation, Inc.
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -46,6 +46,7 @@ main (void)
     case thrd_busy:
     case thrd_nomem:
     case thrd_error:
+    default:
       ;
     }
 
@@ -56,6 +57,7 @@ main (void)
     case mtx_timed:
     case mtx_plain | mtx_recursive:
     case mtx_timed | mtx_recursive:
+    default:
       ;
     }
 

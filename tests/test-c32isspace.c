@@ -1,9 +1,9 @@
 /* Test of c32isspace() function.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -165,6 +165,10 @@ main (int argc, char *argv[])
 
       case '4':
         /* Locale encoding is GB18030.  */
+        #if GL_CHAR32_T_IS_UNICODE && (defined __NetBSD__ || defined __sun)
+        fputs ("Skipping test: The GB18030 converter in this system's iconv is broken.\n", stderr);
+        return 77;
+        #endif
         {
           /* U+00B7 MIDDLE DOT */
           is = for_character ("\241\244", 2);

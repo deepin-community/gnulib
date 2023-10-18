@@ -2,13 +2,16 @@ Files:
 tests/test-posix_spawn_file_actions_addfchdir.c
 tests/test-posix_spawn-fchdir.c
 tests/signature.h
+tests/qemu.h
 tests/macros.h
 
 Depends-on:
 posix_spawn_file_actions_init
 posix_spawn_file_actions_destroy
 posix_spawnp-tests
+stdbool
 findprog
+xvasprintf
 
 configure.ac:
 AC_EGREP_CPP([notposix], [[
@@ -18,7 +21,7 @@ AC_EGREP_CPP([notposix], [[
   ]],
   [posix_spawn_ported=no],
   [posix_spawn_ported=yes])
-AM_CONDITIONAL([POSIX_SPAWN_PORTED], [test $posix_spawn_ported = yes])
+gl_CONDITIONAL([POSIX_SPAWN_PORTED], [test $posix_spawn_ported = yes])
 
 Makefile.am:
 TESTS += test-posix_spawn_file_actions_addfchdir

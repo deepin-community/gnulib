@@ -1,9 +1,9 @@
 /* Test of <threads.h> substitute in C++ mode.
-   Copyright (C) 2019-2021 Free Software Foundation, Inc.
+   Copyright (C) 2019-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -45,6 +45,9 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::mtx_timedlock, int,
                  (mtx_t *, const struct timespec *));
 SIGNATURE_CHECK (GNULIB_NAMESPACE::mtx_unlock, int, (mtx_t *));
 SIGNATURE_CHECK (GNULIB_NAMESPACE::mtx_destroy, void, (mtx_t *));
+#endif
+
+#if GNULIB_TEST_CALL_ONCE
 SIGNATURE_CHECK (GNULIB_NAMESPACE::call_once, void,
                  (once_flag *, void (*) (void)));
 #endif

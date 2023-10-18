@@ -17,12 +17,13 @@ m4/threadlib.m4
 build-aux/config.rpath
 
 Depends-on:
+gen-header
 include_next
 snippet/c++defs
 snippet/_Noreturn
 snippet/arg-nonnull
 snippet/warn-on-use
-time
+time-h
 havelib
 
 configure.ac-early:
@@ -31,6 +32,7 @@ gl_ANYTHREADLIB_EARLY
 configure.ac:
 gl_THREADS_H
 gl_THREADS_H_REQUIRE_DEFAULTS
+AC_PROG_MKDIR_P
 
 Makefile.am:
 BUILT_SOURCES += threads.h
@@ -38,14 +40,17 @@ BUILT_SOURCES += threads.h
 # We need the following in order to create <threads.h> when the system
 # doesn't have one.
 threads.h: threads.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(_NORETURN_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
-	  sed -e 's|@''GUARD_PREFIX''@|${gl_include_guard_prefix}|g' \
+@NMD@	$(AM_V_GEN)$(MKDIR_P) '%reldir%'
+	$(gl_V_at)$(SED_HEADER_STDOUT) \
+	      -e 's|@''GUARD_PREFIX''@|${gl_include_guard_prefix}|g' \
+	      -e 's|@''INCLUDE_NEXT_AS_FIRST_DIRECTIVE''@|$(INCLUDE_NEXT_AS_FIRST_DIRECTIVE)|g' \
 	      -e 's|@''HAVE_THREADS_H''@|$(HAVE_THREADS_H)|g' \
 	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
+	      -e 's|@''NEXT_AS_FIRST_DIRECTIVE_THREADS_H''@|$(NEXT_AS_FIRST_DIRECTIVE_THREADS_H)|g' \
 	      -e 's|@''NEXT_THREADS_H''@|$(NEXT_THREADS_H)|g' \
+	      -e 's/@''GNULIB_CALL_ONCE''@/$(GNULIB_CALL_ONCE)/g' \
 	      -e 's/@''GNULIB_CND''@/$(GNULIB_CND)/g' \
 	      -e 's/@''GNULIB_MTX''@/$(GNULIB_MTX)/g' \
 	      -e 's/@''GNULIB_THRD''@/$(GNULIB_THRD)/g' \
@@ -61,9 +66,8 @@ threads.h: threads.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(_NORETURN_H
 	      -e '/definition of _Noreturn/r $(_NORETURN_H)' \
 	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
 	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
-	      < $(srcdir)/threads.in.h; \
-	} > $@-t && \
-	mv $@-t $@
+	      $(srcdir)/threads.in.h > $@-t
+	$(AM_V_at)mv $@-t $@
 MOSTLYCLEANFILES += threads.h threads.h-t
 
 Include:

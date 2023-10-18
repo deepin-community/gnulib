@@ -1,9 +1,9 @@
 /* (Persistent) hash array mapped tries.
-   Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -45,9 +45,12 @@
 #ifndef _GL_HAMT_H
 #define _GL_HAMT_H
 
-#ifndef _GL_INLINE_HEADER_BEGIN
-# error "Please include config.h first."
+/* This file uses _GL_INLINE_HEADER_BEGIN, _GL_INLINE, _GL_ATTRIBUTE_DEALLOC,
+   _GL_ATTRIBUTE_NODISCARD.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
 #endif
+
 _GL_INLINE_HEADER_BEGIN
 #ifndef _GL_HAMT_INLINE
 # define _GL_HAMT_INLINE _GL_INLINE
@@ -56,16 +59,18 @@ _GL_INLINE_HEADER_BEGIN
 /* The GL_HAMT_THREAD_SAFE flag is set if the implementation of hamts
    is thread-safe as long as two threads do not simultaneously access
    the same hamt.  This is non-trivial as different hamts may share
-   some structure.  */
+   some structure.
+   We can define it only when the compiler supports _Atomic.  For GCC,
+   it is supported starting with GCC 4.9.  */
 
-#if (__STDC_VERSION__ < 201112 || defined __STD_NO_ATOMICS__) \
-  && __GNUC__ + (__GNUC_MINOR >= 9) <= 4
-# define GL_HAMT_THREAD_SAFE 0
-#else
+#if (__GNUC__ + (__GNUC_MINOR__ >= 9) > 4) \
+    && __STDC_VERSION__ >= 201112L && !defined __STD_NO_ATOMICS__ \
+    && !defined __cplusplus
 # define GL_HAMT_THREAD_SAFE 1
+#else
+# define GL_HAMT_THREAD_SAFE 0
 #endif
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 

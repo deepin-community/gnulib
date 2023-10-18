@@ -1,14 +1,72 @@
-gnulib (20210822~d383792.1-1+dde) UNRELEASED; urgency=medium
+gnulib (20230718+stable-1) unstable; urgency=medium
 
-  * update
+  * QA upload.
+  * New upstream snapshot from stable branch stable-202307.
 
- -- Debian QA Group <packages@qa.debian.org>  Tue, 14 Jun 2022 16:49:00 +0800
+ -- Boyuan Yang <byang@debian.org>  Fri, 21 Jul 2023 19:27:51 -0400
 
-gnulib (20210822~d383792.1-1+dde) unstable; urgency=medium
+gnulib (20230615+stable-1) unstable; urgency=medium
 
-  * Add sunway support.
+  * QA upload.
+  * New upstream snapshot from stable branch stable-202301.
 
- -- Miao Changwei <miaochangwei@uniontech.com>  Mon, 18 Apr 2022 02:51:08 +0800
+ -- Boyuan Yang <byang@debian.org>  Tue, 20 Jun 2023 14:58:32 -0400
+
+gnulib (20230209+stable-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot from stable branch stable-202301.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 24 Feb 2023 15:36:19 -0500
+
+gnulib (20230127+stable-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot from stable branch stable-202301.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 08 Feb 2023 20:23:31 -0500
+
+gnulib (20230113+stable-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot from stable branch stable-202301.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 18 Jan 2023 19:04:30 -0500
+
+gnulib (20230101+stable-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream stable branch stable-202301.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 11 Jan 2023 13:01:48 -0500
+
+gnulib (20221120~6ec9bc7-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot.
+
+ -- Boyuan Yang <byang@debian.org>  Wed, 23 Nov 2022 17:51:25 -0500
+
+gnulib (20220829~828413b-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot.
+  * debian/copyright: Update information.
+
+ -- Boyuan Yang <byang@debian.org>  Tue, 30 Aug 2022 16:08:25 -0400
+
+gnulib (20220606~2849690-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot.
+    + Fix compatibility with Ubuntu 22.04 and OpenSSL 3.0.x.
+  * debian/control: Set git-merge-changelog to be Section: vcs.
+  * debian/control: Bump Standards-Version to 4.6.1.
+  * debian/control: Set Rules-Requires-Root: no.
+  * debian/clscan: Fix various bugs.
+  * debian/copyright: Refresh copyright information.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 10 Jun 2022 23:37:59 -0400
 
 gnulib (20210822~d383792-1) unstable; urgency=medium
 

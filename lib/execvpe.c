@@ -1,5 +1,5 @@
 /* execvpe() function: Execute a program, replacing the current process.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -26,7 +26,6 @@
 #include <unistd.h>
 
 #include <errno.h>
-#include <stdbool.h>
 #include <stdlib.h>
 
 #include "findprog.h"

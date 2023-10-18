@@ -28,6 +28,7 @@ clean-temp
 stat
 error
 xvasprintf
+verify
 c-strstr
 gettext-h
 javacomp-script
@@ -42,8 +43,10 @@ Include:
 "javacomp.h"
 
 Link:
-$(LIB_MBRTOWC)
-$(LIB_GETRANDOM)
+$(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
+$(MBRTOWC_LIB)
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
+$(GETRANDOM_LIB)
 $(LIBTHREAD)
 
 License:

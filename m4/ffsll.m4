@@ -1,5 +1,5 @@
-# ffsll.m4 serial 3
-dnl Copyright (C) 2011-2021 Free Software Foundation, Inc.
+# ffsll.m4 serial 5
+dnl Copyright (C) 2011-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -12,8 +12,26 @@ AC_DEFUN([gl_FUNC_FFSLL],
   dnl Persuade glibc <string.h> and AIX <strings.h> to declare ffsll().
   AC_REQUIRE([AC_USE_SYSTEM_EXTENSIONS])
 
-  AC_CHECK_FUNCS_ONCE([ffsll])
-  if test $ac_cv_func_ffsll = yes; then
+  dnl We can't use AC_CHECK_FUNC here, because ffsll() is defined as a
+  dnl static inline function when compiling for Android 13 or older.
+  dnl But require that ffsll() is declared; otherwise we may be using
+  dnl the GCC built-in function, which leads to warnings
+  dnl "warning: implicit declaration of function 'ffsll'".
+  AC_CACHE_CHECK([for ffsll], [gl_cv_func_ffsll],
+    [AC_LINK_IFELSE(
+       [AC_LANG_PROGRAM(
+          [[#include <string.h>
+            #include <strings.h>
+            long long x;
+          ]],
+          [[int (*func) (long long) = ffsll;
+            return func (x);
+          ]])
+       ],
+       [gl_cv_func_ffsll=yes],
+       [gl_cv_func_ffsll=no])
+    ])
+  if test $gl_cv_func_ffsll = yes; then
     dnl Test whether ffsll works.
     dnl On AIX 7.2 in 32-bit mode it is completely broken.
     AC_CACHE_CHECK([whether ffsll works],
@@ -33,16 +51,16 @@ AC_DEFUN([gl_FUNC_FFSLL],
          [gl_cv_func_ffsll_works=yes],
          [gl_cv_func_ffsll_works=no],
          [case "$host_os" in
-                           # Guess yes on glibc systems.
-            *-gnu* | gnu*) gl_cv_func_ffsll_works="guessing yes" ;;
-                           # Guess yes on musl systems.
-            *-musl*)       gl_cv_func_ffsll_works="guessing yes" ;;
-                           # Guess yes on native Windows.
-            mingw*)        gl_cv_func_ffsll_works="guessing yes" ;;
-                           # Guess no on AIX.
-            aix*)          gl_cv_func_ffsll_works="guessing no" ;;
-                           # If we don't know, obey --enable-cross-guesses.
-            *)             gl_cv_func_ffsll_works="$gl_cross_guess_normal" ;;
+                                # Guess yes on glibc systems.
+            *-gnu* | gnu*)      gl_cv_func_ffsll_works="guessing yes" ;;
+                                # Guess yes on musl systems.
+            *-musl* | midipix*) gl_cv_func_ffsll_works="guessing yes" ;;
+                                # Guess yes on native Windows.
+            mingw*)             gl_cv_func_ffsll_works="guessing yes" ;;
+                                # Guess no on AIX.
+            aix*)               gl_cv_func_ffsll_works="guessing no" ;;
+                                # If we don't know, obey --enable-cross-guesses.
+            *)                  gl_cv_func_ffsll_works="$gl_cross_guess_normal" ;;
           esac
          ])
       ])

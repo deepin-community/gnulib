@@ -1,9 +1,9 @@
 /* Test of getter for RLIMIT_DATA.
-   Copyright (C) 2011-2021 Free Software Foundation, Inc.
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "qemu.h"
 #include "macros.h"
 
 void *memchunk1;
@@ -44,6 +45,11 @@ main ()
   if (value1 == 0 && value2 == 0 && value3 == 0)
     {
       fprintf (stderr, "Skipping test: no way to determine data segment size\n");
+      return 77;
+    }
+  else if (is_running_under_qemu_user ())
+    {
+      fprintf (stderr, "Skipping test: running under QEMU\n");
       return 77;
     }
   else

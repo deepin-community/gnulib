@@ -2,6 +2,7 @@
 @comment %**start of header
 @setfilename gnulib.info
 @settitle GNU Gnulib
+@documentencoding UTF-8
 @c These two require Texinfo 5.0 or later, so we use the older
 @c equivalent @set variables supported in 4.11 and hence
 @ignore
@@ -31,7 +32,7 @@ This manual is for GNU Gnulib (updated @value{UPDATED}),
 which is a library of common routines intended to be shared at the
 source level.
 
-Copyright @copyright{} 2004--2021 Free Software Foundation, Inc.
+Copyright @copyright{} 2004--2023 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -73,6 +74,7 @@ Documentation License''.
 * Extending Gnulib::
 * Miscellaneous Notes::
 * POSIX Substitutes Library::       Building as a separate substitutes library.
+* Keyword Substitutes::             Replacing language keywords.
 * Header File Substitutes::         Overriding system headers.
 * Function Substitutes::            Replacing system functions.
 * Legacy Function Substitutes::     Replacing system functions.
@@ -80,6 +82,7 @@ Documentation License''.
 * Glibc Function Substitutes::      Replacing system functions.
 * Native Windows Support::          Support for the native Windows platforms.
 * Multithreading::                  Multiple threads of execution.
+* Strings and Characters::          Functions for strings and characters.
 * Particular Modules::              Documentation of individual modules.
 * Regular expressions::             The regex module.
 * Build Infrastructure Modules::    Modules that extend the GNU Build System.
@@ -88,6 +91,42 @@ Documentation License''.
 * GNU Free Documentation License::  Copying and sharing this manual.
 * Index::
 @end menu
+
+@c Location of the POSIX specification on the web.
+@set POSIXURL http://pubs.opengroup.org/onlinepubs/9699919799
+
+@c Macro for referencing a POSIX header.
+@ifinfo
+@macro posixheader{header}
+@code{<\header\>}
+@end macro
+@end ifinfo
+@ifnotinfo
+@macro posixheader{header}
+@uref{@value{POSIXURL}/basedefs/\header\.html,,@code{<\header\>}}
+@end macro
+@end ifnotinfo
+
+@c Macro for referencing a POSIX function.
+@c We don't write it as func(), see section "GNU Manuals" of the
+@c GNU coding standards.
+@ifinfo
+@macro posixfunc{func}
+@code{\func\}
+@end macro
+@end ifinfo
+@ifnotinfo
+@macro posixfunc{func}
+@uref{@value{POSIXURL}/functions/\func\.html,,@code{\func\}}
+@end macro
+@end ifnotinfo
+
+@c Macro for referencing a normal function.
+@c We don't write it as func(), see section "GNU Manuals" of the
+@c GNU coding standards.
+@macro func{func}
+@code{\func\}
+@end macro
 
 @c This is used at the beginning of four chapters.
 @macro nosuchmodulenote{thing}
@@ -593,7 +632,7 @@ When a module description contains an @code{AC_LIBOBJ([foo])}
 invocation, you @strong{must} list the source file @code{lib/foo.c}
 in the @code{Files} section.  This is needed even if the module
 depends on another module that already lists @code{lib/foo.c} in its
-@code{Files} section --- because your module might be used among
+@code{Files} section -- because your module might be used among
 the test modules (in the directory specified through @samp{--tests-base})
 and the other module among the main modules (in the directory specified
 through @samp{--source-base}), and in this situation, the
@@ -856,6 +895,132 @@ source code, or when the program uses a mix between C and C++ sources
 (requiring separate builds of the @code{posixlib} for the C compiler and
 for the C++ compiler).
 
+@node Keyword Substitutes
+@chapter ISO C Keyword Substitutes
+
+This chapter describes which keywords specified by ISO C are
+substituted by Gnulib.
+
+@menu
+* alignof::        @code{alignas} and @code{alignof}
+* bool::           @code{bool}, @code{false}, and @code{true}
+* nullptr::        @code{nullptr}
+* static_assert::  @code{static_assert}
+@end menu
+
+@node alignof
+@section @code{alignof} and @code{alignas}
+
+Gnulib module: alignasof
+
+The @code{alignasof} module arranges for @code{alignas} and @code{alignof}
+to be more like standard C@.
+
+Portability problems fixed by Gnulib:
+@itemize
+@item
+Pre-C11 platforms lack @code{alignas} and @code{alignof}.
+
+@item
+On pre-C23 platforms, @code{<stdalign.h>} must be included before
+using @code{alignas} or @code{alignof}.
+@xref{stdalign.h}.
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@item
+On pre-C23 platforms, @code{alignas} and @code{alignof} are macros.
+@end itemize
+
+@node bool
+@section @code{bool}
+
+Gnulib module: stdbool
+
+Portability problems fixed by Gnulib:
+@itemize
+@item
+The keywords @code{bool}, @code{true}, and @code{false} are not available:
+gcc 12 and other compilers predating C23.
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@item
+On pre-C23 platforms, the keyword substitutes are macros.
+
+@item
+On pre-C23 platforms, the keyword substitutes assume C99 or later.
+@end itemize
+
+@node nullptr
+@section @code{nullptr}
+
+Gnulib module: nullptr
+
+@cindex null pointer
+The @code{nullptr} module arranges for @code{nullptr} to act
+like standard C and C++.
+
+The @code{nullptr} keyword yields a null pointer.  It differs from
+the @code{NULL} macro, in that @code{NULL} might be an integer whereas
+@code{nullptr} is of a special @code{nullptr_t} type with only one
+value, namely @code{nullptr} itself.  Using @code{nullptr} can help
+some compilers emit more sensible warnings, can avoid the need to cast
+a null pointer passed to a function prototyped with an ellipsis, and
+removes the need to include @code{<stddef.h>} merely to define
+@code{NULL}.
+
+Portability problems fixed by Gnulib:
+@itemize
+@item
+Some platforms lack @code{nullptr}:
+For C: GCC 12, Clang 15, and other pre-2023 C compilers.
+For C++: pre-2011 C++ compilers.
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@item
+On older platforms, @code{nullptr} is a macro instead of a keyword.
+
+@item
+On older platforms, @code{nullptr} does not have the type @code{nullptr_t}.
+In C, it has type @code{void *}; in C++ it has an integer type.
+
+@item
+On older platforms Gnulib cannot easily emulate @code{nullptr_t}, so
+null pointer type checking is more error prone.  In C, @code{_Generic}
+expressions cannot reliably distinguish the type of @code{nullptr}
+from integer or @code{void *} types.  C++ overloading has similar
+limitations.
+@end itemize
+
+@node static_assert
+@section @code{static_assert}
+
+Gnulib module: assert-h
+
+The @code{assert-h} module arranges for both @code{static_assert} and
+@code{<assert.h>} to be like standard C@.  @xref{assert.h}.
+
+Portability problems fixed by Gnulib:
+@itemize
+@item
+Pre-C11 platforms lack @code{static_assert}.
+
+@item
+On pre-C23 platforms, @code{<assert.h>} must be included before
+using @code{static_assert}.
+@end itemize
+
+Portability problems not fixed by Gnulib:
+@itemize
+@item
+On pre-C23 platforms, @code{static_assert} is a macro.
+@end itemize
+
 @node Header File Substitutes
 @chapter ISO C and POSIX Header File Substitutes
 
@@ -911,7 +1076,9 @@ which (known) portability problems are not worked around by Gnulib.
 * spawn.h::
 * stdalign.h::
 * stdarg.h::
+* stdatomic.h::
 * stdbool.h::
+* stdckdint.h::
 * stddef.h::
 * stdint.h::
 * stdio.h::
@@ -1001,7 +1168,9 @@ which (known) portability problems are not worked around by Gnulib.
 @include posix-headers/spawn.texi
 @include posix-headers/stdalign.texi
 @include posix-headers/stdarg.texi
+@include posix-headers/stdatomic.texi
 @include posix-headers/stdbool.texi
+@include posix-headers/stdckdint.texi
 @include posix-headers/stddef.texi
 @include posix-headers/stdint.texi
 @include posix-headers/stdio.texi
@@ -1114,6 +1283,7 @@ problems are not worked around by Gnulib.
 * bind::
 * bsearch::
 * btowc::
+* c8rtomb::
 * c16rtomb::
 * c32rtomb::
 * cabs::
@@ -1645,6 +1815,7 @@ problems are not worked around by Gnulib.
 * malloc::
 * mblen::
 * mbrlen::
+* mbrtoc8::
 * mbrtoc16::
 * mbrtoc32::
 * mbrtowc::
@@ -1659,6 +1830,7 @@ problems are not worked around by Gnulib.
 * memcpy::
 * memmove::
 * memset::
+* memset_explicit::
 * mkdir::
 * mkdirat::
 * mkdtemp::
@@ -2203,6 +2375,7 @@ problems are not worked around by Gnulib.
 * thrd_sleep::
 * thrd_yield::
 * time::
+* timegm::
 * timer_create::
 * timer_delete::
 * timer_getoverrun::
@@ -2406,6 +2579,7 @@ problems are not worked around by Gnulib.
 @include posix-functions/bind.texi
 @include posix-functions/bsearch.texi
 @include posix-functions/btowc.texi
+@include posix-functions/c8rtomb.texi
 @include posix-functions/c16rtomb.texi
 @include posix-functions/c32rtomb.texi
 @include posix-functions/cabs.texi
@@ -2937,6 +3111,7 @@ problems are not worked around by Gnulib.
 @include posix-functions/malloc.texi
 @include posix-functions/mblen.texi
 @include posix-functions/mbrlen.texi
+@include posix-functions/mbrtoc8.texi
 @include posix-functions/mbrtoc16.texi
 @include posix-functions/mbrtoc32.texi
 @include posix-functions/mbrtowc.texi
@@ -2951,6 +3126,7 @@ problems are not worked around by Gnulib.
 @include posix-functions/memcpy.texi
 @include posix-functions/memmove.texi
 @include posix-functions/memset.texi
+@include posix-functions/memset_explicit.texi
 @include posix-functions/mkdir.texi
 @include posix-functions/mkdirat.texi
 @include posix-functions/mkdtemp.texi
@@ -3495,6 +3671,7 @@ problems are not worked around by Gnulib.
 @include posix-functions/thrd_sleep.texi
 @include posix-functions/thrd_yield.texi
 @include posix-functions/time.texi
+@include posix-functions/timegm.texi
 @include posix-functions/timer_create.texi
 @include posix-functions/timer_delete.texi
 @include posix-functions/timer_getoverrun.texi
@@ -3752,10 +3929,12 @@ not worked around by Gnulib.
 * pty.h::
 * resolv.h::
 * shadow.h::
+* sys/file.h::
 * sys/ioctl.h::
 * sys/random.h::
 * sysexits.h::
 * ttyent.h::
+* utmp.h::
 @end menu
 
 @include glibc-headers/a.out.texi
@@ -3789,10 +3968,12 @@ not worked around by Gnulib.
 @include glibc-headers/pty.texi
 @include glibc-headers/resolv.texi
 @include glibc-headers/shadow.texi
+@include glibc-headers/sys_file.texi
 @include glibc-headers/sys_ioctl.texi
 @include glibc-headers/sys_random.texi
 @include glibc-headers/sysexits.texi
 @include glibc-headers/ttyent.texi
+@include glibc-headers/utmp.texi
 
 @node Glibc Function Substitutes
 @chapter Glibc Function Substitutes
@@ -6483,7 +6664,6 @@ This list of functions is sorted according to the header that declares them.
 * getdate_r::
 * stime::
 * strptime_l::
-* timegm::
 * timelocal::
 * timespec_get::
 @end menu
@@ -6493,7 +6673,6 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/getdate_r.texi
 @include glibc-functions/stime.texi
 @include glibc-functions/strptime_l.texi
-@include glibc-functions/timegm.texi
 @include glibc-functions/timelocal.texi
 @include glibc-functions/timespec_get.texi
 
@@ -6760,6 +6939,9 @@ to POSIX that it can be treated like any other Unix-like platform.
 @include multithread.texi
 
 
+@include strings.texi
+
+
 @node Particular Modules
 @chapter Particular Modules
 
@@ -6774,8 +6956,8 @@ to POSIX that it can be treated like any other Unix-like platform.
 * static inline::
 * extern inline::
 * Closed standard fds::
+* Handling strings with NUL characters::
 * Container data types::
-* String Functions in C Locale::
 * Recognizing Option Arguments::
 * Quoting::
 * progname and getprogname::
@@ -6813,9 +6995,9 @@ to POSIX that it can be treated like any other Unix-like platform.
 
 @include xstdopen.texi
 
-@include containers.texi
+@include string-desc.texi
 
-@include c-locale.texi
+@include containers.texi
 
 @include argmatch.texi
 
@@ -6844,7 +7026,6 @@ to POSIX that it can be treated like any other Unix-like platform.
 * Regular Expression Syntax::
 * Common Operators::
 * GNU Operators::
-* GNU Emacs Operators::
 * What Gets Matched?::
 * Programming with Regex::
 * Regular expression syntaxes::
@@ -6967,7 +7148,7 @@ otherwise have a hard time building your package.
 @node Utilities for Makefiles
 @section Utilities for Makefiles
 
-These are a couple of programs that are often useful in Makefiles.  Some
+These programs can be used in Makefiles.  Some
 of them are also described in
 @ifinfo
 @ref{Auxiliary Programs,,,automake}.
@@ -7017,7 +7198,7 @@ targets depend upon.
 @node Developer tools
 @section Programs for developing in Git checkouts
 
-These are a couple of programs that help when developing in a Git
+These programs can help when developing in a Git
 checkout.  The maintainer of the package copies these programs into the
 version control of the package, so that co-developers can use these
 tools right away.
@@ -7026,16 +7207,55 @@ tools right away.
 @item top/gitsub.sh
 This program manages the subdirectories of a Git checkout that come from
 other packages, including Gnulib.
-@item build-aux/bootstrap
-This program manages the Git submodules, including Gnulib, and is also a
-wrapper around @code{gnulib-tool} and @code{automake}, that generates
-files from other files.@*
-Note: Because this program mixes version control management and
+
+@item top/bootstrap
+@itemx top/autopull.sh
+@itemx top/autogen.sh
+@itemx top/bootstrap-funclib.sh
+This is a set of three programs and a function library, that manage
+the source directory of a package, preparing for the state where
+@samp{./configure} can be used.
+
+@code{autopull.sh} is a program for fetching dependencies that may
+require network accesses.  It manages the Git submodules, including
+Gnulib -- assuming that Gnulib is a Git submodule. It also can fetch
+the PO files for internationalized packages.
+
+@code{autogen.sh} is a program that is meant to be run after
+@code{autopull.sh}.  It generates all autogeneratable files that are
+omitted from version control.  Usually this means that it invokes
+@code{gnulib-tool} and @code{automake}, that generate files from other
+files.
+
+@code{bootstrap} is a wrapper around both:
+@code{./bootstrap --pull} is equivalent to @code{./autopull.sh},
+@code{./bootstrap --gen} is equivalent to @code{./autogen.sh}.
+Plain @code{./bootstrap} is equivalent to @code{./autopull.sh}
+immediately followed by @code{./autogen.sh}; however, because plain
+@code{./bootstrap} mixes version control management and
 generation of files in non-obvious ways, it has a number of usability
 issues for the advanced developer.
+
+@code{bootstrap-funclib.sh} is a function library for these three
+programs.  It is not meant to be used directly.
+
+All three programs make use of a configuration file, called
+@code{bootstrap.conf}.
+
+@item build-aux/bootstrap
+This acts like @code{top/bootstrap}, except it does not
+need the companion files @code{autogen.sh},
+@code{autopull.sh}, and @code{bootstrap-funclib.sh}
+so it avoids some clutter in your project's top level directory.
+With this approach, you update via @code{./bootstrap --pull} and
+@code{./bootstrap --gen} instead of via @code{./autopull.sh} and
+@code{./autogen.sh}.  Otherwise this approach acts similarly, and
+uses the same @code{bootstrap.conf} file.
+
 @item build-aux/bootstrap.conf
-This is the template configuration file.  After copying it into your
-package, you need to customize it.
+This is the template configuration file.  After copying it into the
+top-level directory of your package, you need to customize it.
+
 @item build-aux/po/Makefile.in.in
 @itemx build-aux/po/remove-potcdate.sin
 These are auxiliary files used by @code{bootstrap}.  You don't have to

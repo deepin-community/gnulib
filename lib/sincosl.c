@@ -1,11 +1,11 @@
 /* Quad-precision floating point trigonometric functions on <-pi/4,pi/4>.
-   Copyright (C) 1999, 2006-2007, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2006-2007, 2009-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,

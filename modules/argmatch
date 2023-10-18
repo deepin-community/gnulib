@@ -6,6 +6,7 @@ lib/argmatch.h
 lib/argmatch.c
 
 Depends-on:
+assert-h
 c99
 error
 exitfail
@@ -16,7 +17,6 @@ quote
 quotearg
 stdbool
 stdlib
-verify
 
 configure.ac:
 
@@ -27,7 +27,9 @@ Include:
 "argmatch.h"
 
 Link:
-$(LIB_MBRTOWC)
+$(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
+$(MBRTOWC_LIB)
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
 
 License:
 GPL

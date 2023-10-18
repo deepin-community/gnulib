@@ -3,7 +3,7 @@
 
 # Rewrite a gnulib.mk, adding prefixes to work with automake's subdir-objects.
 
-# Copyright (C) 2012-2021 Free Software Foundation, Inc.
+# Copyright (C) 2012-2023 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -40,6 +40,7 @@ use File::Basename; # for dirname
 (my $ME = $0) =~ s|.*/||;
 
 my $prefix;
+my $canon_prefix;
 my $lib_name;
 
 sub usage ($)
@@ -74,15 +75,24 @@ EOF
   exit $exit_code;
 }
 
-# contents ($FILE_NAME)
-# ---------------------
-sub contents ($)
+# contents_of_file ($FILE_NAME)
+# -----------------------------
+sub contents_of_file ($)
 {
   my ($file) = @_;
   local $/;                     # Turn on slurp-mode.
   my $f = new IO::File "< $file" or die "$file";
   my $contents = $f->getline or die "$file";
   $f->close;
+  return $contents;
+}
+
+# contents_of_stdin
+# -----------------
+sub contents_of_stdin ()
+{
+  local $/;                     # Turn on slurp-mode.
+  my $contents = <STDIN>;
   return $contents;
 }
 
@@ -123,8 +133,8 @@ sub prefix_assignment ($$)
     {
       # Do not change the RHS, which specifies the GPERF program.
     }
-  # Don't change variables such as HAVE_INCLUDE_NEXT.
-  elsif ($lhs_and_assign_op =~ /^HAVE_/)
+  # Don't change variables such as HAVE_INCLUDE_NEXT or SED_HEADER_STDOUT.
+  elsif ($lhs_and_assign_op =~ /^(HAVE_|SED_HEADER_)/)
     {
     }
   elsif ($lhs_and_assign_op =~
@@ -162,7 +172,7 @@ sub prefix_assignment ($$)
 
   # Variables whose name depend on the location: libbison_a_SOURCES =>
   # lib_libbison_a_SOURCES.
-  $lhs_and_assign_op =~ s/($lib_name)/lib_$1/g;
+  $lhs_and_assign_op =~ s/($lib_name)/$canon_prefix$1/g;
 
   $lhs_and_assign_op . $rhs;
 }
@@ -177,6 +187,12 @@ sub prefix ($)
 {
   # Work on $_.
   local ($_) = @_;
+
+  # $canon_prefix is derived from $prefix in the same way as Automake
+  # derives %canon_reldir% from %reldir%. See
+  # <https://www.gnu.org/software/automake/manual/html_node/Include.html>.
+  $canon_prefix = $prefix;
+  $canon_prefix =~ s/[^a-zA-Z0-9_]/_/g;
 
   # Prefix all the occurrence of files in rules.  If there is nothing
   # after in the :, it's probably a phony target, or a suffix rule.
@@ -193,10 +209,6 @@ sub prefix ($)
   #   test '$(srcdir)' = . || rm -f $(top_builddir)/GNUmakefile
   s{\$\(srcdir\)/}{\$(top_srcdir)/$prefix}g;
 
-  # Sometimes, t-$@ is used instead of $@-t, which, of course, does
-  # not work when we have a $@ with a directory in it.
-  s{t-\$\@}{\$\@-t}g;
-
   # Some AC_SUBST patterns remain and would better be Make macros.
   s{\@(MKDIR_P)\@}{\$($1)}g;
 
@@ -206,46 +218,58 @@ sub prefix ($)
   return $_;
 }
 
-# process ($IN)
-# -------------
-sub process ($)
 {
-  my ($file) = @_;
-  my ($bak) = "$file.bak";
-  rename ($file, $bak) or die "$ME: rename $file $bak failed: $!\n";
-  my $contents = contents ($bak);
-  $contents = prefix ($contents);
-  my $out = new IO::File(">$file")
-    or die "$ME: $file: failed to open for writing: $!\n";
-  print $out $contents;
-}
+  my $from_gnulib_tool = 0;
 
-{
   GetOptions
     (
      'lib-name=s' => \$lib_name,
      help => sub { usage 0 },
      version => sub { print "$ME version $VERSION\n"; exit },
+     # Undocumented options:
+     'from-gnulib-tool' => \$from_gnulib_tool,
+     'prefix=s' => \$prefix,
     ) or usage 1;
 
   my $fail = 0;
   defined $lib_name
     or (warn "$ME: no library name; use --lib-name=NAME\n"), $fail = 1;
 
-  # There must be exactly one argument.
-  @ARGV == 0
-    and (warn "$ME: missing FILE argument\n"), $fail = 1;
-  1 < @ARGV
-    and (warn "$ME: too many arguments:\n", join ("\n", @ARGV), "\n"),
-      $fail = 1;
-  $fail
-    and usage 1;
+  if ($from_gnulib_tool != 0)
+    {
+      0 < @ARGV
+        and (warn "$ME: too many arguments:\n", join ("\n", @ARGV), "\n"),
+          $fail = 1;
+      $fail
+        and usage 1;
 
-  my $file = $ARGV[0];
-  $prefix = (dirname $file) . '/';
-  warn "prefix=$prefix\n";
+      my $contents = contents_of_stdin ();
+      $contents = prefix ($contents);
+      print STDOUT $contents;
+    }
+  else
+    {
+      # There must be exactly one argument.
+      @ARGV == 0
+        and (warn "$ME: missing FILE argument\n"), $fail = 1;
+      1 < @ARGV
+        and (warn "$ME: too many arguments:\n", join ("\n", @ARGV), "\n"),
+          $fail = 1;
+      $fail
+        and usage 1;
 
-  process $file;
+      my $file = $ARGV[0];
+      $prefix = (dirname $file) . '/';
+      warn "prefix=$prefix\n";
+
+      my ($bak) = "$file.bak";
+      rename ($file, $bak) or die "$ME: rename $file $bak failed: $!\n";
+      my $contents = contents_of_file ($bak);
+      $contents = prefix ($contents);
+      my $out = new IO::File(">$file")
+        or die "$ME: $file: failed to open for writing: $!\n";
+      print $out $contents;
+    }
 }
 
 ### Setup "GNU" style for perl-mode and cperl-mode.

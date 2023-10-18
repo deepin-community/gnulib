@@ -1,9 +1,9 @@
 /* Test of conversion of multibyte character to wide character.
-   Copyright (C) 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2008-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -26,6 +26,7 @@ SIGNATURE_CHECK (mbrtowc, size_t, (wchar_t *, char const *, size_t,
 
 #include <locale.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "macros.h"
@@ -72,10 +73,6 @@ main (int argc, char *argv[])
     for (c = 0; c < 0x100; c++)
       switch (c)
         {
-        default:
-          if (! (c && 1 < argc && argv[1][0] == '5'))
-            break;
-          FALLTHROUGH;
         case '\t': case '\v': case '\f':
         case ' ': case '!': case '"': case '#': case '%':
         case '&': case '\'': case '(': case ')': case '*':
@@ -97,25 +94,23 @@ main (int argc, char *argv[])
         case 'p': case 'q': case 'r': case 's': case 't':
         case 'u': case 'v': case 'w': case 'x': case 'y':
         case 'z': case '{': case '|': case '}': case '~':
-          /* c is in the ISO C "basic character set", or argv[1] starts
-             with '5' so we are testing all nonnull bytes.  */
+          /* c is in the ISO C "basic character set".  */
+          ASSERT (c < 0x80);
+          /* c is an ASCII character.  */
           buf[0] = c;
+
           wc = (wchar_t) 0xBADFACE;
           ret = mbrtowc (&wc, buf, 1, &state);
           ASSERT (ret == 1);
-          if (c < 0x80)
-            /* c is an ASCII character.  */
-            ASSERT (wc == c);
-          else
-            /* argv[1] starts with '5', that is, we are testing the C or POSIX
-               locale.
-               On most platforms, the bytes 0x80..0xFF map to U+0080..U+00FF.
-               But on musl libc, the bytes 0x80..0xFF map to U+DF80..U+DFFF.  */
-            ASSERT (wc == (btowc (c) == 0xDF00 + c ? btowc (c) : c));
+          ASSERT (wc == c);
           ASSERT (mbsinit (&state));
+
           ret = mbrtowc (NULL, buf, 1, &state);
           ASSERT (ret == 1);
           ASSERT (mbsinit (&state));
+
+          break;
+        default:
           break;
         }
   }
@@ -129,6 +124,15 @@ main (int argc, char *argv[])
     ASSERT (wc == (wchar_t) 0xBADFACE);
     ASSERT (mbsinit (&state));
   }
+
+#ifdef __ANDROID__
+  /* On Android ≥ 5.0, the default locale is the "C.UTF-8" locale, not the
+     "C" locale.  Furthermore, when you attempt to set the "C" or "POSIX"
+     locale via setlocale(), what you get is a "C" locale with UTF-8 encoding,
+     that is, effectively the "C.UTF-8" locale.  */
+  if (argc > 1 && strcmp (argv[1], "5") == 0 && MB_CUR_MAX > 1)
+    argv[1] = "2";
+#endif
 
   if (argc > 1)
     switch (argv[1][0])
@@ -349,7 +353,37 @@ main (int argc, char *argv[])
         return 0;
 
       case '5':
-        /* C locale; tested above.  */
+        /* C or POSIX locale.  */
+        {
+          int c;
+          char buf[1];
+
+          memset (&state, '\0', sizeof (mbstate_t));
+          for (c = 0; c < 0x100; c++)
+            if (c != 0)
+              {
+                /* We are testing all nonnull bytes.  */
+                buf[0] = c;
+
+                wc = (wchar_t) 0xBADFACE;
+                ret = mbrtowc (&wc, buf, 1, &state);
+                /* POSIX:2018 says: "In the POSIX locale an [EILSEQ] error
+                   cannot occur since all byte values are valid characters."  */
+                ASSERT (ret == 1);
+                if (c < 0x80)
+                  /* c is an ASCII character.  */
+                  ASSERT (wc == c);
+                else
+                  /* On most platforms, the bytes 0x80..0xFF map to U+0080..U+00FF.
+                     But on musl libc, the bytes 0x80..0xFF map to U+DF80..U+DFFF.  */
+                  ASSERT (wc == (btowc (c) == 0xDF00 + c ? btowc (c) : c));
+                ASSERT (mbsinit (&state));
+
+                ret = mbrtowc (NULL, buf, 1, &state);
+                ASSERT (ret == 1);
+                ASSERT (mbsinit (&state));
+              }
+        }
         return 0;
       }
 

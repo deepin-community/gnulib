@@ -1,5 +1,5 @@
-# pwrite.m4 serial 6
-dnl Copyright (C) 2010-2021 Free Software Foundation, Inc.
+# pwrite.m4 serial 8
+dnl Copyright (C) 2010-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -12,7 +12,7 @@ AC_DEFUN([gl_FUNC_PWRITE],
   dnl Persuade glibc <unistd.h> to declare pwrite().
   AC_REQUIRE([AC_USE_SYSTEM_EXTENSIONS])
 
-  AC_CHECK_FUNCS_ONCE([pwrite])
+  gl_CHECK_FUNCS_ANDROID([pwrite], [[#include <unistd.h>]])
   if test $ac_cv_func_pwrite = yes; then
     dnl On HP-UX 11.11 with _FILE_OFFSET_BITS=64, pwrite() on a file does not
     dnl fail when an invalid (negative) offset is passed and uses an arbitrary
@@ -95,5 +95,8 @@ changequote([,])dnl
     esac
   else
     HAVE_PWRITE=0
+    case "$gl_cv_onwards_func_pwrite" in
+      future*) REPLACE_PWRITE=1 ;;
+    esac
   fi
 ])
