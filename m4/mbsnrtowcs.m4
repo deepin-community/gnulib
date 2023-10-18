@@ -1,5 +1,5 @@
-# mbsnrtowcs.m4 serial 6
-dnl Copyright (C) 2008, 2010-2021 Free Software Foundation, Inc.
+# mbsnrtowcs.m4 serial 9
+dnl Copyright (C) 2008, 2010-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -14,9 +14,12 @@ AC_DEFUN([gl_FUNC_MBSNRTOWCS],
   AC_REQUIRE([AC_TYPE_MBSTATE_T])
   gl_MBSTATE_T_BROKEN
 
-  AC_CHECK_FUNCS_ONCE([mbsnrtowcs])
+  gl_CHECK_FUNCS_ANDROID([mbsnrtowcs], [[#include <wchar.h>]])
   if test $ac_cv_func_mbsnrtowcs = no; then
     HAVE_MBSNRTOWCS=0
+    case "$gl_cv_onwards_func_mbsnrtowcs" in
+      future*) REPLACE_MBSNRTOWCS=1 ;;
+    esac
   else
     if test $REPLACE_MBSTATE_T = 1; then
       REPLACE_MBSNRTOWCS=1
@@ -26,6 +29,13 @@ AC_DEFUN([gl_FUNC_MBSNRTOWCS],
         *yes) ;;
         *) REPLACE_MBSNRTOWCS=1 ;;
       esac
+      if test $REPLACE_MBSNRTOWCS = 0; then
+        gl_MBRTOWC_C_LOCALE
+        case "$gl_cv_func_mbrtowc_C_locale_sans_EILSEQ" in
+          *yes) ;;
+          *) REPLACE_MBSNRTOWCS=1 ;;
+        esac
+      fi
     fi
   fi
 ])

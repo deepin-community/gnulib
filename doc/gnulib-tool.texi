@@ -1,7 +1,7 @@
 @node Invoking gnulib-tool
 @chapter Invoking gnulib-tool
 
-@c Copyright (C) 2005--2021 Free Software Foundation, Inc.
+@c Copyright (C) 2005--2023 Free Software Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document
 @c under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -46,6 +46,7 @@ a real run without changing anything.
 * Link-time requirements::      Which libraries to link against
 * Finding POSIX substitutes::   Determining additional suitable Gnulib modules
 * Modified build rules::        Modifying the build rules of a Gnulib import
+* Non-recursive make::          Building directly from the top-level directory
 * Multiple instances::          Using Gnulib for both a library and a program
 * gettextize and autopoint::    Caveat: @code{gettextize} and @code{autopoint} users!
 * Localization::                Handling Gnulib's own message translations.
@@ -178,7 +179,7 @@ extra effort to create self-contained tarballs, and it may disturb some
 mechanism the maintainer applies to the sources.  For these reasons,
 this option is generally discouraged.
 
-@code{gnulib-tool} will overwrite any pre-existing files, in
+@code{gnulib-tool} will overwrite any preexisting files, in
 particular @file{Makefile.am}.  It is also possible to separate the
 generated @file{Makefile.am} content (for building the gnulib library)
 into a separate file, say @file{gnulib.mk}, that can be included by your
@@ -601,6 +602,50 @@ The other approach, the kitchen-sink module, is more advanced.  See
 chapter @ref{Extending Gnulib}.
 
 
+@node Non-recursive make
+@section Building directly from the top-level directory
+
+By default, the Gnulib import directory will contain a generated
+@code{Makefile.am} file.  After configuring, this produces a generated
+@code{Makefile} in this directory.  As a consequence, the build from the
+top-level directory will use a recursive @code{make} invocation for this
+directory.
+
+Some people prefer a build system where the @code{Makefile} in the
+top-level directory directly builds the artifacts in the subdirectories,
+without an intermediate @code{make} invocation.  This is called
+``non-recursive make'' and is supported by Automake.  For more details,
+see @url{https://autotools.io/automake/nonrecursive.html}.
+
+Gnulib supports this flavour of build system too.  To use it, pass two
+options to @code{gnulib-tool}: @samp{--makefile-name} and
+@samp{--automake-subdir}.
+
+With the @code{gnulib-tool} option @samp{--makefile-name}, you are
+telling @code{gnulib-tool} to generate an includable @code{Makefile.am}
+portion in the Gnulib import directory, rather than a self-contained
+@code{Makefile.am}.  For example, when you use
+@samp{--makefile-name=Makefile.gnulib}, @code{gnulib-tool} will generate
+@code{Makefile.gnulib}.
+
+With the option @samp{--automake-subdir}, you are telling
+@code{gnulib-tool} that you will include the generated file from the
+@code{Makefile.am} in the top-level directory, rather than from a
+@code{Makefile.am} in the same directory.  For example, the top-level
+@code{Makefile.am} might contain this directive:
+
+@smallexample
+include lib/Makefile.gnulib
+@end smallexample
+
+The option @samp{--automake-subdir} is also supported in combination
+with @samp{--with-tests} (@pxref{Unit tests}).  Note that in this case,
+however, the generated unit tests directory will contains a
+@code{Makefile.am} and thus use a recursive @code{make} invocation.
+This is not a problem, since the built artifacts of your package have
+no dependencies towards the Gnulib unit tests, nor vice versa.
+
+
 @node Multiple instances
 @section Using Gnulib for both a library and a program
 
@@ -752,7 +797,7 @@ at the time the Gnulib snapshot was taken.
 After running @code{gettextize}, invoke @code{gnulib-tool} and import
 the @code{gettext} module.  Also, copy the latest version of gnulib's
 @file{build-aux/po/Makefile.in.in} to your @file{po/} directory (this
-is done for you if you use gnulib's @file{bootstrap} script).
+is done for you if you use gnulib's @file{autogen.sh} script).
 
 @item
 If you get an error message like
@@ -783,7 +828,7 @@ Invoke @code{gnulib-tool}, and import the @code{gettext-h} module.
 
 Regardless of which approach you used to get the infrastructure in
 place, the following steps must then be used to preserve that
-infrastructure (gnulib's @file{bootstrap} script follows these rules):
+infrastructure (gnulib's @file{autogen.sh} script follows these rules):
 
 @enumerate
 @item
@@ -875,7 +920,7 @@ functions will not be affected.
 
 
 @node VCS Issues
-@section Issues with Version Control Systems
+@section Integration with Version Control Systems
 
 If a project stores its source files in a version control system (VCS),
 such as CVS, Subversion, or Git, one needs to decide which files to commit.
@@ -937,38 +982,87 @@ add because they were missing.
 
 @end itemize
 
-Gnulib includes the file @file{build-aux/bootstrap} to aid a developer
-in using this setup.  Furthermore, in projects that use git for
-version control, it is possible to use a git submodule containing the
-precise commit of the gnulib repository, so that each developer
-running @file{bootstrap} will get the same version of all
-gnulib-provided files.  The location of the submodule can be chosen to
-fit the package's needs; here's how to initially create the submodule
-in the directory @file{.gnulib}:
+Most packages nowadays use the first among these two approaches.  Over
+time, three ways of handling version control have evolved.
+
+In the cases (A) and (B), a ``git submodule'' is used to reference
+the precise commit of the gnulib repository, so that each developer
+running @samp{./bootstrap --pull} or @file{autopull.sh}
+will get the same version of all gnulib-provided
+files.
+
+The alternative is to always follow the newest Gnulib automatically.
+Note that this can cause breakages at unexpected moments, namely
+when a broken commit is pushed in Gnulib.  It does not happen often,
+but it does happen.
+
+@itemize
+@item (A)
+In this approach, the developers use a git submodule manually.
+
+The location of the submodule can be chosen to fit the package's needs;
+here's how to initially create the submodule in the directory @file{gnulib}:
 
 @smallexample
-$ dir=.gnulib
-$ git submodule add -- https://git.savannah.gnu.org/git/gnulib.git $dir
-$ git config alias.syncsub "submodule foreach git pull origin master"
+$ git submodule add -- https://git.savannah.gnu.org/git/gnulib.git gnulib
 @end smallexample
 
 @noindent
-Thereafter, @file{bootstrap} can run this command to update the
+Thereafter, the developer will run this command to update the
 submodule to the recorded checkout level:
 
 @smallexample
-git submodule update --init $dir
+$ git submodule update --init gnulib
 @end smallexample
 
 @noindent
-and a developer can use this sequence to update to a newer version of
-gnulib:
+Use this sequence to update to a newer version of gnulib:
 
 @smallexample
-$ git syncsub
-$ git add $dir
-$ ./bootstrap
+$ git submodule update --remote gnulib
+$ git add gnulib
+$ ./bootstrap --bootstrap-sync
 @end smallexample
+
+If multiple submodules are used, the following may be useful:
+
+@smallexample
+$ git config alias.syncsub "submodule foreach git pull origin master"
+$ git syncsub
+@end smallexample
+
+@item (B)
+In this approach, the @code{build-aux/bootstrap} or @code{autopull.sh}
+program (see @ref{Developer tools}) is used to aid a developer in
+using this setup.  You copy this program (and if it's
+@code{autopull.sh}, its companion files) into your package and place
+the copy or copies under version control.  The program can be
+customized using @file{bootstrap.conf} which you also put under
+version control.
+
+@item (C)
+In this approach, you write the @code{autopull.sh} and @code{autogen.sh}
+files by hand.
+
+@code{autopull.sh} is most easily written as a script that
+invokes
+@smallexample
+./gitsub.sh pull || exit 1
+@end smallexample
+@noindent
+where @code{gitsub.sh} is described in @ref{Developer tools}.
+
+@code{autogen.sh} typically contains an explicit @code{gnulib-tool}
+invocation, followed by
+@smallexample
+aclocal -I m4 \
+  && autoconf \
+  && autoheader && touch config.h.in \
+  && automake --add-missing --copy \
+  && rm -rf autom4te.cache \
+  || exit $?
+@end smallexample
+@end itemize
 
 @item
 Some projects take a ``middle road'': they do commit Gnulib source

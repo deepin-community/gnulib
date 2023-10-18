@@ -1,9 +1,9 @@
 /* Test of ptsname_r(3).
-   Copyright (C) 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -208,6 +208,39 @@ main (void)
     /* This close (fd) call takes 15 seconds.  It would be interruptible by the
        SIGALRM timer, but then this test would report failure.  */
     close (fd);
+  }
+
+#elif defined __GNU__ /* Hurd */
+
+  /* Try various master names of Hurd: /dev/pty[p-q][0-9a-v]  */
+  {
+    int char1;
+    int char2;
+
+    for (char1 = 'p'; char1 <= 'q'; char1++)
+      for (char2 = '0'; char2 <= 'v'; (char2 == '9' ? char2 = 'a' : char2++))
+        {
+          char master_name[32];
+          int fd;
+
+          sprintf (master_name, "/dev/pty%c%c", char1, char2);
+          fd = open (master_name, O_RDONLY);
+          if (fd >= 0)
+            {
+              char buffer[256];
+              int result;
+              char slave_name[32];
+
+              result = ptsname_r (fd, buffer, sizeof buffer);
+              ASSERT (result == 0);
+              sprintf (slave_name, "/dev/tty%c%c", char1, char2);
+              ASSERT (same_slave (buffer, slave_name));
+
+              test_errors (fd, buffer);
+
+              close (fd);
+            }
+        }
   }
 
 #else

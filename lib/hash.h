@@ -1,5 +1,5 @@
 /* hash - hashing table processing.
-   Copyright (C) 1998-1999, 2001, 2003, 2009-2021 Free Software Foundation,
+   Copyright (C) 1998-1999, 2001, 2003, 2009-2023 Free Software Foundation,
    Inc.
    Written by Jim Meyering <meyering@ascend.com>, 1998.
 
@@ -24,8 +24,14 @@
 #ifndef HASH_H_
 # define HASH_H_
 
+/* This file uses _GL_ATTRIBUTE_DEALLOC, _GL_ATTRIBUTE_DEPRECATED,
+   _GL_ATTRIBUTE_MALLOC, _GL_ATTRIBUTE_NODISCARD, _GL_ATTRIBUTE_PURE,
+   _GL_ATTRIBUTE_RETURNS_NONNULL.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
+
 # include <stdio.h>
-# include <stdbool.h>
 
 # ifdef __cplusplus
 extern "C" {
@@ -198,7 +204,7 @@ extern Hash_table *hash_xinitialize (size_t candidate,
   _GL_ATTRIBUTE_RETURNS_NONNULL;
 
 /* Make all buckets empty, placing any chained entries on the free list.
-   Apply the user-specified function data_freer (if any) to the datas of any
+   Apply the user-specified function data_freer (if any) to the data of any
    affected entries.  */
 extern void hash_clear (Hash_table *table);
 

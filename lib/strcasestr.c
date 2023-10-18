@@ -1,5 +1,5 @@
 /* Case-insensitive searching in a string.
-   Copyright (C) 2005-2021 Free Software Foundation, Inc.
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2005.
 
    This file is free software: you can redistribute it and/or modify
@@ -21,7 +21,6 @@
 #include <string.h>
 
 #include <ctype.h>
-#include <stdbool.h>
 #include <strings.h>
 
 #define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))

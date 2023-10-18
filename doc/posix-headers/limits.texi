@@ -12,6 +12,9 @@ The macros @code{LLONG_MIN}, @code{LLONG_MAX}, @code{ULLONG_MAX} are not
 defined on some platforms:
 older glibc systems (e.g. Fedora 1), AIX 5.1, HP-UX 11, IRIX 6.5, OpenVMS.
 @item
+The macro @code{MB_LEN_MAX} is not defined on some platforms:
+pcc 1.2.0.DEVEL 20220331.
+@item
 The macros @code{WORD_BIT}, @code{LONG_BIT} are not defined on some platforms:
 glibc 2.11 without @code{-D_GNU_SOURCE}, Cygwin, mingw, MSVC 14.
 @item
@@ -21,6 +24,12 @@ glibc 2.24, NetBSD 9.0, many others.
 The macros @code{BOOL_MAX} and @code{BOOL_WIDTH} are not defined on
 some platforms:
 glibc 2.32, many others.
+@item
+The macro @code{BOOL_MAX} is not defined with some compilers:
+clang 15.0.6.
+@item
+The macro @code{SSIZE_MAX} is not defined on some platforms:
+MSVC 14.
 @end itemize
 
 Portability problems fixed by Gnulib module @code{gethostname}:
@@ -37,9 +46,6 @@ Portability problems not fixed by Gnulib:
 The macro @code{SSIZE_MAX} has the wrong type,
 albeit with the correct value:
 32-bit glibc 2.24 (on some architectures), Cygwin 2.5.2.
-@item
-The macro @code{SSIZE_MAX} is not defined on some platforms:
-MSVC 14.
 @end itemize
 
 For @code{PATH_MAX}, Gnulib provides a module @code{pathmax} with a header

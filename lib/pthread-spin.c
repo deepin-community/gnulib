@@ -1,5 +1,5 @@
 /* POSIX spin locks.
-   Copyright (C) 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -20,8 +20,6 @@
 
 /* Specification.  */
 #include <pthread.h>
-
-#include <stdbool.h>
 
 #if (defined _WIN32 && ! defined __CYGWIN__) && USE_WINDOWS_THREADS
 # include "windows-spin.h"
@@ -69,7 +67,7 @@ pthread_spin_destroy (pthread_spinlock_t *lock)
    require to link with -latomic.  */
 
 # if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 7) \
-      || __clang_major > 3 || (__clang_major__ == 3 && __clang_minor__ >= 1)) \
+      || __clang_major__ > 3 || (__clang_major__ == 3 && __clang_minor__ >= 1)) \
      && !defined __ibmxl__
 /* Use GCC built-ins (available in GCC >= 4.7 and clang >= 3.1) that operate on
    the first byte of the lock.
@@ -164,7 +162,8 @@ pthread_spin_destroy (pthread_spinlock_t *lock)
   return 0;
 }
 
-# elif (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1) \
+# elif (((__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1)) \
+         && !defined __ANDROID__) \
         || __clang_major__ >= 3) \
        && !defined __ibmxl__
 /* Use GCC built-ins (available in GCC >= 4.1 and clang >= 3.0).

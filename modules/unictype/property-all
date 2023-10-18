@@ -39,6 +39,12 @@ unictype/property-decimal-digit
 unictype/property-default-ignorable-code-point
 unictype/property-deprecated
 unictype/property-diacritic
+unictype/property-emoji
+unictype/property-emoji-component
+unictype/property-emoji-modifier
+unictype/property-emoji-modifier-base
+unictype/property-emoji-presentation
+unictype/property-extended-pictographic
 unictype/property-extender
 unictype/property-format-control
 unictype/property-grapheme-base
@@ -78,6 +84,7 @@ unictype/property-private-use
 unictype/property-punctuation
 unictype/property-quotation-mark
 unictype/property-radical
+unictype/property-regional-indicator
 unictype/property-sentence-terminal
 unictype/property-soft-dotted
 unictype/property-space

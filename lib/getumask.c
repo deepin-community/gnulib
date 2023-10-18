@@ -1,9 +1,9 @@
 /* Retrieve the umask of the process (multithread-safe).
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -106,6 +106,16 @@ getumask (void)
     {
       /* Create a temporary file and inspect its access permissions.  */
       const char *tmpdir = getenv ("TMPDIR");
+# if defined _WIN32 && !defined __CYGWIN__
+      if (tmpdir == NULL || *tmpdir == '\0')
+        {
+          /* On native Windows, TMPDIR is typically not set, and /tmp does not
+             exist.  $TMP and $TEMP can be used instead.  */
+          tmpdir = getenv ("TMP");
+          if (tmpdir == NULL || *tmpdir == '\0')
+            tmpdir = getenv ("TEMP");
+        }
+# endif
       if (tmpdir == NULL || *tmpdir == '\0')
         tmpdir = "/tmp";
       size_t tmpdir_length = strlen (tmpdir);

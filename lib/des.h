@@ -1,5 +1,5 @@
 /* des.h --- DES cipher implementation.
- * Copyright (C) 2005, 2007, 2009-2021 Free Software Foundation, Inc.
+ * Copyright (C) 2005, 2007, 2009-2023 Free Software Foundation, Inc.
  *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -23,7 +23,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
 
 /*
  * Encryption/Decryption context of DES

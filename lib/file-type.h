@@ -1,11 +1,11 @@
 /* Return a string describing the type of a file.
 
-   Copyright (C) 1993-1994, 2001-2002, 2004-2005, 2009-2021 Free Software
+   Copyright (C) 1993-1994, 2001-2002, 2004-2005, 2009-2023 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -20,6 +20,11 @@
 
 #ifndef FILE_TYPE_H
 # define FILE_TYPE_H 1
+
+/* This file uses _GL_ATTRIBUTE_PURE.  */
+# if !_GL_CONFIG_H_INCLUDED
+#  error "Please include config.h first."
+# endif
 
 # include <sys/types.h>
 # include <sys/stat.h>

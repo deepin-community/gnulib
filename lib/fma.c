@@ -1,9 +1,9 @@
 /* Fused multiply-add.
-   Copyright (C) 2007, 2009, 2011-2021 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009, 2011-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -24,7 +24,6 @@
 #include <math.h>
 
 #include <limits.h>
-#include <stdbool.h>
 #include <stdlib.h>
 
 #if HAVE_FEGETROUND
@@ -33,7 +32,6 @@
 
 #include "float+.h"
 #include "integer_length.h"
-#include "verify.h"
 
 #ifdef USE_LONG_DOUBLE
 # define FUNC fmal
@@ -95,11 +93,11 @@
 
 typedef unsigned int mp_limb_t;
 #define GMP_LIMB_BITS 32
-verify (sizeof (mp_limb_t) * CHAR_BIT == GMP_LIMB_BITS);
+static_assert (sizeof (mp_limb_t) * CHAR_BIT == GMP_LIMB_BITS);
 
 typedef unsigned long long mp_twolimb_t;
 #define GMP_TWOLIMB_BITS 64
-verify (sizeof (mp_twolimb_t) * CHAR_BIT == GMP_TWOLIMB_BITS);
+static_assert (sizeof (mp_twolimb_t) * CHAR_BIT == GMP_TWOLIMB_BITS);
 
 /* Number of limbs needed for a single DOUBLE.  */
 #define NLIMBS1 ((MANT_BIT + GMP_LIMB_BITS - 1) / GMP_LIMB_BITS)
@@ -725,10 +723,14 @@ FUNC (DOUBLE x, DOUBLE y, DOUBLE z)
                     int rounding_mode = fegetround ();
                     if (rounding_mode == FE_TOWARDZERO)
                       round_up = 0;
+# if defined FE_DOWNWARD /* not defined on sh4 */
                     else if (rounding_mode == FE_DOWNWARD)
                       round_up = sign;
+# endif
+# if defined FE_UPWARD /* not defined on sh4 */
                     else if (rounding_mode == FE_UPWARD)
                       round_up = !sign;
+# endif
 #else
                     /* Cf. <https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/float.h.html> */
                     int rounding_mode = FLT_ROUNDS;

@@ -27,6 +27,9 @@ avoid deprecation warnings from the versions in this header:
 glibc 2.25.
 @end itemize
 
+@xref{Avoiding the year 2038 problem}, for portability issues with
+@code{time_t}.
+
 Portability problems not fixed by Gnulib:
 @itemize
 @item

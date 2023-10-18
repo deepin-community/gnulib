@@ -2,6 +2,7 @@ Files:
 tests/test-c-vasprintf.c
 tests/test-c-vasprintf.sh
 m4/locale-fr.m4
+m4/codeset.m4
 tests/macros.h
 
 Depends-on:
@@ -15,4 +16,4 @@ Makefile.am:
 TESTS += test-c-vasprintf.sh
 TESTS_ENVIRONMENT += LOCALE_FR='@LOCALE_FR@'
 check_PROGRAMS += test-c-vasprintf
-test_c_vasprintf_LDADD = $(LDADD) $(LIB_SETLOCALE)
+test_c_vasprintf_LDADD = $(LDADD) $(SETLOCALE_LIB)

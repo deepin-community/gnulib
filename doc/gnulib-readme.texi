@@ -1,6 +1,6 @@
 @c Gnulib README
 
-@c Copyright 2001, 2003--2021 Free Software Foundation, Inc.
+@c Copyright 2001, 2003--2023 Free Software Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document
 @c under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -15,6 +15,7 @@
 * Contributing to Gnulib::
 * Portability guidelines::
 * High Quality::
+* Joining GNU::
 @end menu
 
 @node Gnulib Basics
@@ -323,8 +324,9 @@ platforms, fixes that may be removed in the future.
 
 Because of the freestanding C99 assumption, Gnulib code can include
 @code{<float.h>}, @code{<limits.h>}, @code{<stdarg.h>},
-@code{<stdbool.h>}, @code{<stddef.h>}, and @code{<stdint.h>}
-unconditionally.   Gnulib code can also assume the existence
+@code{<stddef.h>}, and @code{<stdint.h>}
+unconditionally; @code{<stdbool.h>} is also in the C99 freestanding
+list but is obsolescent as of C23.  Gnulib code can also assume the existence
 of @code{<ctype.h>}, @code{<errno.h>}, @code{<fcntl.h>},
 @code{<locale.h>}, @code{<signal.h>}, @code{<stdio.h>},
 @code{<stdlib.h>}, @code{<string.h>}, and @code{<time.h>}.  Similarly,
@@ -355,14 +357,16 @@ are reasonably portable nowadays include:
 
 @itemize
 @item
-A declarations after a statement, or as the first clause in a
+A declaration after a statement, or as the first clause in a
 @code{for} statement.
 
 @item
 @code{long long int}.
 
 @item
-@code{<stdbool.h>}, assuming the @code{stdbool} module is used.
+@code{<stdbool.h>}, although Gnulib code no longer uses
+it directly, preferring plain @code{bool} via the
+@code{stdbool} module instead.
 @xref{stdbool.h}.
 
 @item
@@ -402,8 +406,19 @@ feature should require the corresponding module.
 
 @itemize
 @item
-Variable length arrays, unless @code{__STDC_NO_VLA__} is defined.
-See the @code{vararrays} module.
+Variable length arrays (VLAs) or variably modified types,
+without checking whether @code{__STDC_NO_VLA__} is defined.
+See the @code{vararrays} and @code{vla} modules.
+
+@item
+Block-scope variable length arrays, without checking whether either
+@code{GNULIB_NO_VLA} or @code{__STDC_NO_VLA__} is defined.
+This lets you define @code{GNULIB_NO_VLA} to pacify GCC when
+using its @option{-Wvla-larger-than warnings} option,
+and to avoid large stack usage that may have security implications.
+@code{GNULIB_NO_VLA} does not affect Gnulib's other uses of VLAs and
+variably modified types, such as array declarations in function
+prototype scope.
 
 @item
 @code{extern inline} functions, without checking whether they are
@@ -527,18 +542,81 @@ We develop and maintain a testsuite for Gnulib.  The goal is to have a
 code in git at @emph{any} time and know that their application will not
 break.  This means that before any change can be committed to the
 repository, a test suite program must be produced that exposes the bug
-for regression testing.  All experimental work should be done on
-branches to help promote this.
+for regression testing.
+
+@node Stable Branches
+@subsection Stable Branches
+
+In Gnulib, we don't use topic branches for experimental work.
+Therefore, occasionally a broken commit may be pushed in Gnulib.
+It does not happen often, but it does happen.
+
+To compensate for this, Gnulib offers ``stable branches''.  These
+are branches of the Gnulib code that are maintained over some
+longer period (a year, for example) and include
+@itemize
+@item
+bug fixes,
+@item
+portability enhancements (to existing as well as to new platforms),
+@item
+updates to @code{config.guess} and @code{config.sub}.
+@end itemize
+
+@noindent
+Not included in the stable branches are:
+@itemize
+@item
+new features, such as new modules,
+@item
+optimizations,
+@item
+refactorings,
+@item
+complex or risky changes in general,
+@item
+updates to @code{texinfo.tex},
+@item
+documentation updates.
+@end itemize
+
+So far, we have three stable branches:
+@table @code
+@item stable-202301
+A stable branch that starts at the beginning of January 2023.
+@item stable-202207
+A stable branch that starts at the beginning of July 2022.
+@item stable-202201
+A stable branch that starts at the beginning of January 2022.
+It is no longer updated.
+@end table
+
+The two use-cases of stable branches are thus:
+@itemize
+@item
+You want to protect yourself from occasional breakage in Gnulib.
+@item
+When making a bug-fix release of your code, you can incorporate
+bug fixes in Gnulib, by pulling in the newest commits from the
+same stable branch that you were already using for the previous
+release.
+@end itemize
+
+@node Writing reliable code
+@subsection Writing reliable code
 
 When compiling and testing Gnulib and Gnulib-using programs, certain
-compiler options can help improve reliability.  The
-@code{manywarnings} module enables several forms of static checking in
-GCC and related compilers (@pxref{manywarnings}).  For dynamic checking,
-you can run @code{configure} with @code{CFLAGS} options appropriate
-for your compiler.  For example:
+compiler options can help improve reliability.  First of all, make it
+a habit to use @samp{-Wall} in all compilation commands. Beyond that,
+the @code{manywarnings} module enables several forms of static checking in
+GCC and related compilers (@pxref{manywarnings}).
+
+For dynamic checking, you can run @code{configure} with @code{CFLAGS}
+options appropriate for your compiler.  For example:
 
 @example
 ./configure \
+ CPPFLAGS='-Wall'\
  CFLAGS='-g3 -O2'\
 ' -D_FORTIFY_SOURCE=2'\
 ' -fsanitize=undefined'\
@@ -572,3 +650,8 @@ libraries (@code{libstdc++} and @code{libubsan}) to be linked
 statically rather than dynamically, though this typically bloats the
 executable and the remaining extra libraries are still linked
 dynamically.
+
+It is also good to occasionally run the programs under @code{valgrind}
+(@pxref{Running self-tests under valgrind}).
+
+@include join-gnu.texi

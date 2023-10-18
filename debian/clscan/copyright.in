@@ -3,6 +3,9 @@ Upstream-Contact: bug-gnulib@gnu.org
  <https://lists.gnu.org/mailman/listinfo/bug-gnulib>
 Source: <https://git.savannah.gnu.org/gitweb/?p=gnulib.git>
  <git://git.savannah.gnu.org/gnulib.git>
+
+Files: *
+Copyright: Free Software Foundation, Inc.
 License: custom-mostly-gpl
  The files in here are mostly copyright (C) Free Software Foundation, and
  are under assorted licenses.  Mostly, but not entirely, GPL.
@@ -24,10 +27,33 @@ License: custom-mostly-gpl
  Detailed copyright information follows, see debian/clscan/README
  in the gnulib source package for information on updating this.
 
+Files: debian/*
+Copyright: 2009-2014 Ian Beckwith <ianb@debian.org>
+           2006-2008 Daniel Baumann <daniel@debian.org>
+License: GPL-2.0-only
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 of the License.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 Files: debian/git-merge-changelog.pod
 Copyright: 2008-2010 Bruno Haible <bruno@clisp.org>
            2014 Ian Beckwith <ianb@debian.org>
-License: GPL-2+
+License: GPL-2.0-or-later
+
+Files: debian/clscan/*
+Copyright:
+ 2009 Ian Beckwith <ianb@erislabs.net>
+License: GPL-2.0-or-later
+
+License: GPL-2.0-or-later
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation; either version 2 of the License, or
@@ -39,24 +65,7 @@ License: GPL-2+
  GNU General Public License for more details.
  .
  You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Files: debian/*
-Copyright: 2009-2014 Ian Beckwith <ianb@debian.org>
-           2006-2008 Daniel Baumann <daniel@debian.org>
-License: GPL-2
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; version 2 of the License.
- .
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
- .
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software Foundation,
- Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Files: modules/*
 Copyright: 2002-2014 Free Software Foundation, Inc.

@@ -2,8 +2,9 @@ Files:
 tests/test-limits-h.c
 
 Depends-on:
+assert-h
 extensions
-verify
+sys_types
 limits-h-c++-tests
 
 configure.ac:

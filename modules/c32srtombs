@@ -9,7 +9,7 @@ lib/c32srtombs-state.c
 Depends-on:
 uchar
 wchar
-verify
+assert-h
 c32rtomb
 wcsrtombs       [test $SMALL_WCHAR_T = 0]
 
@@ -23,6 +23,10 @@ lib_SOURCES += c32srtombs.c
 
 Include:
 <uchar.h>
+
+Link:
+$(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
 
 License:
 LGPL

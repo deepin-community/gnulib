@@ -1,11 +1,11 @@
 #! /bin/sh
 #
-# Copyright (C) 2019-2021 Free Software Foundation, Inc.
+# Copyright (C) 2019-2023 Free Software Foundation, Inc.
 # Written by Bruno Haible <bruno@clisp.org>, 2019.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3 of the License, or
+# the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -49,7 +49,7 @@
 #      subdirectory, let's call it a "subcheckout") are:
 #        - The simplicity: you are conceptually always using the newest revision
 #          of the dependency package.
-#        - You don't have to remember to periodially upgrade the dependency.
+#        - You don't have to remember to periodically upgrade the dependency.
 #          Upgrading the dependency is an implicit operation.
 
 # This program is meant to be copied to the top-level directory of the package,
@@ -354,9 +354,9 @@ func_pull ()
         fi
       else
         # The subdir does not yet exist. Create a plain checkout.
-        trap func_cleanup_current_git_clone 1 2 13 15
+        trap func_cleanup_current_git_clone HUP INT PIPE TERM
         git clone $2 "$url" "$path" || func_cleanup_current_git_clone
-        trap - 1 2 13 15
+        trap - HUP INT PIPE TERM
       fi
       ;;
     esac

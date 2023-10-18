@@ -12,7 +12,7 @@ Depends-on:
 math
 float           [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
 stdbool         [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
-verify          [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
+assert-h        [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
 isfinite        [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
 integer_length  [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
 frexp           [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
@@ -20,13 +20,16 @@ ldexp           [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1]
 
 configure.ac:
 gl_FUNC_FMA
-if test $HAVE_FMA = 0 || test $REPLACE_FMA = 1; then
-  AC_LIBOBJ([fma])
+gl_CONDITIONAL([GL_COND_OBJ_FMA], [test $HAVE_FMA = 0 || test $REPLACE_FMA = 1])
+AM_COND_IF([GL_COND_OBJ_FMA], [
   gl_PREREQ_FMA
-fi
+])
 gl_MATH_MODULE_INDICATOR([fma])
 
 Makefile.am:
+if GL_COND_OBJ_FMA
+lib_SOURCES += fma.c
+endif
 
 Include:
 <math.h>

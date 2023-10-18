@@ -1,9 +1,9 @@
 /* Test of <math.h> substitute in C++ mode.
-   Copyright (C) 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -385,28 +385,36 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::truncl, long double, (long double));
 # ifdef isfinite
 #  warning "isfinite should not be a macro in C++"
 # endif
+# if !GNULIB_NAMESPACE_LACKS_ISFINITE
 REAL_FLOATING_CHECK (isfinite, bool, (float), bool, (double), bool, (long double));
+# endif
 #endif
 
 #if GNULIB_TEST_ISINF
 # ifdef isinf
 #  warning "isinf should not be a macro in C++"
 # endif
+# if !GNULIB_NAMESPACE_LACKS_ISINF
 REAL_FLOATING_CHECK (isinf, bool, (float), bool, (double), bool, (long double));
+# endif
 #endif
 
 #if GNULIB_TEST_ISNAN
 # ifdef isnan
 #  warning "isnan should not be a macro in C++"
 # endif
+# if !GNULIB_NAMESPACE_LACKS_ISNAN
 REAL_FLOATING_CHECK (isnan, bool, (float), bool, (double), bool, (long double));
+# endif
 #endif
 
 #if GNULIB_TEST_SIGNBIT
 # ifdef signbit
 #  warning "signbit should not be a macro in C++"
 # endif
+# if !GNULIB_NAMESPACE_LACKS_SIGNBIT
 REAL_FLOATING_CHECK (signbit, bool, (float), bool, (double), bool, (long double));
+# endif
 #endif
 
 

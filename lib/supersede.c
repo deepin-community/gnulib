@@ -1,10 +1,10 @@
 /* Open a file, without destroying an old file with the same name.
 
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -83,15 +83,23 @@ open_supersede (const char *filename, int flags, mode_t mode,
   /* Extra flags for existing devices.  */
   int extra_flags =
     #if defined __sun || (defined _WIN32 && !defined __CYGWIN__)
-    /* open ("/dev/null", O_TRUNC | O_WRONLY) fails with error EINVAL on Solaris
-       zones.  See <https://www.illumos.org/issues/13035>.
-       Likewise for open ("NUL", O_TRUNC | O_RDWR) on native Windows.
+    /* open ("/dev/null", O_TRUNC | O_WRONLY) fails on Solaris zones:
+         - with error EINVAL on Illumos, see
+           <https://www.illumos.org/issues/13035>,
+         - with error EACCES on Solaris 11.3.
+       Likewise, open ("NUL", O_TRUNC | O_RDWR) fails with error EINVAL on
+       native Windows.
        As a workaround, add the O_CREAT flag, although it ought not to be
        necessary.  */
     O_CREAT;
     #else
     0;
     #endif
+
+#if defined _WIN32 && ! defined __CYGWIN__
+  if (strcmp (filename, "/dev/null") == 0)
+    filename = "NUL";
+#endif
 
   if (supersede_if_exists)
     {
@@ -199,7 +207,7 @@ open_supersede (const char *filename, int flags, mode_t mode,
             }
           #if defined __sun || (defined _WIN32 && !defined __CYGWIN__)
           /* See the comment regarding extra_flags, above.  */
-          else if (errno == EINVAL)
+          else if (errno == EINVAL || errno == EACCES)
             {
               struct stat statbuf;
 

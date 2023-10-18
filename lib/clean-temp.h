@@ -1,10 +1,10 @@
 /* Temporary directories and temporary files with automatic cleanup.
-   Copyright (C) 2006, 2011-2021 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2011-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -18,7 +18,11 @@
 #ifndef _CLEAN_TEMP_H
 #define _CLEAN_TEMP_H
 
-#include <stdbool.h>
+/* This file uses _GL_ATTRIBUTE_DEALLOC.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
+
 #include <stdio.h>
 #include <sys/types.h>
 

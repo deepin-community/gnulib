@@ -1,5 +1,5 @@
 /* Abbreviated name of signals.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -131,7 +131,7 @@ sigabbrev_np (int sig)
     case SIGEMT:      return "EMT";
     #endif
     /* Mac OS X, FreeBSD, NetBSD, OpenBSD, Minix */
-    #if defined SIGINFO
+    #if defined SIGINFO && SIGINFO != SIGPWR
     case SIGINFO:     return "INFO";
     #endif
     /* Linux, Mac OS X, FreeBSD, NetBSD, OpenBSD, Minix, AIX, IRIX, Cygwin */

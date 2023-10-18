@@ -1,12 +1,12 @@
 /* Parse comma separated list into words.
-   Copyright (C) 1996-1997, 1999, 2004, 2007, 2009-2021 Free Software
+   Copyright (C) 1996-1997, 1999, 2004, 2007, 2009-2023 Free Software
    Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,

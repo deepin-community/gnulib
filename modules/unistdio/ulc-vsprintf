@@ -12,7 +12,7 @@ stdint
 errno
 
 configure.ac:
-gl_LIBUNISTRING_MODULE([0.9.8], [unistdio/ulc-vsprintf])
+gl_LIBUNISTRING_MODULE([1.2], [unistdio/ulc-vsprintf])
 
 Makefile.am:
 if LIBUNISTRING_COMPILE_UNISTDIO_ULC_VSPRINTF
@@ -23,7 +23,7 @@ Include:
 "unistdio.h"
 
 Link:
-$(LIB_MBRTOWC)
+$(MBRTOWC_LIB)
 
 License:
 LGPLv3+ or GPLv2+

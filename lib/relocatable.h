@@ -1,5 +1,5 @@
 /* Provide relocatable packages.
-   Copyright (C) 2003, 2005, 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2008-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This file is free software: you can redistribute it and/or modify
@@ -17,6 +17,11 @@
 
 #ifndef _RELOCATABLE_H
 #define _RELOCATABLE_H
+
+/* This file uses _GL_ATTRIBUTE_MALLOC, HAVE_VISIBILITY.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 #include <stdlib.h>
 

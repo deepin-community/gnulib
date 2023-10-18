@@ -5,9 +5,11 @@ tests/test-dfa-invalid-char-class.sh
 tests/test-dfa-invalid-merge.sh
 
 Depends-on:
+binary-io
 stdio
 stdlib
 string
+unistd
 regex
 
 configure.ac:
@@ -19,4 +21,4 @@ TESTS += \
   test-dfa-match.sh
 
 check_PROGRAMS += test-dfa-match-aux
-test_dfa_match_aux_LDADD = $(LDADD) $(LIB_SETLOCALE) @LIBINTL@ $(LIB_MBRTOWC)
+test_dfa_match_aux_LDADD = $(LDADD) $(SETLOCALE_LIB) @LIBINTL@ $(MBRTOWC_LIB)

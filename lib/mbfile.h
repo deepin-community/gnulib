@@ -1,9 +1,9 @@
 /* Multibyte character I/O: macros for multi-byte encodings.
-   Copyright (C) 2001, 2005, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005, 2009-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -47,17 +47,18 @@
 #ifndef _MBFILE_H
 #define _MBFILE_H 1
 
+/* This file uses _GL_INLINE_HEADER_BEGIN, _GL_INLINE.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
+
 #include <assert.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <wchar.h>
 
 #include "mbchar.h"
 
-#ifndef _GL_INLINE_HEADER_BEGIN
- #error "Please include config.h first."
-#endif
 _GL_INLINE_HEADER_BEGIN
 #ifndef MBFILE_INLINE
 # define MBFILE_INLINE _GL_INLINE
@@ -109,7 +110,7 @@ mbfile_multi_getc (struct mbchar *mbc, struct mbfile_multi *mbf)
     {
       /* These characters are part of the basic character set.  ISO C 99
          guarantees that their wide character code is identical to their
-         char code.  */
+         char code.  The 32-bit wide character code is the same as well.  */
       mbc->wc = mbc->buf[0] = mbf->buf[0];
       mbc->wc_valid = true;
       mbc->ptr = &mbc->buf[0];
@@ -135,7 +136,7 @@ mbfile_multi_getc (struct mbchar *mbc, struct mbfile_multi *mbf)
          behaviour will clobber it.  */
       mbstate_t backup_state = mbf->state;
 
-      bytes = mbrtowc (&mbc->wc, &mbf->buf[0], mbf->bufcount, &mbf->state);
+      bytes = mbrtoc32 (&mbc->wc, &mbf->buf[0], mbf->bufcount, &mbf->state);
 
       if (bytes == (size_t) -1)
         {
@@ -177,11 +178,15 @@ mbfile_multi_getc (struct mbchar *mbc, struct mbfile_multi *mbf)
         {
           if (bytes == 0)
             {
-              /* A null wide character was encountered.  */
+              /* A null 32-bit wide character was encountered.  */
               bytes = 1;
               assert (mbf->buf[0] == '\0');
               assert (mbc->wc == 0);
             }
+          else if (bytes == (size_t) -3)
+            /* The previous multibyte sequence produced an additional 32-bit
+               wide character.  */
+            bytes = 0;
           mbc->wc_valid = true;
           break;
         }

@@ -1,10 +1,9 @@
 /* Locate a substring in a wide string.
-   Copyright (C) 1999, 2011-2021 Free Software Foundation, Inc.
-   Written by Bruno Haible <bruno@clisp.org>, 1999.
+   Copyright (C) 1999, 2011-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -15,37 +14,43 @@
    You should have received a copy of the GNU Lesser General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
-wchar_t *
-wcsstr (const wchar_t *haystack, const wchar_t *needle)
+/* Written by Eric Blake, 2008.  */
+
+#define AVAILABLE(h, h_l, j, n_l)                       \
+  (!MEMCHR0 ((h) + (h_l), (j) + (n_l) - (h_l))          \
+   && ((h_l) = (j) + (n_l)))
+#include "wcs-two-way.h"
+
+RETURN_TYPE
+FUNC (const UNIT *haystack_start, const UNIT *needle_start)
 {
-  wchar_t n = needle[0];
+  const UNIT *haystack = haystack_start;
+  const UNIT *needle = needle_start;
+  size_t needle_len; /* Length of NEEDLE.  */
+  size_t haystack_len; /* Known minimum length of HAYSTACK.  */
+  bool ok = true; /* True if NEEDLE is prefix of HAYSTACK.  */
 
-  /* Is needle empty?  */
-  if (n == (wchar_t)'\0')
-    return (wchar_t *) haystack;
+  /* Determine length of NEEDLE, and in the process, make sure
+     HAYSTACK is at least as long (no point processing all of a long
+     NEEDLE if HAYSTACK is too short).  */
+  while (*haystack && *needle)
+    ok &= *haystack++ == *needle++;
+  if (*needle)
+    return NULL;
+  if (ok)
+    return (RETURN_TYPE) haystack_start;
 
-  /* Is needle nearly empty?  */
-  if (needle[1] == (wchar_t)'\0')
-    return wcschr (haystack, n);
+  /* Reduce the size of haystack using STRCHR, since it has a smaller
+     linear coefficient than the Two-Way algorithm.  */
+  needle_len = needle - needle_start;
+  haystack = STRCHR (haystack_start + 1, *needle_start);
+  if (!haystack || __builtin_expect (needle_len == 1, 0))
+    return (RETURN_TYPE) haystack;
+  needle -= needle_len;
+  haystack_len = (haystack > haystack_start + needle_len ? 1
+                  : needle_len + haystack_start - haystack);
 
-  /* Search for needle's first character.  */
-  for (; *haystack != (wchar_t)'\0'; haystack++)
-    {
-      if (*haystack == n)
-        {
-          /* Compare with needle's remaining characters.  */
-          const wchar_t *hptr = haystack + 1;
-          const wchar_t *nptr = needle + 1;
-          for (;;)
-            {
-              if (*hptr != *nptr)
-                break;
-              hptr++; nptr++;
-              if (*nptr == (wchar_t)'\0')
-                return (wchar_t *) haystack;
-            }
-        }
-    }
-
-  return NULL;
+  /* Perform the search.  */
+  return two_way_short_needle (haystack, haystack_len,
+                               needle, needle_len);
 }

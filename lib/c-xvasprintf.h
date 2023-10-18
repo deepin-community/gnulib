@@ -1,9 +1,9 @@
 /* vasprintf and asprintf, with out-of-memory checking, in C locale.
-   Copyright (C) 2002-2004, 2006-2021 Free Software Foundation, Inc.
+   Copyright (C) 2002-2004, 2006-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -16,6 +16,11 @@
 
 #ifndef _C_XVASPRINTF_H
 #define _C_XVASPRINTF_H
+
+/* This file uses _GL_ATTRIBUTE_FORMAT, _GL_ATTRIBUTE_MALLOC.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 /* Get va_list.  */
 #include <stdarg.h>
@@ -41,10 +46,10 @@ extern "C" {
    used in floating-point formatting directives is always '.'. */
 extern char *c_xasprintf (const char *format, ...)
   _GL_ATTRIBUTE_FORMAT ((_GL_ATTRIBUTE_SPEC_PRINTF_STANDARD, 1, 2))
-  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC_FREE _GL_ATTRIBUTE_RETURNS_NONNULL;
+  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC_FREE;
 extern char *c_xvasprintf (const char *format, va_list args)
   _GL_ATTRIBUTE_FORMAT ((_GL_ATTRIBUTE_SPEC_PRINTF_STANDARD, 1, 0))
-  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC_FREE _GL_ATTRIBUTE_RETURNS_NONNULL;
+  _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC_FREE;
 
 #ifdef __cplusplus
 }

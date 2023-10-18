@@ -1,8 +1,10 @@
 Files:
-tests/signature.h
 tests/test-gettimeofday.c
+tests/signature.h
+tests/macros.h
 
 Depends-on:
+time
 
 configure.ac:
 

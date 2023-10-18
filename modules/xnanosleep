@@ -11,7 +11,7 @@ c99
 dtotimespec
 intprops
 nanosleep
-time
+time-h
 unistd
 
 configure.ac:
@@ -24,7 +24,7 @@ Include:
 "xnanosleep.h"
 
 Link:
-$(LIB_NANOSLEEP)
+$(NANOSLEEP_LIB)
 
 License:
 GPL

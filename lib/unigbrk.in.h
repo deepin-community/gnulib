@@ -1,12 +1,12 @@
 /* Grapheme cluster breaks in Unicode strings.
-   Copyright (C) 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
    Written by Ben Pfaff <blp@cs.stanford.edu>, 2010.
 
    This file is free software.
    It is dual-licensed under "the GNU LGPLv3+ or the GNU GPLv2+".
    You can redistribute it and/or modify it under either
      - the terms of the GNU Lesser General Public License as published
-       by the Free Software Foundation; either version 3, or (at your
+       by the Free Software Foundation, either version 3, or (at your
        option) any later version, or
      - the terms of the GNU General Public License as published by the
        Free Software Foundation; either version 2, or (at your option)
@@ -62,10 +62,10 @@ enum
   GBP_LVT          = 11,
   GBP_RI           = 12,
   GBP_ZWJ          = 13,
-  GBP_EB           = 14,
-  GBP_EM           = 15,
-  GBP_GAZ          = 16,
-  GBP_EBG          = 17
+  GBP_EB           = 14, /* obsolete */
+  GBP_EM           = 15, /* obsolete */
+  GBP_GAZ          = 16, /* obsolete */
+  GBP_EBG          = 17  /* obsolete */
 };
 
 /* Return the Grapheme_Cluster_Break property of a Unicode character. */

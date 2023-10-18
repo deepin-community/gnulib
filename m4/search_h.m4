@@ -1,5 +1,5 @@
-# search_h.m4 serial 15
-dnl Copyright (C) 2007-2021 Free Software Foundation, Inc.
+# search_h.m4 serial 16
+dnl Copyright (C) 2007-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -78,4 +78,5 @@ AC_DEFUN([gl_SEARCH_H_DEFAULTS],
   HAVE_TSEARCH=1;    AC_SUBST([HAVE_TSEARCH])
   HAVE_TWALK=1;      AC_SUBST([HAVE_TWALK])
   REPLACE_TSEARCH=0; AC_SUBST([REPLACE_TSEARCH])
+  REPLACE_TWALK=0;   AC_SUBST([REPLACE_TWALK])
 ])

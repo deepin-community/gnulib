@@ -1,5 +1,5 @@
-# wcsnrtombs.m4 serial 7
-dnl Copyright (C) 2008-2021 Free Software Foundation, Inc.
+# wcsnrtombs.m4 serial 9
+dnl Copyright (C) 2008-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -11,9 +11,12 @@ AC_DEFUN([gl_FUNC_WCSNRTOMBS],
   AC_REQUIRE([AC_TYPE_MBSTATE_T])
   gl_MBSTATE_T_BROKEN
 
-  AC_CHECK_FUNCS_ONCE([wcsnrtombs])
+  gl_CHECK_FUNCS_ANDROID([wcsnrtombs], [[#include <wchar.h>]])
   if test $ac_cv_func_wcsnrtombs = no; then
     HAVE_WCSNRTOMBS=0
+    case "$gl_cv_onwards_func_wcsnrtombs" in
+      future*) REPLACE_WCSNRTOMBS=1 ;;
+    esac
   else
     if test $REPLACE_MBSTATE_T = 1; then
       REPLACE_WCSNRTOMBS=1

@@ -1,11 +1,11 @@
 /* Formatted output to strings in C locale.
-   Copyright (C) 2004, 2006-2021 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2006-2023 Free Software Foundation, Inc.
    Written by Simon Josefsson and Yoann Vandoorselaere <yoann@prelude-ids.org>.
    Modified for C locale by Ben Pfaff.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published
-   by the Free Software Foundation; either version 3 of the License,
+   by the Free Software Foundation, either version 3 of the License,
    or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,

@@ -45,11 +45,11 @@ errno
 free-posix
 memchr
 multiarch
-verify
+assert-h
 
 configure.ac:
-gl_PREREQ_VASNPRINTF_WITH_EXTRAS
-gl_LIBUNISTRING_MODULE([0.9.8], [unistdio/ulc-vasnprintf])
+gl_PREREQ_VASNPRINTF_WITH_POSIX_EXTRAS
+gl_LIBUNISTRING_MODULE([1.2], [unistdio/ulc-vasnprintf])
 
 Makefile.am:
 if LIBUNISTRING_COMPILE_UNISTDIO_ULC_VASNPRINTF
@@ -60,7 +60,7 @@ Include:
 "unistdio.h"
 
 Link:
-$(LIB_MBRTOWC)
+$(MBRTOWC_LIB)
 
 License:
 LGPLv3+ or GPLv2+

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001-2003, 2006-2021 Free Software Foundation, Inc.
+/* Copyright (C) 2001-2003, 2006-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2001.
 
    This file is free software: you can redistribute it and/or modify
@@ -58,27 +58,13 @@
 
 /* 7.16. Boolean type and values */
 
-/* BeOS <sys/socket.h> already #defines false 0, true 1.  We use the same
-   definitions below, but temporarily we have to #undef them.  */
-#if defined __BEOS__ && !defined __HAIKU__
-# include <OS.h> /* defines bool but not _Bool */
-# undef false
-# undef true
-#endif
-
 #ifdef __cplusplus
-# define _Bool bool
-# define bool bool
+# if !defined _MSC_VER
+#  define _Bool bool
+#  define bool bool
+# endif
 #else
-# if defined __BEOS__ && !defined __HAIKU__
-  /* A compiler known to have 'bool'.  */
-  /* If the compiler already has both 'bool' and '_Bool', we can assume they
-     are the same types.  */
-#  if !@HAVE__BOOL@
-typedef bool _Bool;
-#  endif
-# else
-#  if !defined __GNUC__
+# if !defined __GNUC__
    /* If @HAVE__BOOL@:
         Some HP-UX cc and AIX IBM C compiler versions have compiler bugs when
         the built-in _Bool type is used.  See
@@ -98,10 +84,10 @@ typedef bool _Bool;
           "Invalid enumerator. (badenum)" with HP-UX cc on Tru64.
         The only benefit of the enum, debuggability, is not important
         with these compilers.  So use 'signed char' and no enum.  */
-#   define _Bool signed char
-#  else
+#  define _Bool signed char
+# else
    /* With this compiler, trust the _Bool type if the compiler has it.  */
-#   if !@HAVE__BOOL@
+#  if !@HAVE__BOOL@
    /* For the sake of symbolic names in gdb, define true and false as
       enum constants, not only as macros.
       It is tempting to write
@@ -112,7 +98,6 @@ typedef bool _Bool;
       (see ISO C 99 6.3.1.1.(2)).  So add a negative value to the
       enum; this ensures that '_Bool' promotes to 'int'.  */
 typedef enum { _Bool_must_promote_to_int = -1, false = 0, true = 1 } _Bool;
-#   endif
 #  endif
 # endif
 # define bool _Bool
@@ -120,8 +105,17 @@ typedef enum { _Bool_must_promote_to_int = -1, false = 0, true = 1 } _Bool;
 
 /* The other macros must be usable in preprocessor directives.  */
 #ifdef __cplusplus
-# define false false
-# define true true
+# if !defined _MSC_VER
+#  define false false
+#  define true true
+# endif
+/* In Sun C++ 5.11 (Solaris Studio 12.2) and older, 'true' as a preprocessor
+   expression evaluates to 0, not 1.  Fix this by overriding 'true'.  Note that
+   the replacement has to be of type 'bool'.  */
+# if defined __SUNPRO_CC && true != 1
+#  undef true
+#  define true (!false)
+# endif
 #else
 # define false 0
 # define true 1

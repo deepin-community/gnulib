@@ -25,7 +25,7 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function has an incompatible declaration on some platforms:
-MidnightBSD 2.0, Solaris 11.4 (when @code{_POSIX_PTHREAD_SEMANTICS} is not defined).
+FreeBSD 12.0, MidnightBSD 2.0, Solaris 11.4 (when @code{_POSIX_PTHREAD_SEMANTICS} is not defined).
 @item
 This function fails even when standard input is a tty on some platforms:
 HP-UX 11.11.
@@ -33,4 +33,9 @@ HP-UX 11.11.
 This function fails with error code @code{EINVAL} instead of @code{ERANGE} when
 the second argument is zero on some platforms:
 HP-UX 11.31.
+@item
+This function fails with error code @code{ENOMEM} instead of @code{ERANGE} on
+some platforms:
+@c https://dev.haiku-os.org/ticket/18349
+Haiku.
 @end itemize

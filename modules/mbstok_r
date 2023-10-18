@@ -5,7 +5,6 @@ Files:
 lib/mbstok_r.c
 
 Depends-on:
-mbuiter
 string
 mbsspn
 mbspbrk
@@ -22,7 +21,8 @@ Include:
 
 Link:
 $(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
-$(LIB_MBRTOWC)
+$(MBRTOWC_LIB)
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
 
 License:
 LGPL

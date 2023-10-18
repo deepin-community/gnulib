@@ -1,9 +1,9 @@
 /* Test of <stdlib.h> substitute in C++ mode.
-   Copyright (C) 2010-2021 Free Software Foundation, Inc.
+   Copyright (C) 2010-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -73,6 +73,11 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::mbtowc, int,
                  (wchar_t *, const char *, size_t));
 #endif
 
+#if GNULIB_TEST_MBSTOWCS
+SIGNATURE_CHECK (GNULIB_NAMESPACE::mbstowcs, size_t,
+                 (wchar_t *, const char *, size_t));
+#endif
+
 #if GNULIB_TEST_MKDTEMP
 SIGNATURE_CHECK (GNULIB_NAMESPACE::mkdtemp, char *, (char *));
 #endif
@@ -114,7 +119,7 @@ SIGNATURE_CHECK (GNULIB_NAMESPACE::ptsname_r, int, (int, char *, size_t));
 SIGNATURE_CHECK (GNULIB_NAMESPACE::putenv, int, (char *));
 #endif
 
-#if GNULIB_TEST_QSORT_R
+#if GNULIB_TEST_QSORT_R && !defined __SUNPRO_CC
 SIGNATURE_CHECK (GNULIB_NAMESPACE::qsort_r, void,
                  (void *, size_t, size_t,
                   int (*) (void const *, void const *, void *), void *));

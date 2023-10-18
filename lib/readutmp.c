@@ -1,10 +1,10 @@
 /* GNU's read utmp module.
 
-   Copyright (C) 1992-2001, 2003-2006, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 1992-2001, 2003-2006, 2009-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -27,7 +27,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <signal.h>
-#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>

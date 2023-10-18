@@ -1,10 +1,10 @@
 /* Detect write error on a stream.
-   Copyright (C) 2003-2006, 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2003-2006, 2008-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -21,7 +21,6 @@
 #include "fwriteerror.h"
 
 #include <errno.h>
-#include <stdbool.h>
 
 static int
 do_fwriteerror (FILE *fp, bool ignore_ebadf)

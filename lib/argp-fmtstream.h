@@ -1,11 +1,11 @@
 /* Word-wrapping and line-truncating streams.
-   Copyright (C) 1997-2021 Free Software Foundation, Inc.
+   Copyright (C) 1997-2023 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -23,6 +23,12 @@
 
 #ifndef _ARGP_FMTSTREAM_H
 #define _ARGP_FMTSTREAM_H
+
+/* This file uses _GL_INLINE_HEADER_BEGIN, __GL_INLINE, _GL_ATTRIBUTE_DEALLOC,
+   _GL_ATTRIBUTE_FORMAT.  */
+#if !_LIBC && !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -187,9 +193,6 @@ extern int __argp_fmtstream_ensure (argp_fmtstream_t __fs, size_t __amount);
 #define __argp_fmtstream_point argp_fmtstream_point
 #define __argp_fmtstream_update _argp_fmtstream_update
 #define __argp_fmtstream_ensure _argp_fmtstream_ensure
-#ifndef _GL_INLINE_HEADER_BEGIN
- #error "Please include config.h first."
-#endif
 _GL_INLINE_HEADER_BEGIN
 #ifndef ARGP_FS_EI
 # define ARGP_FS_EI _GL_INLINE

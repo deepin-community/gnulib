@@ -1,5 +1,5 @@
 /* Timed read-write locks (native Windows implementation).
-   Copyright (C) 2005-2021 Free Software Foundation, Inc.
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -22,7 +22,6 @@
 #include "windows-timedrwlock.h"
 
 #include <errno.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <sys/time.h>
 

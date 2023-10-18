@@ -1,10 +1,10 @@
 /* Abstract ordered set data type as a C++ class.
-   Copyright (C) 2006-2021 Free Software Foundation, Inc.
+   Copyright (C) 2006-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -153,7 +153,7 @@ public:
     ~iterator ()
       { gl_oset_iterator_free (&_state); }
 
-  #if defined __xlC__ || defined __HP_aCC || defined __SUNPRO_CC
+  #if defined __xlC__ || defined __HP_aCC || defined __SUNPRO_CC || defined __EDG__ || (defined _MSC_VER && !defined __clang__)
   public:
   #else
   private:

@@ -1,5 +1,5 @@
 /* ISO C 11 locking in multithreaded situations.
-   Copyright (C) 2005-2021 Free Software Foundation, Inc.
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -187,12 +187,6 @@ mtx_destroy (mtx_t *mutex)
     }
 }
 
-void
-call_once (once_flag *flagp, void (*func) (void))
-{
-  glwthread_once (flagp, func);
-}
-
 #else
 /* Use POSIX threads.  */
 
@@ -277,12 +271,6 @@ void
 mtx_destroy (mtx_t *mutex)
 {
   pthread_mutex_destroy (mutex);
-}
-
-void
-call_once (once_flag *flagp, void (*func) (void))
-{
-  pthread_once (flagp, func);
 }
 
 #endif

@@ -1,9 +1,9 @@
 /* Test of execute.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
+   the Free Software Foundation, either version 3, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -21,7 +21,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,6 +57,19 @@ main (int argc, char *argv[])
   char *prog_path = argv[1];
   const char *progname = "test-execute-child";
   int test = atoi (argv[2]);
+
+  /* When this test is executed through 'make' (GNU make 4.4) and
+     build-aux/test-driver, i.e. through
+       make check TESTS=test-execute.sh
+     or
+       rm -f test-execute.sh.log; make test-execute.sh.log
+     the signal handler for SIGPIPE is set to SIG_IGN.  This is a bug in
+     GNU make 4.4: <https://savannah.gnu.org/bugs/index.php?63307>.
+     It causes the tests 3 and 4 to fail.  Work around it by resetting
+     the signal handler for SIGPIPE to the default.  */
+  #ifdef SIGPIPE
+  signal (SIGPIPE, SIG_DFL);
+  #endif
 
   switch (test)
     {
@@ -97,8 +109,8 @@ main (int argc, char *argv[])
       break;
     case 1:
       {
-        /* Check an invocation of a non-existent program.  */
-        const char *prog_argv[3] = { "./non-existent", NULL };
+        /* Check an invocation of a nonexistent program.  */
+        const char *prog_argv[3] = { "./nonexistent", NULL };
         int ret = execute (progname, prog_argv[0], prog_argv, NULL,
                            false, false, false, false, true, false, NULL);
         ASSERT (ret == 127);

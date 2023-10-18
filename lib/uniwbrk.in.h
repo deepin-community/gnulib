@@ -1,12 +1,12 @@
 /* Word breaks in Unicode strings.
-   Copyright (C) 2001-2003, 2005-2021 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2005-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This file is free software.
    It is dual-licensed under "the GNU LGPLv3+ or the GNU GPLv2+".
    You can redistribute it and/or modify it under either
      - the terms of the GNU Lesser General Public License as published
-       by the Free Software Foundation; either version 3, or (at your
+       by the Free Software Foundation, either version 3, or (at your
        option) any later version, or
      - the terms of the GNU General Public License as published by the
        Free Software Foundation; either version 2, or (at your option)
@@ -63,10 +63,11 @@ enum
   WBP_SQ           = 15,
   WBP_HL           = 16,
   WBP_ZWJ          = 17,
-  WBP_EB           = 18,
-  WBP_EM           = 19,
-  WBP_GAZ          = 20,
-  WBP_EBG          = 21
+  WBP_EB           = 18, /* obsolete */
+  WBP_EM           = 19, /* obsolete */
+  WBP_GAZ          = 20, /* obsolete */
+  WBP_EBG          = 21, /* obsolete */
+  WBP_WSS          = 22
 };
 
 /* Return the Word_Break property of a Unicode character.  */

@@ -1,5 +1,5 @@
-# log2l.m4 serial 3
-dnl Copyright (C) 2010-2021 Free Software Foundation, Inc.
+# log2l.m4 serial 6
+dnl Copyright (C) 2010-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -17,7 +17,7 @@ AC_DEFUN([gl_FUNC_LOG2L],
   dnl defined in the same library as log2().
   save_LIBS="$LIBS"
   LIBS="$LIBS $LOG2_LIBM"
-  AC_CHECK_FUNCS([log2l])
+  gl_CHECK_FUNCS_ANDROID([log2l], [[#include <math.h>]])
   LIBS="$save_LIBS"
   if test $ac_cv_func_log2l = yes; then
     LOG2L_LIBM="$LOG2_LIBM"
@@ -37,6 +37,9 @@ AC_DEFUN([gl_FUNC_LOG2L],
   else
     HAVE_LOG2L=0
     HAVE_DECL_LOG2L=0
+    case "$gl_cv_onwards_func_log2l" in
+      future*) REPLACE_LOG2L=1 ;;
+    esac
   fi
   if test $HAVE_LOG2L = 0 || test $REPLACE_LOG2L = 1; then
     dnl Find libraries needed to link lib/log2l.c.
@@ -162,16 +165,16 @@ int main (int argc, char *argv[])
         [gl_cv_func_log2l_works=yes],
         [gl_cv_func_log2l_works=no],
         [case "$host_os" in
-                          # Guess yes on glibc systems.
-           *-gnu* | gnu*) gl_cv_func_log2l_works="guessing yes" ;;
-                          # Guess no on musl systems.
-           *-musl*)       gl_cv_func_log2l_works="guessing no" ;;
-                          # Guess no on OSF/1.
-           osf*)          gl_cv_func_log2l_works="guessing no" ;;
-                          # Guess yes on native Windows.
-           mingw*)        gl_cv_func_log2l_works="guessing yes" ;;
-                          # If we don't know, obey --enable-cross-guesses.
-           *)             gl_cv_func_log2l_works="$gl_cross_guess_normal" ;;
+                               # Guess yes on glibc systems.
+           *-gnu* | gnu*)      gl_cv_func_log2l_works="guessing yes" ;;
+                               # Guess no on musl systems.
+           *-musl* | midipix*) gl_cv_func_log2l_works="guessing no" ;;
+                               # Guess no on OSF/1.
+           osf*)               gl_cv_func_log2l_works="guessing no" ;;
+                               # Guess yes on native Windows.
+           mingw*)             gl_cv_func_log2l_works="guessing yes" ;;
+                               # If we don't know, obey --enable-cross-guesses.
+           *)                  gl_cv_func_log2l_works="$gl_cross_guess_normal" ;;
          esac
         ])
     ])

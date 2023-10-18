@@ -1,10 +1,10 @@
 /* Compare two wide strings.
-   Copyright (C) 1999, 2011-2021 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2011-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 1999.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -27,8 +27,9 @@ wcsncmp (const wchar_t *s1, const wchar_t *s2, size_t n)
           n--;
           continue;
         }
-      /* Note that wc1 and wc2 each have at most 31 bits.  */
-      return (int)wc1 - (int)wc2;
+      /* ISO C requires wcsncmp to work with all wchar_t values.
+         We cannot assume that wc1 and wc2 are in the range 0..INT_MAX.  */
+      return _GL_CMP (wc1, wc2);
              /* > 0 if wc1 > wc2, < 0 if wc1 < wc2,
                 = 0 if wc1 and wc2 are both '\0'.  */
     }

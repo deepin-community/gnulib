@@ -1,5 +1,5 @@
 /* Test that the handler is called, with the right fault address.
-   Copyright (C) 2002-2021 Free Software Foundation, Inc.
+   Copyright (C) 2002-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,7 +79,7 @@ main ()
   prot_unwritable = PROT_READ;
 # endif
 
-  /* Setup some mmaped memory.  */
+  /* Setup some mmapped memory.  */
   p = mmap_zeromap ((void *) 0x12340000, 0x4000);
   if (p == (void *)(-1))
     {

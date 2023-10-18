@@ -1,9 +1,9 @@
 /* Test of c32isgraph() function.
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -119,7 +119,7 @@ main (int argc, char *argv[])
           /* U+007F <control> */
           is = for_character ("\177", 1);
           ASSERT (is == 0);
-        #if !((defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined __sgi || defined __sun || (defined _WIN32 && !defined __CYGWIN__))
+        #if !((defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined __sgi || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
           /* U+00A0 NO-BREAK SPACE */
           is = for_character ("\240", 1);
           ASSERT (is != 0);
@@ -155,7 +155,7 @@ main (int argc, char *argv[])
           /* U+007F <control> */
           is = for_character ("\177", 1);
           ASSERT (is == 0);
-        #if !((defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined __sun || (defined _WIN32 && !defined __CYGWIN__))
+        #if !((defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
           /* U+00A0 NO-BREAK SPACE */
           is = for_character ("\302\240", 2);
           ASSERT (is != 0);
@@ -166,7 +166,7 @@ main (int argc, char *argv[])
           /* U+2002 EN SPACE */
           is = for_character ("\342\200\202", 3);
           ASSERT (is == 0);
-        #if !(defined __GLIBC__ || defined _AIX || defined __sun || defined __CYGWIN__)
+        #if !(defined __GLIBC__ || defined MUSL_LIBC || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __NetBSD__ || defined _AIX || defined __sun || defined __CYGWIN__)
           /* U+202E RIGHT-TO-LEFT OVERRIDE */
           is = for_character ("\342\200\256", 3);
           ASSERT (is == 0);
@@ -174,7 +174,7 @@ main (int argc, char *argv[])
           /* U+3000 IDEOGRAPHIC SPACE */
           is = for_character ("\343\200\200", 3);
           ASSERT (is == 0);
-        #if !(defined __GLIBC__ || defined _AIX || defined __sun || defined __CYGWIN__)
+        #if !(defined __GLIBC__ || defined MUSL_LIBC || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __NetBSD__ || defined _AIX || defined __sun || defined __CYGWIN__)
           /* U+FEFF ZERO WIDTH NO-BREAK SPACE */
           is = for_character ("\357\273\277", 3);
           ASSERT (is == 0);
@@ -184,7 +184,7 @@ main (int argc, char *argv[])
           is = for_character ("\360\240\200\200", 4);
           ASSERT (is != 0);
         #endif
-        #if !(defined __GLIBC__ || defined _AIX || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
+        #if !(defined __GLIBC__ || defined MUSL_LIBC || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __NetBSD__ || defined _AIX || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
           /* U+E0001 LANGUAGE TAG */
           is = for_character ("\363\240\200\201", 4);
           ASSERT (is == 0);
@@ -194,6 +194,10 @@ main (int argc, char *argv[])
 
       case '4':
         /* Locale encoding is GB18030.  */
+        #if GL_CHAR32_T_IS_UNICODE && (defined __NetBSD__ || defined __sun)
+        fputs ("Skipping test: The GB18030 converter in this system's iconv is broken.\n", stderr);
+        return 77;
+        #endif
         {
           /* U+007F <control> */
           is = for_character ("\177", 1);
@@ -211,7 +215,7 @@ main (int argc, char *argv[])
           /* U+2002 EN SPACE */
           is = for_character ("\201\066\243\070", 4);
           ASSERT (is == 0);
-        #if !defined __GLIBC__
+        #if !(defined __GLIBC__ || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__)
           /* U+202E RIGHT-TO-LEFT OVERRIDE */
           is = for_character ("\201\066\247\061", 4);
           ASSERT (is == 0);
@@ -219,7 +223,7 @@ main (int argc, char *argv[])
           /* U+3000 IDEOGRAPHIC SPACE */
           is = for_character ("\241\241", 2);
           ASSERT (is == 0);
-        #if !defined __GLIBC__
+        #if !(defined __GLIBC__ || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__)
           /* U+FEFF ZERO WIDTH NO-BREAK SPACE */
           is = for_character ("\204\061\225\063", 4);
           ASSERT (is == 0);
@@ -229,7 +233,7 @@ main (int argc, char *argv[])
           is = for_character ("\225\062\202\066", 4);
           ASSERT (is != 0);
         #endif
-        #if !defined __GLIBC__
+        #if !(defined __GLIBC__ || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__)
           /* U+E0001 LANGUAGE TAG */
           is = for_character ("\323\066\225\071", 4);
           ASSERT (is == 0);

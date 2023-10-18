@@ -1,9 +1,9 @@
 /* (Persistent) hash array mapped tries.
-   Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -197,6 +197,7 @@ free_element (const struct function_table *functions, Hamt_entry *elt)
 }
 
 /* Return the initialized element.  */
+_GL_ATTRIBUTE_MAYBE_UNUSED
 static Hamt_entry *
 init_element (Hamt_entry *elt)
 {
@@ -213,8 +214,7 @@ static struct bucket *
 alloc_bucket (size_t elt_count)
 {
   struct bucket *bucket
-    = xmalloc (FLEXSIZEOF (struct bucket, elts,
-                           sizeof (Hamt_entry) * elt_count));
+    = xmalloc (FLEXNSIZEOF (struct bucket, elts, elt_count));
   init_ref_counter (&bucket->ref_counter, bucket_entry);
   bucket->elt_count = elt_count;
   return bucket;
@@ -250,8 +250,7 @@ static struct subtrie *
 alloc_subtrie (int node_count)
 {
   struct subtrie *subtrie
-    = xmalloc (FLEXSIZEOF (struct subtrie, nodes,
-                           sizeof (Hamt_entry) * node_count));
+    = xmalloc (FLEXNSIZEOF (struct subtrie, nodes, node_count));
   init_ref_counter (&subtrie->ref_count, subtrie_entry);
   return subtrie;
 }
@@ -680,6 +679,11 @@ entry_insert (const struct function_table *functions, Hamt_entry *entry,
       Hamt_entry *new_entry = copy_entry (*elt_ptr);
       if (replace)
         *elt_ptr = NULL;
+      /* We have to take this shortcut as shifting an integer of N
+        bits by N or more bits triggers undefined behavior.
+        See: https://lists.gnu.org/archive/html/bug-gnulib/2022-04/msg00023.html.  */
+      if (depth >= _GL_HAMT_MAX_DEPTH)
+       return (Hamt_entry *) create_populated_bucket (new_entry, copy_entry (entry));
       return create_populated_subtrie (new_entry, copy_entry (entry), hash,
                                        (hash_element (functions, entry)
                                         >> (5 * depth)), depth);

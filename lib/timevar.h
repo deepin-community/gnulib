@@ -1,6 +1,6 @@
 /* Timing variables for measuring application performance.
 
-   Copyright (C) 2000, 2002, 2004, 2009-2015, 2018-2021 Free Software
+   Copyright (C) 2000, 2002, 2004, 2009-2015, 2018-2023 Free Software
    Foundation, Inc.
 
    Contributed by Alex Samuel <samuel@codesourcery.com>
@@ -35,7 +35,7 @@ extern "C" {
    system.
 
    Timing variables are defined using the DEFTIMEVAR macro in
-   timevar.def.  Each has an enumeral identifier, used when referring
+   timevar.def.  Each has an identifier of type timevar_id_t, used to refer
    to the timing variable in code, and a character string name.
 
    Timing variables can be used in two ways:

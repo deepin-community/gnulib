@@ -1,10 +1,10 @@
 /* Sequential list data type implemented by a hash table with a binary tree.
-   Copyright (C) 2006, 2008-2021 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2008-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -84,6 +84,7 @@ check_invariants (gl_list_node_t node, gl_list_node_t parent)
 
   return left_blackheight + (node->color == BLACK ? 1 : 0);
 }
+extern void gl_rbtreehash_list_check_invariants (gl_list_t);
 void
 gl_rbtreehash_list_check_invariants (gl_list_t list)
 {

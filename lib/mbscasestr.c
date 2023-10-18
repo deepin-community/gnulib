@@ -1,10 +1,10 @@
 /* Case-insensitive searching in a string.  -*- coding: utf-8 -*-
-   Copyright (C) 2005-2021 Free Software Foundation, Inc.
+   Copyright (C) 2005-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2005.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation; either version 3 of the
+   published by the Free Software Foundation, either version 3 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -21,7 +21,6 @@
 #include <string.h>
 
 #include <ctype.h>
-#include <stdbool.h>
 #include <stddef.h>  /* for NULL, in case a nonstandard string.h lacks it */
 #include <stdlib.h>
 
@@ -65,7 +64,7 @@ knuth_morris_pratt_multibyte (const char *haystack, const char *needle,
       {
         mb_copy (&needle_mbchars[j], &mbui_cur (iter));
         if (needle_mbchars[j].wc_valid)
-          needle_mbchars[j].wc = towlower (needle_mbchars[j].wc);
+          needle_mbchars[j].wc = c32tolower (needle_mbchars[j].wc);
       }
   }
 
@@ -153,7 +152,7 @@ knuth_morris_pratt_multibyte (const char *haystack, const char *needle,
 
         mb_copy (&c, &mbui_cur (phaystack));
         if (c.wc_valid)
-          c.wc = towlower (c.wc);
+          c.wc = c32tolower (c.wc);
         if (mb_equal (needle_mbchars[j], c))
           {
             j++;
@@ -238,7 +237,7 @@ mbscasestr (const char *haystack, const char *needle)
 
           mb_copy (&b, &mbui_cur (iter_needle));
           if (b.wc_valid)
-            b.wc = towlower (b.wc);
+            b.wc = c32tolower (b.wc);
 
           mbui_init (iter_haystack, haystack);
           for (;; mbui_advance (iter_haystack))
@@ -280,7 +279,7 @@ mbscasestr (const char *haystack, const char *needle)
               comparison_count++;
               mb_copy (&c, &mbui_cur (iter_haystack));
               if (c.wc_valid)
-                c.wc = towlower (c.wc);
+                c.wc = c32tolower (c.wc);
               if (mb_equal (c, b))
                 /* The first character matches.  */
                 {

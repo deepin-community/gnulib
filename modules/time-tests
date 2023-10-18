@@ -1,9 +1,10 @@
 Files:
 tests/test-time.c
+tests/signature.h
+tests/macros.h
 
 Depends-on:
-verify
-time-c++-tests
+gettimeofday
 
 configure.ac:
 

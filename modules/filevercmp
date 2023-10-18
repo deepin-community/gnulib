@@ -6,9 +6,10 @@ lib/filevercmp.h
 lib/filevercmp.c
 
 Depends-on:
+assert-h
 c-ctype
+idx
 stdbool
-string
 
 configure.ac:
 

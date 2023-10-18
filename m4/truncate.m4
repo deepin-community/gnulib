@@ -1,5 +1,5 @@
-# truncate.m4 serial 3   -*- Autoconf -*-
-dnl Copyright (C) 2017-2021 Free Software Foundation, Inc.
+# truncate.m4 serial 5   -*- Autoconf -*-
+dnl Copyright (C) 2017-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -9,7 +9,7 @@ AC_DEFUN([gl_FUNC_TRUNCATE],
   AC_REQUIRE([gl_UNISTD_H_DEFAULTS])
   AC_REQUIRE([AC_CANONICAL_HOST])
 
-  AC_CHECK_FUNCS_ONCE([truncate])
+  gl_CHECK_FUNCS_ANDROID([truncate], [[#include <unistd.h>]])
   dnl AC_CHECK_FUNC is not enough here, because when compiling for Android 4.4
   dnl or older with _FILE_OFFSET_BITS=64, truncate() is not declared.  There
   dnl is a function 'truncate' in libc, but it is unsuitable, because it takes
@@ -71,10 +71,10 @@ AC_DEFUN([gl_FUNC_TRUNCATE],
     fi
   else
     HAVE_DECL_TRUNCATE=0
-    if test $ac_cv_func_truncate = yes; then
+    case "$gl_cv_onwards_func_truncate" in
       dnl Avoid a conflict with the 'truncate' in libc.
-      REPLACE_TRUNCATE=1
-    fi
+      yes | future*) REPLACE_TRUNCATE=1 ;;
+    esac
   fi
 ])
 

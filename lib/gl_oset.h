@@ -1,5 +1,5 @@
 /* Abstract ordered set data type.
-   Copyright (C) 2006-2007, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2006-2007, 2009-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
    This file is free software: you can redistribute it and/or modify
@@ -18,12 +18,14 @@
 #ifndef _GL_OSET_H
 #define _GL_OSET_H
 
-#include <stdbool.h>
-#include <stddef.h>
-
-#ifndef _GL_INLINE_HEADER_BEGIN
+/* This file uses _GL_INLINE_HEADER_BEGIN, _GL_INLINE,
+   _GL_ATTRIBUTE_NODISCARD.  */
+#if !_GL_CONFIG_H_INCLUDED
  #error "Please include config.h first."
 #endif
+
+#include <stddef.h>
+
 _GL_INLINE_HEADER_BEGIN
 #ifndef GL_OSET_INLINE
 # define GL_OSET_INLINE _GL_INLINE

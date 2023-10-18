@@ -1,10 +1,10 @@
 /* Getter for RLIMIT_DATA.
-   Copyright (C) 2011-2021 Free Software Foundation, Inc.
+   Copyright (C) 2011-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2011.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -77,7 +77,7 @@
 
    AIX:
      a) setrlimit with RLIMIT_DATA works.
-     b) No VMA iteration API exists.
+     b) The /proc/$pid/map file contains a list of the virtual memory areas.
 
    HP-UX:
      a) setrlimit with RLIMIT_DATA works, except on HP-UX 11.00, where it
@@ -350,6 +350,7 @@ vma_iterate_callback (void *data, uintptr_t start, uintptr_t end,
   return 0;
 }
 
+_GL_ATTRIBUTE_MAYBE_UNUSED
 static uintptr_t
 get_rusage_data_via_iterator (void)
 {

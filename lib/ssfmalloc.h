@@ -1,6 +1,6 @@
 /* Simple and straight-forward malloc implementation (front end).
 
-   Copyright (C) 2020-2021 Free Software Foundation, Inc.
+   Copyright (C) 2020-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -77,6 +77,11 @@
                         header - not to be used by the application - at the
                         beginning of a page sequence returned by ALLOC_PAGES.
  */
+
+/* This file uses _GL_CMP.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 /* =================== Declarations of exported functions =================== */
 
@@ -327,8 +332,8 @@ static unsigned int small_block_page_num_bitmap_words;
 struct small_page_header
 {
   struct dissected_page_header common;
-  /* Two bitmaps, each with small_block_page_num_bitmap_words. In each a bit
-     represents ALIGNMENT bytes.
+  /* Two bitmaps, each with small_block_page_num_bitmap_words words. In each
+     a bit represents ALIGNMENT bytes.
        - available_bitmap: bit set means available, bit clear means allocated.
        - blockend_bitmap: bit set means the an allocated block ends here.  */
   uint32_t bitmap_words[FLEXIBLE_ARRAY_MEMBER];
@@ -360,8 +365,8 @@ init_small_block_page_pool (struct page_pool *pool)
     {
       num_bitmap_words = (num_bits + 32 - 1) / 32;
       blocks_start =
-        (FLEXSIZEOF (struct small_page_header, bitmap_words,
-                     2 * num_bitmap_words * sizeof (uint32_t))
+        (FLEXNSIZEOF (struct small_page_header, bitmap_words,
+                      2 * num_bitmap_words)
          + ALIGNMENT - 1) & -ALIGNMENT;
       unsigned int num_bits_r = (unsigned int) (PAGESIZE - blocks_start) / ALIGNMENT;
       if (num_bits_r >= num_bits)

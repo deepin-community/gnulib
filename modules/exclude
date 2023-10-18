@@ -6,6 +6,8 @@ lib/exclude.h
 lib/exclude.c
 
 Depends-on:
+assert-h
+c32tolower
 filename
 fnmatch
 fopen-gnu
@@ -15,7 +17,6 @@ mbuiter
 regex
 stdbool
 unlocked-io-internal
-verify
 xalloc
 
 configure.ac:
@@ -28,7 +29,8 @@ Include:
 
 Link:
 $(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
-$(LIB_MBRTOWC)
+$(MBRTOWC_LIB)
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
 
 License:
 GPL

@@ -1,9 +1,9 @@
 /* Child program invoked by test-execute-main.
-   Copyright (C) 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2009-2023 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3, or (at your option)
+   the Free Software Foundation, either version 3, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -57,6 +57,7 @@ is_device (int fd)
 
 /* In this file, we use only system functions, no overrides from gnulib.  */
 #undef atoi
+#undef close
 #undef fcntl
 #undef fflush
 #undef fgetc
@@ -64,12 +65,17 @@ is_device (int fd)
 #undef fputs
 #undef getcwd
 #undef isatty
+#undef open
 #undef raise
 #undef read
 #undef sprintf
+#undef strcasestr
 #undef strcmp
 #undef strlen
+#undef strstr
 #undef write
+
+#include "qemu.h"
 
 #if HAVE_MSVC_INVALID_PARAMETER_HANDLER
 static void __cdecl
@@ -166,12 +172,15 @@ main (int argc, char *argv[])
       _set_invalid_parameter_handler (gl_msvc_invalid_parameter_handler);
       #endif
       {
+        /* QEMU 6.1 in user-mode passes an open fd = 3, that references
+           /dev/urandom.  We need to ignore this fd.  */
+        bool is_qemu = is_running_under_qemu_user ();
         char buf[300];
         buf[0] = '\0';
         char *p = buf;
         int fd;
         for (fd = 0; fd < 20; fd++)
-          if (is_open (fd))
+          if (is_open (fd) && !(is_qemu && fd == 3))
             {
               sprintf (p, "%d ", fd);
               p += strlen (p);

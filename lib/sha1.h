@@ -1,6 +1,6 @@
 /* Declarations of functions and data types used for SHA1 sum
    library functions.
-   Copyright (C) 2000-2001, 2003, 2005-2006, 2008-2021 Free Software
+   Copyright (C) 2000-2001, 2003, 2005-2006, 2008-2023 Free Software
    Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
@@ -19,10 +19,18 @@
 #ifndef SHA1_H
 # define SHA1_H 1
 
+/* This file uses HAVE_OPENSSL_SHA1.  */
+# if !_GL_CONFIG_H_INCLUDED
+#  error "Please include config.h first."
+# endif
+
 # include <stdio.h>
 # include <stdint.h>
 
 # if HAVE_OPENSSL_SHA1
+#  ifndef OPENSSL_API_COMPAT
+#   define OPENSSL_API_COMPAT 0x10101000L /* FIXME: Use OpenSSL 1.1+ API.  */
+#  endif
 #  include <openssl/sha.h>
 # endif
 
@@ -30,7 +38,7 @@
 extern "C" {
 # endif
 
-#define SHA1_DIGEST_SIZE 20
+# define SHA1_DIGEST_SIZE 20
 
 # if HAVE_OPENSSL_SHA1
 #  define GL_OPENSSL_NAME 1
@@ -88,6 +96,7 @@ extern void *sha1_buffer (const char *buffer, size_t len,
                           void *restrict resblock);
 
 # endif
+
 /* Compute SHA1 message digest for bytes read from STREAM.
    STREAM is an open file stream.  Regular files are handled more efficiently.
    The contents of STREAM from its current position to its end will be read.

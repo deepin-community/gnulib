@@ -1,5 +1,5 @@
-# log2.m4 serial 10
-dnl Copyright (C) 2010-2021 Free Software Foundation, Inc.
+# log2.m4 serial 13
+dnl Copyright (C) 2010-2023 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -18,7 +18,7 @@ AC_DEFUN([gl_FUNC_LOG2],
   dnl Test whether log2() exists.
   save_LIBS="$LIBS"
   LIBS="$LIBS $LOG2_LIBM"
-  AC_CHECK_FUNCS([log2])
+  gl_CHECK_FUNCS_ANDROID([log2], [[#include <math.h>]])
   LIBS="$save_LIBS"
   if test $ac_cv_func_log2 = yes; then
     HAVE_LOG2=1
@@ -79,14 +79,14 @@ int main (int argc, char *argv[])
               [gl_cv_func_log2_ieee=yes],
               [gl_cv_func_log2_ieee=no],
               [case "$host_os" in
-                                # Guess yes on glibc systems.
-                 *-gnu* | gnu*) gl_cv_func_log2_ieee="guessing yes" ;;
-                                # Guess yes on musl systems.
-                 *-musl*)       gl_cv_func_log2_ieee="guessing yes" ;;
-                                # Guess yes on native Windows.
-                 mingw*)        gl_cv_func_log2_ieee="guessing yes" ;;
-                                # If we don't know, obey --enable-cross-guesses.
-                 *)             gl_cv_func_log2_ieee="$gl_cross_guess_normal" ;;
+                                     # Guess yes on glibc systems.
+                 *-gnu* | gnu*)      gl_cv_func_log2_ieee="guessing yes" ;;
+                                     # Guess yes on musl systems.
+                 *-musl* | midipix*) gl_cv_func_log2_ieee="guessing yes" ;;
+                                     # Guess yes on native Windows.
+                 mingw*)             gl_cv_func_log2_ieee="guessing yes" ;;
+                                     # If we don't know, obey --enable-cross-guesses.
+                 *)                  gl_cv_func_log2_ieee="$gl_cross_guess_normal" ;;
                esac
               ])
             LIBS="$save_LIBS"
@@ -100,6 +100,9 @@ int main (int argc, char *argv[])
   else
     HAVE_LOG2=0
     HAVE_DECL_LOG2=0
+    case "$gl_cv_onwards_func_log2" in
+      future*) REPLACE_LOG2=1 ;;
+    esac
   fi
   if test $HAVE_LOG2 = 0 || test $REPLACE_LOG2 = 1; then
     dnl Find libraries needed to link lib/log2.c.

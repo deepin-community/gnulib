@@ -1,9 +1,9 @@
 /* Test of POSIX compatible printf() function.
-   Copyright (C) 2007, 2009-2021 Free Software Foundation, Inc.
+   Copyright (C) 2007, 2009-2023 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -32,12 +32,17 @@
 #include <string.h>
 #include <errno.h>
 
+#include "qemu.h"
+
 int
 main (int argc, char *argv[])
 {
   struct rlimit limit;
   int arg;
   int ret;
+
+  if (is_running_under_qemu_user ())
+    return 77;
 
   /* Some printf implementations allocate temporary space with malloc.  */
   /* On BSD systems, malloc() is limited by RLIMIT_DATA.  */

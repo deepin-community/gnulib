@@ -11,10 +11,10 @@ also show snapshot and debian package version.
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/gnulib-tool b/gnulib-tool
-index 2ba5dec..939366b 100755
+index 5993143..6992549 100755
 --- a/gnulib-tool
 +++ b/gnulib-tool
-@@ -362,12 +362,13 @@ q
+@@ -366,12 +366,13 @@ q
      version=' '`cd "$gnulib_dir" && ./build-aux/git-version-gen /dev/null | sed -e 's/-dirty/-modified/'`
    else
      # gnulib copy without versioning information.

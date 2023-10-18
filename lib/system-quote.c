@@ -1,10 +1,10 @@
 /* Quoting for a system command.
-   Copyright (C) 2012-2021 Free Software Foundation, Inc.
+   Copyright (C) 2012-2023 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2012.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
+   the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
@@ -20,7 +20,6 @@
 /* Specification.  */
 #include "system-quote.h"
 
-#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -258,7 +257,7 @@ system_quote (enum system_command_interpreter interpreter,
     case SCI_SYSTEM:
     case SCI_WINDOWS_CMD:
       {
-        size_t length = system_quote_length (interpreter, string);
+        size_t length = system_quote_length (interpreter, string) + 1;
         char *quoted = XNMALLOC (length, char);
         system_quote_copy (quoted, interpreter, string);
         return quoted;

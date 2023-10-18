@@ -1,6 +1,6 @@
 /* Immutable data.
 
-   Copyright (C) 2021 Free Software Foundation, Inc.
+   Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -49,6 +49,11 @@
    platform that lacks support for read-only and writeable memory areas, the
    functions work alike, except that the "read-only" pointers are actually
    writable.  */
+
+/* This file uses HAVE_WORKING_MPROTECT.  */
+#if !_GL_CONFIG_H_INCLUDED
+ #error "Please include config.h first."
+#endif
 
 #include <stddef.h>
 
