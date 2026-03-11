@@ -5,13 +5,15 @@ tests/nap.h
 
 Depends-on:
 nanosleep
-stdckdint
+stdckdint-h
 time-h
-unistd
+unistd-h
+xconcat-filename
+xgetcwd-lgpl
 
 configure.ac:
 
 Makefile.am:
 TESTS += test-stat-time
 check_PROGRAMS += test-stat-time
-test_stat_time_LDADD = $(LDADD) $(NANOSLEEP_LIB)
+test_stat_time_LDADD = $(LDADD) $(NANOSLEEP_LIB) @LIBINTL@

@@ -6,8 +6,8 @@ lib/javacomp.h
 lib/javacomp.c
 
 Depends-on:
-stdbool
-unistd
+bool
+unistd-h
 javaversion
 execute
 spawn-pipe
@@ -31,6 +31,7 @@ xvasprintf
 verify
 c-strstr
 gettext-h
+gnulib-i18n
 javacomp-script
 sh-filename
 

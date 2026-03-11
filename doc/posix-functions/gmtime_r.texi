@@ -1,10 +1,11 @@
 @node gmtime_r
-@section @code{gmtime_r}
+@subsection @code{gmtime_r}
 @findex gmtime_r
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/gmtime_r.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/gmtime_r.html}
 
 Gnulib module: time_r
+@mindex time_r
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -23,4 +24,8 @@ Portability problems not fixed by Gnulib:
 On some platforms, this function yields incorrect values for
 timestamps before the year 1:
 MacOS X 10.5, Solaris 11.3.
+@item
+This function sets the field @code{tm_zone} to @code{"GMT"}
+instead of @code{"UTC"} on some platforms:
+glibc, NetBSD, OpenBSD, Minix, Cygwin, Android.
 @end itemize

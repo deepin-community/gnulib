@@ -1,16 +1,17 @@
 @node mbrlen
-@section @code{mbrlen}
+@subsection @code{mbrlen}
 @findex mbrlen
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/mbrlen.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/mbrlen.html}
 
 Gnulib module: mbrlen
+@mindex mbrlen
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-Minix 3.1.8, HP-UX 11.00, IRIX 6.5, mingw.
+Minix 3.1.8, HP-UX 11.00, mingw.
 @item
 In the C or POSIX locales, this function can return @code{(size_t) -1}
 and set @code{errno} to @code{EILSEQ}:

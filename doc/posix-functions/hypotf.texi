@@ -1,10 +1,12 @@
 @node hypotf
-@section @code{hypotf}
+@subsection @code{hypotf}
 @findex hypotf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/hypotf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/hypotf.html}
 
 Gnulib module: hypotf or hypotf-ieee
+@mindex hypotf
+@mindex hypotf-ieee
 
 Portability problems fixed by either Gnulib module @code{hypotf} or @code{hypotf-ieee}:
 @itemize

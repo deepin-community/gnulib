@@ -1,9 +1,10 @@
 @node wctype.h
 @section @file{wctype.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/wctype.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/wctype.h.html}
 
 Gnulib module: wctype-h
+@mindex wctype-h
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -16,9 +17,6 @@ mingw, MSVC 14.
 @item
 The functions @code{isw*} are missing on some platforms:
 FreeBSD 4.11.
-@item
-The function @code{iswblank} is declared but not defined on some platforms:
-IRIX 6.5.30.
 @end itemize
 
 Portability problems not fixed by Gnulib:

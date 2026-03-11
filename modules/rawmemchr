@@ -7,11 +7,10 @@ lib/rawmemchr.valgrind
 m4/rawmemchr.m4
 
 Depends-on:
-alignasof
 assert-h
 extensions
-stdint
-string
+stdint-h
+string-h
 
 configure.ac:
 gl_FUNC_RAWMEMCHR

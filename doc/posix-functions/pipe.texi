@@ -1,10 +1,11 @@
 @node pipe
-@section @code{pipe}
+@subsection @code{pipe}
 @findex pipe
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pipe.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pipe.html}
 
 Gnulib module: pipe-posix
+@mindex pipe-posix
 
 Portability problems fixed by Gnulib:
 @itemize

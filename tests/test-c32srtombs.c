@@ -1,5 +1,5 @@
 /* Test of conversion of 32-bit wide string to string.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ main (int argc, char *argv[])
 
       switch (argv[1][0])
         {
-        case '1':
+        case '2':
           /* Locale encoding is ISO-8859-1 or ISO-8859-15.  */
           {
             const char original[] = "B\374\337er"; /* "Büßer" */
@@ -83,7 +83,7 @@ main (int argc, char *argv[])
           }
           break;
 
-        case '2':
+        case '3':
           /* Locale encoding is UTF-8.  */
           {
             const char original[] = "s\303\274\303\237\360\237\230\213!"; /* "süß😋!" */
@@ -120,7 +120,7 @@ main (int argc, char *argv[])
           }
           break;
 
-        case '3':
+        case '4':
           /* Locale encoding is EUC-JP.  */
           {
             const char original[] = "<\306\374\313\334\270\354>"; /* "<日本語>" */
@@ -158,9 +158,11 @@ main (int argc, char *argv[])
           break;
 
 
-        case '4':
+        case '5':
           /* Locale encoding is GB18030.  */
-          #if GL_CHAR32_T_IS_UNICODE && (defined __NetBSD__ || defined __sun)
+          #if (defined __GLIBC__ && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 13 && __GLIBC_MINOR__ <= 15) || (GL_CHAR32_T_IS_UNICODE && (defined __FreeBSD__ || defined __NetBSD__ || defined __sun))
+          if (test_exit_status != EXIT_SUCCESS)
+            return test_exit_status;
           fputs ("Skipping test: The GB18030 converter in this system's iconv is broken.\n", stderr);
           return 77;
           #endif
@@ -203,7 +205,7 @@ main (int argc, char *argv[])
           return 1;
         }
 
-      return 0;
+      return test_exit_status;
     }
 
   return 1;

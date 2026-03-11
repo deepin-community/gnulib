@@ -1,3 +1,6 @@
-01-gnulib-directory.patch
-02-shebang.patch
-03-tests.patch
+00-gnulib-tool-version.patch
+# 00Z-gnulib-tool-version.patch
+# 00a-gnulib-tool-version.patch
+# 00b-gnulib-tool-version.patch
+# 00c-gnulib-tool-version.patch
+# 00d-gnulib-tool-version.patch

@@ -1,10 +1,11 @@
 @node execl
-@section @code{execl}
+@subsection @code{execl}
 @findex execl
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/execl.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/execl.html}
 
 Gnulib module: execl
+@mindex execl
 
 Portability problems fixed by Gnulib:
 @itemize

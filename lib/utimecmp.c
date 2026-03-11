@@ -1,6 +1,6 @@
 /* utimecmp.c -- compare file timestamps
 
-   Copyright (C) 2004-2007, 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2004-2007, 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,8 +53,7 @@ enum { SYSCALL_RESOLUTION = 100 };
        && (defined HAVE_STRUCT_STAT_ST_ATIM_TV_NSEC             \
            || defined HAVE_STRUCT_STAT_ST_ATIMESPEC_TV_NSEC     \
            || defined HAVE_STRUCT_STAT_ST_ATIMENSEC             \
-           || defined HAVE_STRUCT_STAT_ST_ATIM_ST__TIM_TV_NSEC  \
-           || defined HAVE_STRUCT_STAT_ST_SPARE1))
+           || defined HAVE_STRUCT_STAT_ST_ATIM_ST__TIM_TV_NSEC))
 enum { SYSCALL_RESOLUTION = 1000 };
 #else
 enum { SYSCALL_RESOLUTION = BILLION };

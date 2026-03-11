@@ -1,6 +1,6 @@
 /* Bitset vectors.
 
-   Copyright (C) 2002, 2004, 2009-2015, 2018-2023 Free Software Foundation,
+   Copyright (C) 2002, 2004, 2009-2015, 2018-2025 Free Software Foundation,
    Inc.
 
    Contributed by Michael Hayes (m.hayes@elec.canterbury.ac.nz).
@@ -27,6 +27,11 @@
 #endif
 
 #include "bitset.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef bitset * bitsetv;
 
@@ -67,5 +72,10 @@ void debug_bitsetv (bitsetv);
 
 /* Dump vector of bitsets as a matrix.  */
 void bitsetv_matrix_dump (FILE *, const char *, bitsetv);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* _BITSETV_H  */

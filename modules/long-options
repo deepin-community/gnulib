@@ -9,8 +9,8 @@ Depends-on:
 c99
 exitfail
 getopt-gnu
-stdbool
-stdlib
+bool
+stdlib-h
 version-etc
 
 configure.ac:

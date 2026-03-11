@@ -8,6 +8,7 @@ tests/executable-script
 tests/executable-script.sh
 tests/executable-shell-script
 tests/signature.h
+tests/macros.h
 
 Depends-on:
 posix_spawn_file_actions_init
@@ -19,9 +20,9 @@ posix_spawnattr_init
 posix_spawnattr_setsigmask
 posix_spawnattr_setflags
 posix_spawnattr_destroy
-stdbool
-unistd
-sys_wait
+bool
+unistd-h
+sys_wait-h
 dup
 environ
 sh-filename

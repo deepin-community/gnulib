@@ -9,10 +9,11 @@ m4/sig_atomic_t.m4
 
 Depends-on:
 c99
-stdbool
-unistd
+bool
+unistd-h
 sigaction
 lock
+once
 thread-optim
 sigprocmask
 raise

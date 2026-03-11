@@ -1,10 +1,11 @@
 @node pread
-@section @code{pread}
+@subsection @code{pread}
 @findex pread
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pread.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pread.html}
 
 Gnulib module: pread
+@mindex pread
 
 Portability problems fixed by Gnulib:
 @itemize

@@ -1,8 +1,8 @@
 @node sysconf
-@section @code{sysconf}
+@subsection @code{sysconf}
 @findex sysconf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/sysconf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/sysconf.html}
 
 LSB specification:@* @url{https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/baselib-sysconf.html}
 

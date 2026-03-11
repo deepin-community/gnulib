@@ -7,12 +7,12 @@ lib/stdio-impl.h
 m4/fflush.m4
 
 Depends-on:
-stdio
+stdio-h
 fpurge                    [test $REPLACE_FFLUSH = 1]
 ftello                    [test $REPLACE_FFLUSH = 1]
 freading                  [test $REPLACE_FFLUSH = 1]
 lseek                     [test $REPLACE_FFLUSH = 1]
-unistd                    [test $REPLACE_FFLUSH = 1]
+unistd-h                  [test $REPLACE_FFLUSH = 1]
 fseeko                    [test $REPLACE_FFLUSH = 1]
 
 configure.ac-early:

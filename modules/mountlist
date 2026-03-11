@@ -1,6 +1,10 @@
 Description:
 Return list of mounted file systems.
 
+Usable-in-testdir:
+# This module aborts the configuration on mingw. FIXME
+no
+
 Files:
 lib/mountlist.h
 lib/mountlist.c
@@ -13,8 +17,8 @@ free-posix
 getline
 open
 unlocked-io-internal
-stdbool
-stdint
+bool
+stdint-h
 strstr-simple
 xalloc
 

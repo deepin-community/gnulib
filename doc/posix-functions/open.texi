@@ -1,17 +1,19 @@
 @node open
-@section @code{open}
+@subsection @code{open}
 @findex open
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/open.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/open.html}
 
 Gnulib module: open, fchdir
+@mindex open
+@mindex fchdir
 
 Portability problems fixed by the Gnulib module @code{open}:
 @itemize
 @item
 Some platforms do not support @code{O_CLOEXEC}:
 @c See posix-headers/fcntl.texi for the list.
-Mac OS X 10.6, FreeBSD 8.4, NetBSD 5.1, OpenBSD 4.9, Minix 3.1.8, AIX 7.1, HP-UX 11, IRIX 6.5, Solaris 10, Cygwin 1.7.x, mingw, MSVC 14.
+Mac OS X 10.6, FreeBSD 8.4, NetBSD 5.1, OpenBSD 4.9, Minix 3.1.8, AIX 7.1, HP-UX 11, Solaris 10, Cygwin 1.7.x, mingw, MSVC 14.
 @item
 On platforms where @code{off_t} is a 32-bit type, @code{open} may not work
 correctly with files 2 GiB and larger.  @xref{Large File Support}.
@@ -19,8 +21,9 @@ correctly with files 2 GiB and larger.  @xref{Large File Support}.
 This function does not fail when the file name argument ends in a slash
 and (without the slash) names a nonexistent file or a file that is not a
 directory, on some platforms:
-macOS 11.1, FreeBSD 7.2, AIX 7.1, HP-UX 11.00, Solaris 9.
+macOS 14, FreeBSD 7.2, AIX 7.1, HP-UX 11.00, Solaris 9.
 @item
+@mindex nonblocking
 This function does not support the @code{O_NONBLOCK} flag when it is defined
 by the gnulib module @code{nonblocking} on some platforms:
 mingw, MSVC 14.
@@ -41,6 +44,13 @@ Portability problems not fixed by Gnulib:
 @item
 The Gnulib replacement for @code{O_CLOEXEC} is not atomic, and so is
 not safe in the presence of multiple threads or signal handlers.
+@item
+The Gnulib replacement for @code{O_SEARCH} may require read access
+instead of search/execute access.
+@item
+On some platforms, @code{O_SEARCH} may reject directories
+where you have search access even though @code{O_SEARCH} is not replaced:
+macOS 12.6.
 @item
 @code{open ("symlink", O_CREAT ...)} fails when the argument points to a
 nonexistent file in an existing directory on some platforms:

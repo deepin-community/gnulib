@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2023 Free Software Foundation, Inc.
+ * Copyright (C) 2012-2025 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,5 +71,5 @@ main (int argc, char *argv[])
   TEST_COUNT_LEADING_ZEROS (count_leading_zeros_ll, unsigned long long int,
                             ULLONG_BIT, ULLONG_MAX, 1ULL);
 
-  return 0;
+  return test_exit_status;
 }

@@ -1,5 +1,5 @@
 /* Test intprops.h.
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,9 +16,12 @@
 
 /* Written by Paul Eggert.  */
 
+#include <config.h>
+
+#if _GL_GNUC_PREREQ (4, 3)
+
 /* Tell gcc not to warn about the long expressions that the overflow
    macros expand to, or about the (X < 0) expressions.  */
-#if 4 < __GNUC__ + (3 <= __GNUC_MINOR__)
 # pragma GCC diagnostic ignored "-Woverlength-strings"
 # pragma GCC diagnostic ignored "-Wtype-limits"
 
@@ -27,8 +30,6 @@
 # pragma GCC diagnostic ignored "-Woverflow"
 
 #endif
-
-#include <config.h>
 
 #ifdef TEST_STDCKDINT
 # include <stdckdint.h>
@@ -444,5 +445,5 @@ main (void)
   CHECK_REMAINDER (37*39u - 1, -39, true);
   CHECK_REMAINDER (LONG_MAX, -INT_MAX, false);
 
-  return 0;
+  return test_exit_status;
 }

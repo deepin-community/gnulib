@@ -1,6 +1,6 @@
 /* A GNU-like <utmp.h>.
 
-   Copyright (C) 2023 Free Software Foundation, Inc.
+   Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -62,11 +62,11 @@
 #   undef login_tty
 #   define login_tty rpl_login_tty
 #  endif
-_GL_FUNCDECL_RPL (login_tty, int, (int fd));
+_GL_FUNCDECL_RPL (login_tty, int, (int fd), );
 _GL_CXXALIAS_RPL (login_tty, int, (int fd));
 # else
 #  if !@HAVE_LOGIN_TTY@
-_GL_FUNCDECL_SYS (login_tty, int, (int fd));
+_GL_FUNCDECL_SYS (login_tty, int, (int fd), );
 #  endif
 _GL_CXXALIAS_SYS (login_tty, int, (int fd));
 # endif

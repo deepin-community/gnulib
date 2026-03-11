@@ -1,16 +1,18 @@
 @node ceill
-@section @code{ceill}
+@subsection @code{ceill}
 @findex ceill
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/ceill.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/ceill.html}
 
 Gnulib module: ceill or ceill-ieee
+@mindex ceill
+@mindex ceill-ieee
 
 Portability problems fixed by either Gnulib module @code{ceill} or @code{ceill-ieee}:
 @itemize
 @item
 This function is missing on some platforms:
-FreeBSD 5.2.1, NetBSD 5.0, OpenBSD 3.8, Minix 3.1.8, HP-UX 11, IRIX 6.5, Solaris 9, Cygwin 1.7.x.
+FreeBSD 5.2.1, NetBSD 5.0, OpenBSD 3.8, Minix 3.1.8, HP-UX 11, Solaris 9, Cygwin 1.7.x.
 @item
 This function is only defined as a macro with arguments on some platforms:
 MSVC 14.

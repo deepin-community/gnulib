@@ -16,12 +16,13 @@ Documentation:
 @end itemize
 
 Gnulib module: forkpty
+@mindex forkpty
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-Minix 3.1.8, AIX 5.1, HP-UX 11, IRIX 6.5, Solaris 11.3, Android 5.1.
+Minix 3.1.8, AIX 5.1, HP-UX 11, Solaris 11.3, Android 5.1.
 @item
 One some systems (at least including Cygwin
 and Mac OS X) linking with @code{-lutil} is not required.
@@ -36,7 +37,7 @@ It is declared in termios.h on Solaris.
 @item
 Some platforms declare the function without marking the last two
 parameters @code{const}.
-FreeBSD 13.0, Solaris 11.4, Cygwin 1.7.1.
+FreeBSD 14.0, Solaris 11.4, Cygwin 1.7.1.
 @end itemize
 
 Portability problems not fixed by Gnulib:

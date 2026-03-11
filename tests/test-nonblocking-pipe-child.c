@@ -1,6 +1,6 @@
 /* Child program invoked by test-nonblocking-pipe-main.
 
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,5 +45,5 @@ main (int argc, char *argv[])
 
   main_reader_loop (test, PIPE_DATA_BLOCK_SIZE, STDIN_FILENO);
 
-  return 0;
+  return test_exit_status;
 }

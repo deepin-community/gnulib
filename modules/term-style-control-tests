@@ -3,8 +3,8 @@ tests/test-term-style-control-hello.c
 tests/test-term-style-control-yes.c
 
 Depends-on:
-stdbool
-unistd
+bool
+unistd-h
 full-write
 
 configure.ac:

@@ -4,13 +4,14 @@ reallocarray function that is glibc compatible.
 Files:
 lib/reallocarray.c
 m4/malloc.m4
+m4/realloc.m4
 m4/reallocarray.m4
 
 Depends-on:
 extensions
-realloc-gnu    [test $HAVE_REALLOCARRAY = 0 || test $REPLACE_REALLOCARRAY = 1]
-stdckdint      [test $HAVE_REALLOCARRAY = 0 || test $REPLACE_REALLOCARRAY = 1]
-stdlib
+realloc-posix  [test $HAVE_REALLOCARRAY = 0 || test $REPLACE_REALLOCARRAY = 1]
+stdckdint-h    [test $HAVE_REALLOCARRAY = 0 || test $REPLACE_REALLOCARRAY = 1]
+stdlib-h
 
 configure.ac:
 gl_FUNC_REALLOCARRAY

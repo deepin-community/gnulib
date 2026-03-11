@@ -17,7 +17,8 @@ findprog-in
 free-posix
 msvc-nothrow
 gettext-h
-spawn
+gnulib-i18n
+spawn-h
 posix_spawn
 posix_spawnp
 posix_spawn_file_actions_init
@@ -28,10 +29,10 @@ posix_spawnattr_init
 posix_spawnattr_setsigmask
 posix_spawnattr_setflags
 posix_spawnattr_destroy
-stdbool
-stdlib
-sys_wait
-unistd
+bool
+stdlib-h
+sys_wait-h
+unistd-h
 wait-process
 windows-spawn
 xalloc-die

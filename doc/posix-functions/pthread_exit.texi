@@ -1,10 +1,11 @@
 @node pthread_exit
-@section @code{pthread_exit}
+@subsection @code{pthread_exit}
 @findex pthread_exit
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_exit.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_exit.html}
 
 Gnulib module: pthread-thread
+@mindex pthread-thread
 
 Portability problems fixed by Gnulib:
 @itemize

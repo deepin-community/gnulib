@@ -14,21 +14,14 @@ m4/printf.m4
 m4/math_h.m4
 
 Depends-on:
-stdio
+stdio-h
 nocrash
 printf-safe
 multiarch
-vasnprintf      [test $REPLACE_SPRINTF = 1]
-isnand-nolibm   [test $REPLACE_SPRINTF = 1]
-isnanl-nolibm   [test $REPLACE_SPRINTF = 1]
-frexp-nolibm    [test $REPLACE_SPRINTF = 1]
-frexpl-nolibm   [test $REPLACE_SPRINTF = 1]
-printf-frexp    [test $REPLACE_SPRINTF = 1]
-printf-frexpl   [test $REPLACE_SPRINTF = 1]
-signbit         [test $REPLACE_SPRINTF = 1]
-fpucw           [test $REPLACE_SPRINTF = 1]
-stdint          [test $REPLACE_SPRINTF = 1]
-errno           [test $REPLACE_SPRINTF = 1]
+vszprintf          [test $REPLACE_SPRINTF = 1]
+mixin/printf-posix [test $REPLACE_SPRINTF = 1]
+stdint-h           [test $REPLACE_SPRINTF = 1]
+errno-h            [test $REPLACE_SPRINTF = 1]
 
 configure.ac:
 gl_FUNC_SPRINTF_POSIX

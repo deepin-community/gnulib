@@ -1,5 +1,5 @@
 /* Test of posix_openpt function.
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,6 +54,29 @@ main (void)
   ASSERT (name);
   ASSERT (grantpt (master) == 0);
   ASSERT (unlockpt (master) == 0);
+
+#if defined __HAIKU__
+  /* On Haiku, the open() call below succeeds only if
+       - done in a child process, and
+       - if that child process has done a setsid() call.
+     So, do that.  */
+  pid_t child_pid = fork ();
+  ASSERT (child_pid >= 0);
+  if (child_pid > 0)
+    {
+      /* We are in the parent.  Wait for the child to terminate.  */
+      int child_status;
+      ASSERT (waitpid (child_pid, &child_status, 0) != -1);
+      ASSERT (WIFEXITED (child_status));
+      int child_exit_status = WEXITSTATUS (child_status);
+      ASSERT (child_exit_status == 0);
+
+      return test_exit_status;
+    }
+  /* We are in the child.  */
+  ASSERT (setsid () >= 0);
+#endif
+
   slave = open (name, O_RDWR);
   ASSERT (0 <= slave);
 
@@ -72,5 +95,5 @@ main (void)
   ASSERT (close (master) == 0);
   ASSERT (close (slave) == 0);
 
-  return 0;
+  return test_exit_status;
 }

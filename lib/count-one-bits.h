@@ -1,5 +1,5 @@
 /* count-one-bits.h -- counts the number of 1-bits in a word.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -85,9 +85,12 @@ count_one_bits_32 (unsigned int x)
 #   include <intrin.h>
 #  else
     /* Don't pollute the namespace with too many MSVC intrinsics.  */
+extern void __cpuid (int[4], int);
 #   pragma intrinsic (__cpuid)
+extern unsigned int __popcnt (unsigned int);
 #   pragma intrinsic (__popcnt)
 #   if defined _M_X64
+extern unsigned long long __popcnt64 (unsigned long long);
 #    pragma intrinsic (__popcnt64)
 #   endif
 #  endif

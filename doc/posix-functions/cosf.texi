@@ -1,10 +1,11 @@
 @node cosf
-@section @code{cosf}
+@subsection @code{cosf}
 @findex cosf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/cosf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/cosf.html}
 
 Gnulib module: cosf
+@mindex cosf
 
 Portability problems fixed by Gnulib:
 @itemize

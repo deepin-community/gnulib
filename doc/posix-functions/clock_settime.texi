@@ -1,8 +1,8 @@
 @node clock_settime
-@section @code{clock_settime}
+@subsection @code{clock_settime}
 @findex clock_settime
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/clock_settime.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/clock_settime.html}
 
 Gnulib module: ---
 

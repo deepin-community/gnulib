@@ -6,10 +6,10 @@ lib/getdomainname.c
 m4/getdomainname.m4
 
 Depends-on:
-unistd
+unistd-h
 extensions
-netdb           [test $HAVE_DECL_GETDOMAINNAME = 0 || test $REPLACE_GETDOMAINNAME = 1]
-sys_socket      [test $HAVE_DECL_GETDOMAINNAME = 0 || test $REPLACE_GETDOMAINNAME = 1]
+netdb-h         [test $HAVE_DECL_GETDOMAINNAME = 0 || test $REPLACE_GETDOMAINNAME = 1]
+sys_socket-h    [test $HAVE_DECL_GETDOMAINNAME = 0 || test $REPLACE_GETDOMAINNAME = 1]
 
 configure.ac:
 gl_FUNC_GETDOMAINNAME

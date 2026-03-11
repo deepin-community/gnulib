@@ -3,13 +3,15 @@ tests/test-sprintf-posix.c
 tests/test-sprintf-posix.h
 tests/minus-zero.h
 tests/infinity.h
-tests/nan.h
 tests/signature.h
 tests/macros.h
 
 Depends-on:
-stdint
-float
+c99
+stdint-h
+float-h
+nan
+snan
 
 configure.ac:
 AC_REQUIRE([gl_LONG_DOUBLE_VS_DOUBLE])

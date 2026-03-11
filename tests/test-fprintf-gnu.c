@@ -1,5 +1,5 @@
 /* Test of POSIX and GNU compatible fprintf() function.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,17 +20,17 @@
 
 #include <stdio.h>
 
-#include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
 
 #include "macros.h"
 
+#define RETTYPE int
 #include "test-fprintf-gnu.h"
 
 int
 main (int argc, char *argv[])
 {
   test_function (fprintf);
-  return 0;
+  return test_exit_status;
 }

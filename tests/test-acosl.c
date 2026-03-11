@@ -1,5 +1,5 @@
 /* Test of acosl() function.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,5 +41,5 @@ main ()
   y = acosl (x);
   ASSERT (y >= 0.9272952180L && y <= 0.9272952181L);
 
-  return 0;
+  return test_exit_status;
 }

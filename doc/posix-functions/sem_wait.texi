@@ -1,8 +1,8 @@
 @node sem_wait
-@section @code{sem_wait}
+@subsection @code{sem_wait}
 @findex sem_wait
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_wait.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/sem_wait.html}
 
 Gnulib module: ---
 

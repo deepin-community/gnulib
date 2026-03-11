@@ -6,9 +6,10 @@ lib/regex-quote.h
 lib/regex-quote.c
 
 Depends-on:
-stdbool
+bool
 xalloc
 mbuiter
+mempcpy
 
 configure.ac:
 AC_REQUIRE([AC_C_RESTRICT])

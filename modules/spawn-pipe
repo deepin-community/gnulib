@@ -18,11 +18,12 @@ filename
 findprog-in
 free-posix
 gettext-h
+gnulib-i18n
 msvc-nothrow
 open
 pipe2
 pipe2-safer
-spawn
+spawn-h
 posix_spawn
 posix_spawnp
 posix_spawn_file_actions_init
@@ -36,9 +37,9 @@ posix_spawnattr_setpgroup
 posix_spawnattr_setsigmask
 posix_spawnattr_setflags
 posix_spawnattr_destroy
-stdbool
-stdlib
-unistd
+bool
+stdlib-h
+unistd-h
 unistd-safer
 wait-process
 windows-spawn

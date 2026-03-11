@@ -8,10 +8,9 @@ lib/xstrtoul.c
 m4/xstrtol.m4
 
 Depends-on:
-assure
 intprops
-stdckdint
-stdint
+stdckdint-h
+stdint-h
 
 configure.ac:
 gl_XSTRTOL

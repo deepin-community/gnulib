@@ -1,16 +1,17 @@
 @node getaddrinfo
-@section @code{getaddrinfo}
+@subsection @code{getaddrinfo}
 @findex getaddrinfo
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getaddrinfo.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getaddrinfo.html}
 
 Gnulib module: getaddrinfo
+@mindex getaddrinfo
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-HP-UX 11.11, IRIX 6.5, Cygwin 1.5.x, mingw, MSVC 14.
+HP-UX 11.11, Cygwin 1.5.x, mingw, MSVC 14.
 @item
 On Windows, this function is declared in @code{<ws2tcpip.h>} rather than in
 @code{<netdb.h>}.

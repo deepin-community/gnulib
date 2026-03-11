@@ -1,10 +1,11 @@
 @node globfree
-@section @code{globfree}
+@subsection @code{globfree}
 @findex globfree
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/globfree.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/globfree.html}
 
 Gnulib module: glob
+@mindex glob
 
 Portability problems fixed by Gnulib:
 @itemize

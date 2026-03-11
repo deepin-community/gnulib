@@ -1,9 +1,10 @@
 @node signal.h
 @section @file{signal.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/signal.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/signal.h.html}
 
 Gnulib module: signal-h
+@mindex signal-h
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -34,8 +35,7 @@ NonStop.
 @item
 The type @code{sighandler_t} (a GNU extension) is not defined on most non-glibc
 platforms:
-macOS 11.1, FreeBSD 13.0, NetBSD 9.0, OpenBSD 6.7, AIX 5.1, HP-UX 11,
-IRIX 6.5, Solaris 11.4, Cygwin, mingw, MSVC 14.
+macOS 11.1, FreeBSD 14.0, NetBSD 10.0, OpenBSD 7.5, AIX 5.1, HP-UX 11, Solaris 11.4, Cygwin, mingw, MSVC 14.
 @end itemize
 
 Portability problems not fixed by Gnulib:

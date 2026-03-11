@@ -6,9 +6,9 @@ tests/macros.h
 
 Depends-on:
 ignore-value
-errno
+errno-h
 same-inode
-stdbool
+bool
 symlink
 
 configure.ac:

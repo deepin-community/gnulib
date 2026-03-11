@@ -1,5 +1,5 @@
 /* Test of POSIX compatible dprintf() function.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,6 +19,35 @@
 #include <config.h>
 
 #include <stdio.h>
+
+#if defined __APPLE__ && defined __MACH__                            /* macOS */
+
+/* On macOS 11, 12, 13, 14, this test sometimes fails.  Probably for the same
+   reason as mentioned in the comment in test-fprintf-posix3.c.  */
+
+int
+main ()
+{
+  fprintf (stderr, "Skipping test: cannot trust address space size on this platform\n");
+  return 78;
+}
+
+#else
+
+/* Skip this test when an address sanitizer is in use, since it would fail.  */
+#ifndef __has_feature
+# define __has_feature(a) 0
+#endif
+#if defined __SANITIZE_ADDRESS__ || __has_feature (address_sanitizer)
+
+int
+main ()
+{
+  fprintf (stderr, "Skipping test: address sanitizer's malloc behaves differently\n");
+  return 80;
+}
+
+#else
 
 #include <stdlib.h>
 #include <string.h>
@@ -92,7 +121,7 @@ main (int argc, char *argv[])
       if (memory == NULL)
         return 1;
       memset (memory, 17, MAX_ALLOC_TOTAL);
-      result = 80;
+      result = 81;
     }
   else
     {
@@ -106,14 +135,17 @@ main (int argc, char *argv[])
              but should not result in a permanent memory allocation.  */
           if (dprintf (STDOUT_FILENO, "%011000d\n", 17) == -1
               && errno == ENOMEM)
-            return 1;
+            return 2;
         }
 
       result = 0;
     }
 
-  if (get_rusage_as () > initial_rusage_as + MAX_ALLOC_TOTAL)
-    return 1;
+  if (get_rusage_as () > initial_rusage_as + MAX_ALLOC_TOTAL + 100000)
+    return 3;
 
   return result;
 }
+
+#endif /* ! address sanitizer enabled */
+#endif /* !macOS */

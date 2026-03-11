@@ -1,17 +1,24 @@
 @node calloc
-@section @code{calloc}
+@subsection @code{calloc}
 @findex calloc
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/calloc.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/calloc.html}
 
 Gnulib module: calloc-posix
+@mindex calloc-posix
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
-Upon failure, the function does not set @code{errno} to @code{ENOMEM} on
-some platforms:
+On some platforms, when the function fails it does not set @code{errno}:
 mingw, MSVC 14.
+
+@item
+On some platforms, when the function fails it might set @code{errno}
+to @code{EAGAIN} instead of to @code{ENOMEM}. Although POSIX allows
+@code{EAGAIN}, the @code{calloc-posix} module insists on @code{ENOMEM}
+which also conforms to POSIX and is GNU-compatible:
+Solaris 11.4.
 
 @item
 On some platforms, @code{calloc (n, s)} can succeed even if
@@ -22,6 +29,7 @@ undefined behavior later, so @code{calloc-posix} does not allow
 going over the limit.
 @end itemize
 
+@mindex calloc-gnu
 Extension: Gnulib provides a module @samp{calloc-gnu} that substitutes a
 @code{calloc} implementation that behaves more like the glibc implementation.
 It fixes this portability problem:
@@ -30,5 +38,5 @@ It fixes this portability problem:
 @item
 @code{calloc (0, s)} and @code{calloc (n, 0)} return @code{NULL} on success
 on some platforms:
-AIX 7.2.
+AIX 7.3.
 @end itemize

@@ -16,14 +16,15 @@ error
 fstat
 full-write
 gettext-h
+gnulib-i18n
 ignore-value
 open
 qcopy-acl
 quote
 safe-read
 stat-time
-stdlib
-unistd
+stdlib-h
+unistd-h
 utimens
 
 configure.ac:

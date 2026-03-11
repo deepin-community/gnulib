@@ -1,5 +1,5 @@
 /* Arabic joining group of Unicode characters.
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2011.
 
    This file is free software.
@@ -124,3 +124,4 @@ ELEM (HANIFI_ROHINGYA_PA,       "Hanifi Rohingya Pa")
 ELEM (HANIFI_ROHINGYA_KINNA_YA, "Hanifi Rohingya Kinna Ya")
 ELEM (THIN_YEH,                 "Thin Yeh")
 ELEM (VERTICAL_TAIL,            "Vertical Tail")
+ELEM (KASHMIRI_YEH,             "Kashmiri Yeh")

@@ -1,10 +1,11 @@
 @node unlockpt
-@section @code{unlockpt}
+@subsection @code{unlockpt}
 @findex unlockpt
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/unlockpt.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/unlockpt.html}
 
 Gnulib module: unlockpt
+@mindex unlockpt
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -17,5 +18,5 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function reports success for invalid file descriptors on some platforms:
-NetBSD 5.1, Cygwin 1.7.9.
+NetBSD 5.1, Cygwin 1.7.9, Haiku.
 @end itemize

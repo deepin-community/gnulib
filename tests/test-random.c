@@ -1,5 +1,5 @@
 /* Test random.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,5 +45,7 @@ main ()
     }
 
   /* Fail if none of the numbers were larger than RAND_MAX / 2.  */
-  return !n_big;
+  if (!n_big)
+    return 1;
+  return test_exit_status;
 }

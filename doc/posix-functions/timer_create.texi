@@ -1,10 +1,11 @@
 @node timer_create
-@section @code{timer_create}
+@subsection @code{timer_create}
 @findex timer_create
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/timer_create.html}
 
 Gnulib module: timer-time
+@mindex timer-time
 
 Portability problems fixed by Gnulib:
 @itemize

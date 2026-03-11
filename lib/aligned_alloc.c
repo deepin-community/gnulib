@@ -1,5 +1,5 @@
 /* An aligned_alloc() function that works around platform bugs.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -19,12 +19,35 @@
 /* Specification.  */
 #include <stdlib.h>
 
+#include <errno.h>
+
 void *
 aligned_alloc (size_t alignment, size_t size)
 #undef aligned_alloc
 {
-  if (alignment >= sizeof (void *))
-    return aligned_alloc (alignment, size);
+  if (alignment != 0 && (alignment & (alignment - 1)) == 0)
+    {
+      /* alignment is a power of 2.  */
+      if (size == 0)
+        size = 1;
+      if (alignment >= sizeof (void *))
+        {
+          /* Make size a multiple of alignment.  */
+          size = (size + (alignment - 1)) & -alignment;
+          if (size > 0)
+            return aligned_alloc (alignment, size);
+          else
+            {
+              errno = ENOMEM;
+              return NULL;
+            }
+        }
+      else
+        return malloc (size);
+    }
   else
-    return malloc (size);
+    {
+      errno = EINVAL;
+      return NULL;
+    }
 }

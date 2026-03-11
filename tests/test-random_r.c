@@ -1,5 +1,5 @@
 /* Test random_r.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -64,5 +64,5 @@ main ()
   for (alignment = 0; alignment < sizeof (int32_t); alignment++)
     if (test_failed (alignment))
       return 1;
-  return 0;
+  return test_exit_status;
 }

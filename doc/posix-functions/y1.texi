@@ -1,10 +1,11 @@
 @node y1
-@section @code{y1}
+@subsection @code{y1}
 @findex y1
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/y1.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/y1.html}
 
 Gnulib module: y1
+@mindex y1
 
 Portability problems fixed by Gnulib:
 @itemize

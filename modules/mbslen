@@ -6,8 +6,8 @@ lib/mbslen.c
 m4/mbslen.m4
 
 Depends-on:
-mbuiter
-string
+mbuiterf
+string-h
 
 configure.ac:
 gl_FUNC_MBSLEN

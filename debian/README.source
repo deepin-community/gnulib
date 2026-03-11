@@ -1,0 +1,120 @@
+From: Simon Josefsson <simon@josefsson.org>
+Date: Thu, 11 Apr 2024 14:10:11 +0200
+
+Upstream gnulib is a source-only project with no release tarballs,
+versioned releases or even git tags.  Consumers of gnulib is typically
+other upstream projects that depend on a particular git commit of
+gnulib.  As such it is a bit different from most upstream projects.
+
+We intentionally want to ship a complete git repository in the
+resulting *.deb, so the *.orig.tar.gz source package has to contain a
+complete git repository as well.
+
+The reason for shipping the entire git repository is that other
+packages can then Build-Depends on this package and use gnulib-tool
+with GNULIB_URL=/usr/share/gnulib/gnulib.bundle and GNULIB_REVISION
+stored in bootstrap.conf to pick out the particular git commit that
+the relevant project was bootstrapped for.  Maintainers of projects
+using gnulib pick a particular gnulib git commit, and there is no
+official releases of gnulib to coordinate which commit to pick, so
+maintainers usually chose the latest gnulib HEAD commit at the time
+they are preparing their releases.  We could in theory prune the git
+repository to only contain the particular GNULIB_REVISION commits
+necessary for building other packages in Debian, but for simplicitly
+this package supports all possible versions by shipping the entire git
+repository.
+
+To prepare the *.orig.tar.gz tarball for this package, the following
+manual process was performed (don't proceed if any command fails):
+
+cd $(mktemp -d)
+B=stable-202501 # upstream's stable branch you want in /usr/share/gnulib
+REV=ac9dd0041307b1d3a68d26bf73567aa61222df54 # master branch commit to package
+git clone https://git.savannah.gnu.org/git/gnulib.git
+git -C gnulib fsck # attempt to validate input
+git -C gnulib checkout -B master $REV # put $REV at master
+for b in $(git -C gnulib branch -r | grep origin/stable- | sort --version-sort); do git -C gnulib checkout ${b#origin/}; done
+git -C gnulib checkout $B # use stable $B for /usr/share/gnulib
+git -C gnulib remote remove origin # drop some unrelated branches
+git -C gnulib gc --prune=now # drop any commits after $REV
+git -C gnulib -c 'pack.threads=1' bundle create gnulib.bundle --all
+V=$(git -C gnulib/ show -s --date=format:%Y%m%d --pretty=%cd master)
+git -C gnulib archive --prefix=gnulib-$V/ --add-file gnulib.bundle -o gnulib_$V.orig.tar.gz $B
+gpg --detach-sign --armor gnulib/gnulib_$V.orig.tar.gz
+gpg --verify gnulib/gnulib_$V.orig.tar.gz.asc
+cp gnulib/gnulib_$V.orig.tar.gz{,.asc} ~/dpkg/
+
+The files in /usr/share/gnulib correspond to files on the $B branch,
+except for /usr/share/gnulib/gnulib.bundle which is a git bundle
+containing both master and stable branches up until $REV on master.
+This approach enable /usr/share/gnulib to be an unpacked stable gnulib
+release, but allows any newer commits from the latest master branch in
+/usr/share/gnulib/gnulib.bundle which is intended to be used by other
+packages for bootstrapping builds.
+
+To import the tarball into git use these commands:
+
+cd ~/dpkg/
+git clone git@salsa.debian.org:debian/gnulib.git
+cd gnulib
+git remote add gnu https://git.savannah.gnu.org/git/gnulib.git
+git fetch gnu
+git checkout -B upstream-stable gnu/$B
+# verify the commit is still the same as when generating the tarball
+git tag -m "Imported branch $B of upstream $V" -s upstream/$V
+git checkout debian/sid
+git merge -X theirs upstream-stable
+tar xfa ../gnulib_$V.orig.tar.gz gnulib-$V/gnulib.bundle
+mv gnulib-$V/gnulib.bundle .
+rmdir gnulib-$V
+git commit -m"Update gnulib.bundle (branch $B master $REV)." gnulib.bundle
+pristine-tar commit -s ../gnulib_$V.orig.tar.gz.asc ../gnulib_$V.orig.tar.gz upstream-stable
+dch -v $V-1 "New upstream (branch $B master $REV)."
+git commit -m "New upstream." debian/changelog
+
+Then build the package as usual:
+
+gbp buildpackage --git-pbuilder --git-pbuilder-options=--source-only-changes
+
+Don't forget to update debian/tests/test-dh-gnulib-patch with new
+branch names and commit id's for debci/autopkgtest.
+
+Finalize the release:
+
+gbp dch -R --commit
+gbp tag --sign-tags
+
+Finally push everything when you made the upload:
+
+git push origin upstream-stable
+git push origin pristine-tar
+git push origin upstream/$V
+git push origin debian/sid
+git push origin debian/$V-1
+
+Happy hacking!
+
+Sidenote:
+
+The *.orig.tar.gz tarball generated with this recipe is not
+reproducible, because of the non-deterministic git bundle.
+Surprisingly, this is true even when the 'git clone' command is
+invoked twice during a short period of time with no upstream commit
+into git.  The generated git bundle differs each time depending on
+something that happens during 'git clone'.  Using the .git/
+sub-directory via rsync doesn't improve the matter.  It is thought
+that git bundles ought to be more reproducable than copying the .git/
+tree content, but this does not seem to be the case.  See below for
+some unsuccessful ideas to improve reproducability of the bundle.  It
+would be nice for upstream gnulib to publish signed git bundles of the
+git repository, but for as long as they only publish a git repository
+this appears to be one way to at least somehow re-publish the git
+repository.  Further thinking on this topic is most welcome!
+
+Unsuccessful attempts to get a reproducible git bundle
+
+# dumb protocol doesn't repack the objects
+GIT_SMART_HTTP=0 git clone https://git.savannah.gnu.org/git/gnulib.git
+
+# using rsync fetches .git identical as upstream
+rsync -av git.savannah.gnu.org::git/gnulib.git/ gnulib

@@ -1,5 +1,5 @@
 /* Filtering of data through a subprocess.
-   Copyright (C) 2001-2003, 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2008-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This program is free software: you can redistribute it and/or modify
@@ -153,12 +153,12 @@ WaitForMultipleObjects (DWORD nCount, const HANDLE *pHandles, BOOL bWaitAll,
 # include <sys/select.h>
 #endif
 
-#include "error.h"
+#include <error.h>
 #include "spawn-pipe.h"
 #include "wait-process.h"
 #include "gettext.h"
 
-#define _(str) gettext (str)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 #include "pipe-filter-aux.h"
 
@@ -269,7 +269,7 @@ pipe_filter_ii_execute (const char *progname,
 #endif
 
   /* Open a bidirectional pipe to a subprocess.  */
-  child = create_pipe_bidi (progname, prog_path, prog_argv,
+  child = create_pipe_bidi (progname, prog_path, prog_argv, NULL,
                             NULL, null_stderr, true, exit_on_error,
                             fd);
   if (child == -1)

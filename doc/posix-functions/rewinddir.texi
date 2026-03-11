@@ -1,10 +1,11 @@
 @node rewinddir
-@section @code{rewinddir}
+@subsection @code{rewinddir}
 @findex rewinddir
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/rewinddir.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/rewinddir.html}
 
 Gnulib module: rewinddir
+@mindex rewinddir
 
 Portability problems fixed by Gnulib:
 @itemize

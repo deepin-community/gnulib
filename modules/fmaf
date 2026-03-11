@@ -10,10 +10,10 @@ m4/fegetround.m4
 m4/mathfunc.m4
 
 Depends-on:
-math
+math-h
 extensions
-float           [test $HAVE_FMAF = 0 || test $REPLACE_FMAF = 1]
-stdbool         [test $HAVE_FMAF = 0 || test $REPLACE_FMAF = 1]
+float-h         [test $HAVE_FMAF = 0 || test $REPLACE_FMAF = 1]
+bool            [test $HAVE_FMAF = 0 || test $REPLACE_FMAF = 1]
 assert-h         [test $HAVE_FMAF = 0 || test $REPLACE_FMAF = 1]
 isfinite        [test $HAVE_FMAF = 0 || test $REPLACE_FMAF = 1]
 integer_length  [test $HAVE_FMAF = 0 || test $REPLACE_FMAF = 1]

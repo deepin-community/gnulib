@@ -7,7 +7,8 @@ m4/posix_memalign.m4
 
 Depends-on:
 extensions
-stdlib
+stdckdint-h      [test $REPLACE_POSIX_MEMALIGN = 1]
+stdlib-h
 
 configure.ac:
 gl_FUNC_POSIX_MEMALIGN

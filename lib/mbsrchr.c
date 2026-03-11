@@ -1,5 +1,5 @@
 /* Searching a string for the last occurrence of a character.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2007.
 
    This file is free software: you can redistribute it and/or modify
@@ -20,7 +20,13 @@
 /* Specification.  */
 #include <string.h>
 
-#include "mbuiter.h"
+#include <stdlib.h>
+
+#if GNULIB_MCEL_PREFER
+# include "mcel.h"
+#else
+# include "mbuiterf.h"
+#endif
 
 /* Locate the last single-byte character C in the character string STRING,
    and return a pointer to it.  Return NULL if C is not found in STRING.  */
@@ -34,14 +40,27 @@ mbsrchr (const char *string, int c)
       && (unsigned char) c >= 0x30)
     {
       const char *result = NULL;
-      mbui_iterator_t iter;
 
-      for (mbui_init (iter, string); mbui_avail (iter); mbui_advance (iter))
+#if GNULIB_MCEL_PREFER
+      while (*string)
         {
-          if (mb_len (mbui_cur (iter)) == 1
-              && (unsigned char) * mbui_cur_ptr (iter) == (unsigned char) c)
-            result = mbui_cur_ptr (iter);
+          mcel_t g = mcel_scanz (string);
+          if (g.len == 1 && (unsigned char) *string == (unsigned char) c)
+            result = string;
+          string += g.len;
         }
+#else
+      mbuif_state_t state;
+      const char *iter;
+      for (mbuif_init (state), iter = string; mbuif_avail (state, iter); )
+        {
+          mbchar_t cur = mbuif_next (state, iter);
+          if (mb_len (cur) == 1 && (unsigned char) *iter == (unsigned char) c)
+            result = iter;
+          iter += mb_len (cur);
+        }
+#endif
+
       return (char *) result;
     }
   else

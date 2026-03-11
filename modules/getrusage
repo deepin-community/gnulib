@@ -6,8 +6,8 @@ lib/getrusage.c
 m4/getrusage.m4
 
 Depends-on:
-sys_resource
-stdint          [test $HAVE_GETRUSAGE = 0]
+sys_resource-h
+stdint-h        [test $HAVE_GETRUSAGE = 0]
 
 configure.ac:
 gl_FUNC_GETRUSAGE

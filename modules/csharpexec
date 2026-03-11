@@ -8,14 +8,27 @@ lib/classpath.h
 lib/classpath.c
 
 Depends-on:
-stdbool
+bool
+stat
+error
+dirname
+xconcat-filename
+canonicalize
+cygpath
 execute
+spawn-pipe
+wait-process
 xsetenv
+scandir
+alphasort
 sh-quote
 xalloc
 xmalloca
-error
+copy-file
+clean-temp-simple
+clean-temp
 gettext-h
+gnulib-i18n
 csharpexec-script
 
 configure.ac:

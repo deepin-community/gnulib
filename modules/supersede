@@ -9,8 +9,8 @@ m4/supersede.m4
 Depends-on:
 c99
 fcntl-h
-stdbool
-sys_stat
+bool
+sys_stat-h
 clean-temp
 tempname
 canonicalize

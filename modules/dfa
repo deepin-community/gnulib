@@ -9,21 +9,35 @@ lib/localeinfo.h
 
 Depends-on:
 assert
+c32isprint
+c32isspace
+c32rtomb
+c32tob
+c32tolower
+c32toupper
 c99
 ctype
 flexmember
+gettext-h
+gnulib-i18n
 idx
-locale
+locale-h
+mbrtoc32-regular
+mbszero
 regex
-stdbool
-stddef
-stdint
-stdio
-stdlib
-string
+bool
+stddef-h
+stdint-h
+stdio-h
+stdlib-h
+string-h
+uchar-h
+# The lonesome_lower array requires ISO C 23 semantics for char32_t.
+# But uchar-h-c23 has a global effect, therefore leave it to each package
+# to enable it.
+#uchar-h-c23
 verify
-wchar
-wctype-h
+wchar-h
 xalloc
 xalloc-die
 
@@ -38,7 +52,9 @@ Include:
 "localeinfo.h"
 
 Link:
+$(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
 $(MBRTOWC_LIB)
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
 
 License:
 GPL

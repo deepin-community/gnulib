@@ -1,8 +1,10 @@
-# logbf.m4 serial 3
-dnl Copyright (C) 2012-2023 Free Software Foundation, Inc.
+# logbf.m4
+# serial 6
+dnl Copyright (C) 2012-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_LOGBF],
 [
@@ -15,10 +17,10 @@ AC_DEFUN([gl_FUNC_LOGBF],
   gl_MATHFUNC([logbf], [float], [(float)])
   if test $gl_cv_func_logbf_no_libm = yes \
      || test $gl_cv_func_logbf_in_libm = yes; then
-    save_LIBS="$LIBS"
+    saved_LIBS="$LIBS"
     LIBS="$LIBS $LOGBF_LIBM"
     gl_FUNC_LOGBF_WORKS
-    LIBS="$save_LIBS"
+    LIBS="$saved_LIBS"
     case "$gl_cv_func_logbf_works" in
       *yes) ;;
       *) REPLACE_LOGBF=1 ;;
@@ -75,7 +77,11 @@ int main ()
         [gl_cv_func_logbf_works=no],
         [case "$host_os" in
            *gnu* | solaris*) gl_cv_func_logbf_works="guessing no" ;;
-           mingw*) # Guess yes on MSVC, no on mingw.
+           # Guess yes on MSVC, no on mingw.
+           windows*-msvc*)
+             gl_cv_func_logbf_works="guessing yes"
+             ;;
+           mingw* | windows*)
              AC_EGREP_CPP([Known], [
 #ifdef _MSC_VER
  Known

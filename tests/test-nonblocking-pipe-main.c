@@ -1,6 +1,6 @@
 /* Test for nonblocking read and write on pipes.
 
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -108,5 +108,5 @@ main (int argc, char *argv[])
     ASSERT (err == 0);
   }
 
-  return exitcode;
+  return (exitcode ? exitcode : test_exit_status);
 }

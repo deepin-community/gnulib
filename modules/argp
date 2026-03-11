@@ -24,7 +24,7 @@ basename-lgpl
 extern-inline
 getopt-gnu
 strchrnul
-sysexits
+sysexits-h
 malloc-gnu
 mempcpy
 strndup
@@ -32,8 +32,8 @@ strcase
 extensions
 vsnprintf
 sleep
-stdbool
-stdio
+bool
+stdio-h
 strerror
 memchr
 memmove

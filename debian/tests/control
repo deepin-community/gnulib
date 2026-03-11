@@ -1,0 +1,5 @@
+Tests:
+ test-dh-gnulib-patch,
+Depends:
+ git,
+ gnulib,

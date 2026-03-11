@@ -1,10 +1,11 @@
 @node atanf
-@section @code{atanf}
+@subsection @code{atanf}
 @findex atanf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/atanf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/atanf.html}
 
 Gnulib module: atanf
+@mindex atanf
 
 Portability problems fixed by Gnulib:
 @itemize

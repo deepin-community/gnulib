@@ -1,8 +1,8 @@
 @node clock
-@section @code{clock}
+@subsection @code{clock}
 @findex clock
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/clock.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/clock.html}
 
 Gnulib module: ---
 

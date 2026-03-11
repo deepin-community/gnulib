@@ -7,10 +7,10 @@ lib/trunc.c
 m4/truncl.m4
 
 Depends-on:
-math
+math-h
 extensions
 trunc           [{ test $HAVE_DECL_TRUNCL = 0 || test $REPLACE_TRUNCL = 1; } && test $HAVE_SAME_LONG_DOUBLE_AS_DOUBLE = 1]
-float           [{ test $HAVE_DECL_TRUNCL = 0 || test $REPLACE_TRUNCL = 1; } && test $HAVE_SAME_LONG_DOUBLE_AS_DOUBLE = 0]
+float-h         [{ test $HAVE_DECL_TRUNCL = 0 || test $REPLACE_TRUNCL = 1; } && test $HAVE_SAME_LONG_DOUBLE_AS_DOUBLE = 0]
 
 configure.ac:
 gl_FUNC_TRUNCL

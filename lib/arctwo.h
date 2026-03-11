@@ -1,5 +1,5 @@
 /* arctwo.h --- The arctwo block cipher
- * Copyright (C) 2000-2003, 2005, 2009-2023 Free Software Foundation, Inc.
+ * Copyright (C) 2000-2003, 2005, 2009-2025 Free Software Foundation, Inc.
  *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,10 +19,15 @@
 /* Code from Libgcrypt adapted for gnulib by Simon Josefsson. */
 
 #ifndef ARCTWO_H
-# define ARCTWO_H
+#define ARCTWO_H
 
-# include <stddef.h>
-# include <stdint.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef struct
 {
@@ -57,5 +62,10 @@ arctwo_encrypt (arctwo_context *context, const char *inbuf,
 extern void
 arctwo_decrypt (arctwo_context *context, const char *inbuf,
                 char *restrict outbuf, size_t length);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ARCTWO_H */

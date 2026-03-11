@@ -1,10 +1,11 @@
 @node fdatasync
-@section @code{fdatasync}
+@subsection @code{fdatasync}
 @findex fdatasync
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/fdatasync.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/fdatasync.html}
 
 Gnulib module: fdatasync
+@mindex fdatasync
 
 Portability problems fixed by Gnulib:
 @itemize

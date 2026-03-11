@@ -1,8 +1,8 @@
 @node getpwnam
-@section @code{getpwnam}
+@subsection @code{getpwnam}
 @findex getpwnam
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getpwnam.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getpwnam.html}
 
 Gnulib module: ---
 

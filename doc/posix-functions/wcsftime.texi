@@ -1,16 +1,17 @@
 @node wcsftime
-@section @code{wcsftime}
+@subsection @code{wcsftime}
 @findex wcsftime
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcsftime.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/wcsftime.html}
 
 Gnulib module: wcsftime
+@mindex wcsftime
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 On native Windows platforms (mingw, MSVC), this function works incorrectly
-when the environment variable @code{TZ} has been set by Cygwin.
+when the environment variable @env{TZ} has been set by Cygwin.
 @end itemize
 
 Portability problems not fixed by Gnulib:

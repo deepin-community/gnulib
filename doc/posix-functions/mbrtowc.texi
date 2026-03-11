@@ -1,16 +1,17 @@
 @node mbrtowc
-@section @code{mbrtowc}
+@subsection @code{mbrtowc}
 @findex mbrtowc
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/mbrtowc.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/mbrtowc.html}
 
 Gnulib module: mbrtowc
+@mindex mbrtowc
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-Minix 3.1.8, HP-UX 11.00, IRIX 6.5, mingw.
+Minix 3.1.8, HP-UX 11.00, mingw.
 @item
 In the C or POSIX locales, this function can return @code{(size_t) -1}
 and set @code{errno} to @code{EILSEQ}:
@@ -22,7 +23,7 @@ This function returns 0 instead of @code{(size_t) -2} when the input
 is empty:
 @c https://sourceware.org/bugzilla/show_bug.cgi?id=16950
 glibc 2.19,
-MSVC 14, Android 11.
+mingw with UCRT, MSVC 14, Android 11.
 @item
 This function returns @code{(size_t) -1} instead of @code{(size_t) -2}
 when the input is empty:
@@ -34,7 +35,7 @@ AIX 7.2.
 @item
 This function stores a wide character when parsing an incomplete multibyte
 character on some platforms:
-MSVC 14.
+mingw with UCRT, MSVC 14.
 @item
 This function returns the total number of bytes that make up the multibyte
 character, not the number of bytes that were needed to complete the multibyte
@@ -56,6 +57,7 @@ glibc 2.34.
 @item
 On Windows and 32-bit AIX platforms, @code{wchar_t} is a 16-bit type and
 therefore cannot accommodate all Unicode characters.
+@mindex mbrtoc32
 However, the ISO C11 function @code{mbrtoc32}, provided by Gnulib module
 @code{mbrtoc32}, operates on 32-bit wide characters and therefore does not have
 this limitation.

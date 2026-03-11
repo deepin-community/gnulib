@@ -1,5 +1,5 @@
 /* Test of wcsncmp() function.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,18 @@
 SIGNATURE_CHECK (wcsncmp, int, (const wchar_t *, const wchar_t *, size_t));
 
 #include "macros.h"
+
+/* Test the library, not the compiler+library.  */
+static int
+lib_wcsncmp (wchar_t const *ws1, wchar_t const *ws2, size_t n)
+{
+  return wcsncmp (ws1, ws2, n);
+}
+static int (*volatile volatile_wcsncmp) (wchar_t const *,
+                                         wchar_t const *, size_t)
+  = lib_wcsncmp;
+#undef wcsncmp
+#define wcsncmp volatile_wcsncmp
 
 int
 main (int argc, char *argv[])
@@ -178,5 +190,11 @@ main (int argc, char *argv[])
       }
   }
 
-  return 0;
+  /* Test zero-length operations on NULL pointers, allowed by
+     <https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3322.pdf>.  */
+  ASSERT (wcsncmp (NULL, L"x", 0) == 0);
+  ASSERT (wcsncmp (L"x", NULL, 0) == 0);
+  ASSERT (wcsncmp (NULL, NULL, 0) == 0);
+
+  return test_exit_status;
 }

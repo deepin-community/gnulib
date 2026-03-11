@@ -1,6 +1,6 @@
 /* Test the getaddrinfo module.
 
-   Copyright (C) 2006-2023 Free Software Foundation, Inc.
+   Copyright (C) 2006-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ simple (char const *host, char const *service)
   hints.ai_family = AF_UNSPEC;
   hints.ai_socktype = SOCK_STREAM;
 
-  res = getaddrinfo (host, service, 0, &ai0);
+  res = getaddrinfo (host, service, NULL, &ai0);
   err = errno;
 
   dbgprintf ("res %d: %s\n", res, gai_strerror (res));

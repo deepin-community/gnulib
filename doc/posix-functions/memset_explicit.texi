@@ -1,5 +1,5 @@
 @node memset_explicit
-@section @code{memset_explicit}
+@subsection @code{memset_explicit}
 @findex memset_explicit
 
 Documentation:
@@ -17,6 +17,7 @@ Documentation:
 @end itemize
 
 Gnulib module: memset_explicit
+@mindex memset_explicit
 
 The @code{memset_explicit} function is an approximation to what is
 needed, and does not suffice in general to erase information.
@@ -29,7 +30,7 @@ Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-glibc 2.36, FreeBSD 13.1, NetBSD 9.3, OpenBSD 7.2, macOS 13, Solaris 11.4, Android 13,
+glibc 2.36, FreeBSD 13.1, NetBSD 10.0, OpenBSD 7.2, macOS 13, Solaris 11.4, Android API level 33,
 and many other systems.
 @end itemize
 

@@ -13,7 +13,7 @@ lib/wcschr-impl.h
 m4/wcschr.m4
 
 Depends-on:
-wchar
+wchar-h
 
 configure.ac:
 gl_FUNC_WCSCHR
@@ -29,7 +29,7 @@ Include:
 <wchar.h>
 
 License:
-LGPL
+LGPLv2+
 
 Maintainer:
 all

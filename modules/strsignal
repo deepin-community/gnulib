@@ -7,10 +7,11 @@ lib/siglist.h
 m4/strsignal.m4
 
 Depends-on:
-string
+string-h
 extensions
 gettext-h       [test $HAVE_STRSIGNAL = 0 || test $REPLACE_STRSIGNAL = 1]
-lock            [test $HAVE_STRSIGNAL = 0 || test $REPLACE_STRSIGNAL = 1]
+gnulib-i18n     [test $HAVE_STRSIGNAL = 0 || test $REPLACE_STRSIGNAL = 1]
+once            [test $HAVE_STRSIGNAL = 0 || test $REPLACE_STRSIGNAL = 1]
 tls             [test $HAVE_STRSIGNAL = 0 || test $REPLACE_STRSIGNAL = 1]
 snprintf        [test $HAVE_STRSIGNAL = 0 || test $REPLACE_STRSIGNAL = 1]
 memset          [test $HAVE_STRSIGNAL = 0 || test $REPLACE_STRSIGNAL = 1]

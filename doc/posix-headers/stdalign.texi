@@ -1,17 +1,14 @@
 @node stdalign.h
 @section @file{stdalign.h}
 
-POSIX specification:@* Not in POSIX yet, but we expect it will be,
-at least temporarily until it becomes obsolete due to its phasing
-out starting in C23.
-ISO C23 (latest free draft
-@url{http://www.open-std.org/jtc1/sc22/wg14/www/docs/n3047.pdf})
-sections 6.5.3.4, 6.7.5, 7.15.
-C++11 (latest free draft
-@url{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3242.pdf})
-section 18.10.
+ISO C23 specification:@* @url{https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf} sections 6.5.3.4, 6.7.5, 7.15.
+
+C++11 specification:@* @url{https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2011/n3242.pdf} section 18.10.
+
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/stdalign.h.html}
 
 Gnulib module: alignasof
+@mindex alignasof
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -20,12 +17,14 @@ On older C platforms @code{<stdalign.h>} must be included before using
 @code{alignas} or @code{alignof}.  For example, GCC versions before 13 do not
 support these keywords, which were standardized by C23.
 On C23 and later platforms, @code{<stdalign.h>} has no effect and need
-not be included.  (Gnulib-using code should not include
+not be included.
+@mindex stdalign-h
+(Gnulib-using code should not include
 @code{<stdalign.h>} without also employing Gnulib's now-deprecated
-@code{stdalign} module.)
+@code{stdalign-h} module.)
 @item
 This header file is missing on many platforms:
-FreeBSD 6.4, NetBSD 7.1, OpenBSD 6.7, Minix 3.3.0, AIX 7.1, HP-UX 11.31, IRIX 6.5, Solaris 11.3, mingw, MSVC 14, Android 9.0.
+FreeBSD 6.4, NetBSD 7.1, OpenBSD 7.5, Minix 3.3.0, AIX 7.1, HP-UX 11.31, Solaris 11.3, mingw, MSVC 14, Android 9.0.
 @item
 Clang 3.0's @code{<stdalign.h>} does not define @code{alignof}.
 @item
@@ -44,7 +43,11 @@ In C23, these macros are not defined.
 This portability problem should not matter with code using Gnulib's
 @code{alignasof} module, as such code should use @code{alignas} and
 @code{alignof} without checking these two macros.  (Gnulib's
-now-deprecated @code{stdalign} module defines these two macros.)
+now-deprecated @code{stdalign-h} module defines these two macros.)
+@item
+@c https://github.com/llvm/llvm-project/issues/81472
+Clang 17 does not support an @code{alignas} attribute in the
+specifier-qualifier position of a member declaration.
 @end itemize
 
 Portability problems not fixed by Gnulib:

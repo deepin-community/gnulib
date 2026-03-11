@@ -1,8 +1,10 @@
-# wcsstr.m4 serial 3
-dnl Copyright (C) 2011-2023 Free Software Foundation, Inc.
+# wcsstr.m4
+# serial 4
+dnl Copyright (C) 2011-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl Check that wcsstr exists and works.
 AC_DEFUN([gl_FUNC_WCSSTR_SIMPLE],
@@ -33,7 +35,7 @@ static void quit (int sig) { _exit (sig + 128); }
     wchar_t *haystack = (wchar_t *) malloc ((2 * m + 2) * sizeof (wchar_t));
     wchar_t *needle = (wchar_t *) malloc ((m + 2) * sizeof (wchar_t));
     /* Failure to compile this test due to missing alarm is okay,
-       since all such platforms (mingw) also have quadratic strstr.  */
+       since all such platforms (mingw, MSVC) also have quadratic wcsstr.  */
     signal (SIGALRM, quit);
     alarm (5);
     /* Check for quadratic performance.  */

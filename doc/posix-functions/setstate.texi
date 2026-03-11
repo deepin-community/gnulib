@@ -1,10 +1,11 @@
 @node setstate
-@section @code{setstate}
+@subsection @code{setstate}
 @findex setstate
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/setstate.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/setstate.html}
 
 Gnulib module: random
+@mindex random
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -21,5 +22,5 @@ Portability problems not fixed by Gnulib:
 @item
 This function has a slightly incompatible declaration (the argument type being
 @samp{const char *} instead of @samp{char *}) on some platforms:
-macOS 11.1, AIX 7.1, HP-UX 11.31, IRIX 6.5, Solaris 11.4, Solaris 11 OpenIndiana.
+macOS 14, AIX 7.1, HP-UX 11.31, Solaris 11.4, Solaris 11 OpenIndiana.
 @end itemize

@@ -1,10 +1,11 @@
 @node readlink
-@section @code{readlink}
+@subsection @code{readlink}
 @findex readlink
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/readlink.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/readlink.html}
 
 Gnulib module: readlink
+@mindex readlink
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -13,11 +14,15 @@ This function is missing on some platforms:
 mingw, MSVC 14.
 @item
 Some platforms mistakenly succeed on file names ending in @file{/}:
-FreeBSD 7.2, Solaris 9, Mac OS X 10.10.
+FreeBSD 7.2, Solaris 9, macOS 14.
 @item
 On some platforms, this function returns @code{int} instead of
 @code{ssize_t}:
-glibc 2.4, FreeBSD 6.0, OpenBSD 6.7, Cygwin 1.5.x, AIX 7.1.
+glibc 2.4, FreeBSD 6.0, OpenBSD 7.5, Cygwin 1.5.x, AIX 7.1.
+@item
+For the file name @file{/dev/null}, this function returns @file{\Device\Null},
+which is unusable, on some platforms:
+Cygwin 3.3.6.
 @end itemize
 
 Portability problems mostly fixed by Gnulib:
@@ -46,8 +51,7 @@ directories, Cygwin sets @code{errno} to @code{ENOENT} or @code{EIO} instead of
 this function.
 @item
 When this function is called on a file that is not a symbolic link:
-IRIX may set @code{errno} to @code{ENXIO} instead of @code{EINVAL}.  Cygwin
-may set errno to @code{EACCES} instead of @code{EINVAL}.
+Cygwin may set errno to @code{EACCES} instead of @code{EINVAL}.
 @item
 When this function fails because it is called on an existing
 non-directory's name concatenated to @file{/},
@@ -58,6 +62,8 @@ Symlink contents do not always have a trailing null byte, and there is
 no indication if symlink contents were truncated if the return value
 matches the length.  Furthermore,
 Linux sets @code{errno} to @code{EINVAL} if the
-requested length is zero.  Use the gnulib module @code{areadlink} for
+requested length is zero.
+@mindex areadlink
+Use the gnulib module @code{areadlink} for
 improved ability to read symlink contents.
 @end itemize

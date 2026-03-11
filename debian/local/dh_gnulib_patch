@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# Copyright (C) 2024  Simon Josefsson <simon@josefsson.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+set -e
+
+# Dependencies: /bin/sh, test, find, sort, basename, dirname, patch
+
+ME="$0"
+LC_ALL=C; export LC_ALL # consistent sort behaviour
+
+PATCHDIR=/usr/share/gnulib/debian/patches.d
+
+echo "$ME: gnulib commit: $(git describe --long --always --abbrev=100)"
+echo "$ME: patch directory: $PATCHDIR"
+
+if test ! -d $PATCHDIR; then
+    echo "$ME: missing patches: $PATCHDIR"
+    exit 1
+fi
+
+find -L $PATCHDIR -mindepth 2 -maxdepth 2 \
+     -type f -regex '.*/[0-9A-Za-z_-]+.patch$' \
+    | sort \
+    | (last_basedir=00-gnulib-tool-version
+       last_basedir_done=no
+       while read -r p; do
+           basedir=$(basename "$(dirname "$p")")
+           patchname=$(basename "$p")
+           if test "$basedir" != "$last_basedir"; then
+               if test "$last_basedir_done" = no; then
+                   break
+               fi
+               last_basedir="$basedir"
+               last_basedir_done=no
+           fi
+           if test "$last_basedir_done" = yes; then
+               echo "$ME: avoiding $p"
+               continue
+           fi
+           echo "$ME: $basedir: $patchname"
+           if patch --dry-run --force -p1 < "$p" > /dev/null 2>&1; then
+               echo "$ME: applying $p"
+               patch -p1 < "$p"
+               last_basedir_done=yes
+           else
+               echo "$ME: skipping $p"
+           fi
+       done
+       if test "$last_basedir_done" = no; then
+           echo "$ME: error: unable to apply any patches"
+           exit 1
+       fi)
+
+echo "$ME: finished applying patches successfully"
+
+exit 0

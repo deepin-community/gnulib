@@ -1,8 +1,8 @@
 @node strrchr
-@section @code{strrchr}
+@subsection @code{strrchr}
 @findex strrchr
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/strrchr.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/strrchr.html}
 
 Gnulib module: ---
 
@@ -14,6 +14,8 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function cannot work correctly on character strings in some multibyte
-locales.  Gnulib provides an alternative function @code{mbsrchr} that works
+locales.
+@mindex mbsrchr
+Gnulib provides an alternative function @code{mbsrchr} that works
 on character strings in all locales.
 @end itemize

@@ -1,0 +1,80 @@
+# Copyright (C) 2024  Simon Josefsson <simon@josefsson.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+=head1 NAME
+
+dh_gnulib_patch - debhelper gnulib patcher
+
+=head1 SYNOPSIS
+
+B<dh_gnulib_patch>
+
+=head1 DESCRIPTION
+
+B<dh_gnulib_patch> will apply patches to a gnulib directory.  The
+gnulib git clone is assumed to be in the current working directory.
+
+The purpose of dh_gnulib_patch is to apply patches to fix bugs in
+gnulib code.  This script will be invoked in a gnulib git clone
+directory with the git commit intended to be used checked out.  It is
+usually invoked from a debian/rules makefile as part of building a
+package.  The idea is that this script is invoked before the gnulib
+code content is actually used to build some other piece of software,
+thereby allowing the script to patch any security problems in the code
+before it is compiled.
+
+This script should work on ALL git commits of gnulib, or at least ALL
+git commits of gnulib that are relevant for building other packages
+that depend on gnulib.  If code that we want to patch has changed in
+gnulib over time, this script needs to figure out how to patch any
+version of that code.
+
+It is expected that this script will only be used to fix serious
+gnulib bugs that affect many packages that uses code from gnulib.  All
+packages that vendor gnulib files without using dh_gnulib_patch will
+have to be patched directly instead (although please consider
+converting the packages to use dh_gnulib_patch in the process).
+
+It is important that this script always perform at least one
+modification to the gnulib git clone tree.  We patch gnulib-tool to
+modify the --version output to achieve this.  The reason is that some
+gnulib scripts uses git "describe output" to influence other
+decisions, and we want to always trigger the dirty git describe.
+Otherwise the dirty git describe code path may be untested up until we
+need to use this mechanism, where it potentially could break and
+causing hard to resolve build failures.
+
+=head1 FILES
+
+Currently the script iterates through a conf.d-style directory path
+under /usr/share/gnulib/debian/patches.d/ asserting that at least one
+patch from each directory applies cleanly, ignoring patches that does
+not apply cleanly (assuming they were intended for some other gnulib
+git commit).  This is anticipated to be sufficient to solve most
+problems, but this script could do anything it like to make sure
+patches are applied, including explicit file modications without going
+through patches.
+
+=head1 RETURN VALUE
+
+Returns 0 on success and non-zero on failures.
+
+=head1 SEE ALSO
+
+L<debhelper(7)>, L<dh(1)>, L<gnulib-tool(1)>.
+
+=head1 AUTHOR
+
+Simon Josefsson <simon@josefsson.org>

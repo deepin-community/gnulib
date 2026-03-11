@@ -2,9 +2,10 @@ Files:
 tests/test-xstrtol.c
 tests/test-xstrtoul.c
 tests/test-xstrtol.sh
+tests/macros.h
 
 Depends-on:
-inttypes
+inttypes-h
 test-framework-sh
 xstrtol-error
 

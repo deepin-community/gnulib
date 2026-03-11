@@ -8,8 +8,8 @@ tests/test-getopt.h
 Depends-on:
 dup2
 setenv
-stdbool
-unistd
+bool
+unistd-h
 unsetenv
 
 configure.ac:

@@ -10,8 +10,8 @@ gen-header
 include_next
 snippet/c++defs
 snippet/warn-on-use
-stddef
-stdlib
+stddef-h
+stdlib-h
 
 configure.ac:
 gl_MALLOC_H

@@ -9,8 +9,10 @@ Depends-on:
 closeout
 freadahead
 fflush
-stdbool
-unistd
+gettext-h
+gnulib-i18n
+bool
+unistd-h
 
 configure.ac:
 

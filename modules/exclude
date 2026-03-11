@@ -13,9 +13,10 @@ fnmatch
 fopen-gnu
 hash
 mbscasecmp
-mbuiter
+mbuiter               [test "$GNULIB_MCEL_PREFER" != yes]
+nullptr
 regex
-stdbool
+bool
 unlocked-io-internal
 xalloc
 

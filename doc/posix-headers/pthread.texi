@@ -1,9 +1,10 @@
 @node pthread.h
 @section @file{pthread.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/pthread.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/pthread.h.html}
 
 Gnulib module: pthread-h
+@mindex pthread-h
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -22,8 +23,4 @@ mingw 3.0.
 
 Portability problems not fixed by Gnulib:
 @itemize
-@item
-This header file lacks the declaration of @code{pthread_atfork} on some
-platforms:
-IRIX 6.5.
 @end itemize

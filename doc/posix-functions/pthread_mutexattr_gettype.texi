@@ -1,10 +1,11 @@
 @node pthread_mutexattr_gettype
-@section @code{pthread_mutexattr_gettype}
+@subsection @code{pthread_mutexattr_gettype}
 @findex pthread_mutexattr_gettype
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutexattr_gettype.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutexattr_gettype.html}
 
 Gnulib module: pthread-mutex
+@mindex pthread-mutex
 
 Portability problems fixed by Gnulib:
 @itemize

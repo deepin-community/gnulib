@@ -1,8 +1,8 @@
 @node strerror_r
-@section @code{strerror_r}
+@subsection @code{strerror_r}
 @findex strerror_r
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/strerror_r.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/strerror_r.html}
 
 LSB specification:
 @itemize
@@ -13,14 +13,16 @@ LSB specification:
 @end itemize
 
 Gnulib module: strerror_r-posix
+@mindex strerror_r-posix
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-NetBSD 3.0, Minix 3.1.8, HP-UX 11.23, IRIX 6.5, Solaris 9, mingw, MSVC 14.
+NetBSD 3.0, Minix 3.1.8, HP-UX 11.23, Solaris 9, mingw, MSVC 14.
 @item
-glibc, Cygwin, and Android have an incompatible version of this function.
+glibc, Cygwin, Android, and AIX+@code{_LINUX_SOURCE_COMPAT}
+have an incompatible version of this function.
 The POSIX compliant code
 @smallexample
 char *s = (strerror_r (err, buf, buflen) == 0 ? buf : NULL);
@@ -61,7 +63,7 @@ FreeBSD 8.2.
 @item
 This function produces a different string for @code{0} than
 @code{strerror} on some platforms:
-macOS 11.1.
+macOS 14.
 @item
 This function always fails when the third argument is less than 80 on some
 platforms:
@@ -86,3 +88,9 @@ OpenBSD 4.7.
 Portability problems not fixed by Gnulib:
 @itemize
 @end itemize
+
+@mindex xstrerror
+Note: Gnulib has a module @code{xstrerror}, with the property that
+@code{xstrerror (NULL, errnum)} returns the value of @code{strerror_r}
+as a freshly allocated string.
+(Recall that the expression @code{strerror (errnum)} is not multithread-safe.)

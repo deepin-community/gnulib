@@ -8,13 +8,14 @@ lib/mbsrtowcs-state.c
 m4/mbsrtowcs.m4
 m4/mbstate_t.m4
 m4/mbrtowc.m4
+m4/locale-en.m4
 m4/locale-fr.m4
 m4/locale-ja.m4
 m4/locale-zh.m4
 m4/codeset.m4
 
 Depends-on:
-wchar
+wchar-h
 extensions
 mbrtowc         [test $HAVE_MBSRTOWCS = 0 || test $REPLACE_MBSRTOWCS = 1]
 strnlen1        [test $HAVE_MBSRTOWCS = 0 || test $REPLACE_MBSRTOWCS = 1]

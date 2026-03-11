@@ -6,13 +6,14 @@ lib/euidaccess.c
 m4/euidaccess.m4
 
 Depends-on:
-unistd
+unistd-h
 extensions
 root-uid
 fcntl-h
+access          [test $HAVE_EUIDACCESS = 0]
 group-member    [test $HAVE_EUIDACCESS = 0]
 stat            [test $HAVE_EUIDACCESS = 0]
-sys_stat        [test $HAVE_EUIDACCESS = 0]
+sys_stat-h      [test $HAVE_EUIDACCESS = 0]
 
 configure.ac:
 gl_FUNC_EUIDACCESS

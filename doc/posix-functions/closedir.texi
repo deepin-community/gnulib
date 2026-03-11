@@ -1,10 +1,11 @@
 @node closedir
-@section @code{closedir}
+@subsection @code{closedir}
 @findex closedir
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/closedir.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/closedir.html}
 
 Gnulib module: closedir
+@mindex closedir
 
 Portability problems fixed by Gnulib:
 @itemize

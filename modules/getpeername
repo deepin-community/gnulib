@@ -8,9 +8,9 @@ lib/w32sock.h
 
 Depends-on:
 extensions
-sys_socket
+sys_socket-h
 socketlib
-errno           [test "$ac_cv_header_winsock2_h" = yes]
+errno-h         [test "$ac_cv_header_winsock2_h" = yes]
 msvc-nothrow    [test "$ac_cv_header_winsock2_h" = yes]
 
 configure.ac:
@@ -18,6 +18,7 @@ AC_REQUIRE([gl_SYS_SOCKET_H])
 gl_CONDITIONAL([GL_COND_OBJ_GETPEERNAME],
                [test "$ac_cv_header_winsock2_h" = yes])
 gl_SYS_SOCKET_MODULE_INDICATOR([getpeername])
+gl_MODULE_INDICATOR([getpeername])
 
 Makefile.am:
 if GL_COND_OBJ_GETPEERNAME

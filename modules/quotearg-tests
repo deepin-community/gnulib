@@ -6,14 +6,14 @@ tests/test-quotearg.sh
 tests/test-quotearg.c
 tests/test-quotearg.h
 tests/macros.h
-tests/testlocale/fr/LC_MESSAGES/test-quotearg.po
-tests/testlocale/fr/LC_MESSAGES/test-quotearg.mo
+tests/testlocale/fr/LC_MESSAGES/gnulib.po
+tests/testlocale/fr/LC_MESSAGES/gnulib.mo
 m4/locale-fr.m4
 m4/codeset.m4
 
 Depends-on:
 gettext
-stdint
+stdint-h
 setenv
 unsetenv
 setlocale

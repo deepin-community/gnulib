@@ -1,10 +1,11 @@
 @node pthread_cond_signal
-@section @code{pthread_cond_signal}
+@subsection @code{pthread_cond_signal}
 @findex pthread_cond_signal
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_signal.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_signal.html}
 
 Gnulib module: pthread-cond
+@mindex pthread-cond
 
 Portability problems fixed by Gnulib:
 @itemize

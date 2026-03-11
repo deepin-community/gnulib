@@ -15,11 +15,12 @@ extern-inline
 fcntl-h
 free-posix
 gettext-h
-stdbool
-stdint
-stdlib
-sys_select
-unistd
+gnulib-i18n
+bool
+stdint-h
+stdlib-h
+sys_select-h
+unistd-h
 xalloc
 
 configure.ac:

@@ -1,3 +1,83 @@
+gnulib (20250303-1) unstable; urgency=medium
+
+  * New upstream (branch stable-202501 master
+    ac9dd0041307b1d3a68d26bf73567aa61222df54).
+  * Update README.source.
+  * Improve git-merge-changelog(1).  Closes: #752135.
+  * Standards-Version: 4.7.2.
+  * Use predictable timestamp for gnulib.info, fixing reproducibility.
+
+ -- Simon Josefsson <simon@josefsson.org>  Sat, 08 Mar 2025 22:42:28 +0100
+
+gnulib (20250102-1) unstable; urgency=medium
+
+  * New upstream (branch stable-202501 master
+    68fedd78b5510236a372f7386769a6011494aa0e).
+  * debian/tests/test-dh-gnulib-patch: Update hashsum for testing.
+  * debian/patches/02-shebang.patch: Dropped, fixed upstream.
+  * debian/copyright: Minor updates.
+  * debian/: Apply "wrap-and-sort -abskt".
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 02 Jan 2025 20:14:35 -0500
+
+gnulib (20240701-1) unstable; urgency=medium
+
+  * New upstream (branch stable-202407 master
+    2520437549b14f3785b4b3c32a0a3fc792d4a9c0).
+  * tests: Handle new git stderr warning, reported by Danilo Gondolfo.
+  * patches/02-shebang.patch: Add Forwarded: URL.
+  * patches/03-tests.patch: Drop unnecessary (?) patch.
+  * Improve README.source.
+  * test-dh-gnulib-patch, patches/00-gnulib-tool-version: Fuzz patches.
+  * Include .gnulib-tool.py for python-based gnulib-tool.
+  * Shorten version number.  Closes: #1069268.
+
+ -- Simon Josefsson <simon@josefsson.org>  Tue, 02 Jul 2024 19:38:50 +0200
+
+gnulib (20240412~dfb7117+stable202401.20240408~aa0aa87-3) unstable; urgency=medium
+
+  * Add dh_gnulib_patch and rework dh integration.  Closes: #1069597.
+
+ -- Simon Josefsson <simon@josefsson.org>  Fri, 10 May 2024 20:45:07 +0200
+
+gnulib (20240412~dfb7117+stable202401.20240408~aa0aa87-2) unstable; urgency=medium
+
+  * Upload to unstable.
+  * Add gnulibvars.mk, for use in debian/rules.
+  * Add Vcs-Git branch.
+  * Lintian fixes.
+  * metadata: Add Bug-Submit and Documentation links.
+  * Fix gnulib-tool --version.
+
+ -- Simon Josefsson <simon@josefsson.org>  Wed, 17 Apr 2024 17:11:14 +0200
+
+gnulib (20240412~dfb7117+stable202401.20240408~aa0aa87-1) experimental; urgency=medium
+
+  * Adopt package.  Closes: #921954.
+  * New upstream snapshot.
+  * Add debian/README.source.
+  * gbp.conf: Set branches.
+  * Ship gnulib.bundle, Python gnulib-tool, DEPENDENCIES, HACKING.
+  * Bump Standards-Version: 4.7.0.
+  * Bump debian/* copyright years.
+  * gnulib: Add Suggests: git.
+
+ -- Simon Josefsson <simon@josefsson.org>  Sun, 07 Apr 2024 10:08:50 +0200
+
+gnulib (20240117+stable-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot from stable branch stable-202401.
+
+ -- Boyuan Yang <byang@debian.org>  Thu, 18 Jan 2024 19:55:03 -0500
+
+gnulib (20231002+stable-1) unstable; urgency=medium
+
+  * QA upload.
+  * New upstream snapshot from stable branch stable-202307.
+
+ -- Boyuan Yang <byang@debian.org>  Fri, 06 Oct 2023 19:24:56 -0400
+
 gnulib (20230718+stable-1) unstable; urgency=medium
 
   * QA upload.

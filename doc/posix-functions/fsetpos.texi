@@ -1,8 +1,8 @@
 @node fsetpos
-@section @code{fsetpos}
+@subsection @code{fsetpos}
 @findex fsetpos
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/fsetpos.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/fsetpos.html}
 
 Gnulib module: ---
 

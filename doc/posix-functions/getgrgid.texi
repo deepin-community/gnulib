@@ -1,8 +1,8 @@
 @node getgrgid
-@section @code{getgrgid}
+@subsection @code{getgrgid}
 @findex getgrgid
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getgrgid.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getgrgid.html}
 
 Gnulib module: ---
 

@@ -1,5 +1,5 @@
 /* Test of strncat() function.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,17 @@ SIGNATURE_CHECK (strncat, char *, (char *, const char *, size_t));
 
 #include "zerosize-ptr.h"
 #include "macros.h"
+
+/* Test the library, not the compiler+library.  */
+static char *
+lib_strncat (char *s1, char const *s2, size_t n)
+{
+  return strncat (s1, s2, n);
+}
+static char *(*volatile volatile_strncat) (char *, char const *, size_t)
+  = lib_strncat;
+#undef strncat
+#define strncat volatile_strncat
 
 #define UNIT char
 #define U_STRNCAT strncat
@@ -58,5 +69,17 @@ main ()
     check (input, SIZEOF (input));
   }
 
-  return 0;
+  /* Test zero-length operations on NULL pointers, allowed by
+     <https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3322.pdf>.  */
+
+#if 0 /* I think this is invalid, per ISO C 23 § 7.26.3.2.  */
+  ASSERT (strncat (NULL, "x", 0) == NULL);
+#endif
+
+  {
+    char y[2] = { 'x', '\0' };
+    ASSERT (strncat (y, NULL, 0) == y);
+  }
+
+  return test_exit_status;
 }

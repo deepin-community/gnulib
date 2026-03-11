@@ -7,11 +7,11 @@ m4/inet_ntop.m4
 m4/sys_socket_h.m4
 
 Depends-on:
-arpa_inet
+arpa_inet-h
 extensions
-sys_socket      [test $HAVE_INET_NTOP = 0 || test $REPLACE_INET_NTOP = 1]
-errno           [test $HAVE_INET_NTOP = 0 || test $REPLACE_INET_NTOP = 1]
-netinet_in      [test $HAVE_INET_NTOP = 0 || test $REPLACE_INET_NTOP = 1]
+sys_socket-h    [test $HAVE_INET_NTOP = 0 || test $REPLACE_INET_NTOP = 1]
+errno-h         [test $HAVE_INET_NTOP = 0 || test $REPLACE_INET_NTOP = 1]
+netinet_in-h    [test $HAVE_INET_NTOP = 0 || test $REPLACE_INET_NTOP = 1]
 
 configure.ac:
 gl_FUNC_INET_NTOP

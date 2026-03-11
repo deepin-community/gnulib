@@ -1,10 +1,11 @@
 @node acosf
-@section @code{acosf}
+@subsection @code{acosf}
 @findex acosf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/acosf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/acosf.html}
 
 Gnulib module: acosf
+@mindex acosf
 
 Portability problems fixed by Gnulib:
 @itemize

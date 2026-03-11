@@ -1,10 +1,11 @@
 @node readdir_r
-@section @code{readdir_r}
+@subsection @code{readdir_r}
 @findex readdir_r
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir_r.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/readdir_r.html}
 
 Gnulib module: extensions
+@mindex extensions
 
 Portability problems fixed by Gnulib:
 @itemize

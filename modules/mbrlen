@@ -5,9 +5,13 @@ Files:
 lib/mbrlen.c
 m4/mbrlen.m4
 m4/mbstate_t.m4
+m4/locale-en.m4
+m4/locale-ja.m4
+m4/locale-zh.m4
+m4/codeset.m4
 
 Depends-on:
-wchar
+wchar-h
 extensions
 mbrtowc         [test $HAVE_MBRLEN = 0 || test $REPLACE_MBRLEN = 1]
 

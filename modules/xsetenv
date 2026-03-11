@@ -11,7 +11,8 @@ setenv
 unsetenv
 error
 gettext-h
-stdlib
+gnulib-i18n
+stdlib-h
 
 configure.ac:
 

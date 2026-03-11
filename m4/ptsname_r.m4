@@ -1,8 +1,10 @@
-# ptsname_r.m4 serial 8
-dnl Copyright (C) 2010-2023 Free Software Foundation, Inc.
+# ptsname_r.m4
+# serial 11
+dnl Copyright (C) 2010-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_PTSNAME_R],
 [
@@ -73,6 +75,15 @@ main (void)
         *yes) ;;
         *) REPLACE_PTSNAME_R=1 ;;
       esac
+      dnl On NetBSD 10.0, when ptsname_r fails with ERANGE, it clobbers the
+      dnl result buffer. We don't use an AC_RUN_IFELSE test here, because
+      dnl while the bug exists on all platforms, only NetBSD/i386 has the
+      dnl files /dev/ptyp[01] on which the bug becomes apparent.
+      dnl
+      dnl On Solaris 11 OmniOS the result buffer is clobbered as well.
+      case "$host_os" in
+        netbsd* | solaris*) REPLACE_PTSNAME_R=1 ;;
+      esac
     fi
   fi
 
@@ -103,7 +114,8 @@ AC_DEFUN([gl_PREREQ_PTSNAME_R], [
        [case "$host_os" in
           irix* | solaris*)
             gl_cv_func_isatty_sets_errno="guessing no" ;;
-          mingw*) # Guess yes on mingw, no on MSVC.
+            # Guess yes on mingw, no on MSVC.
+          mingw* | windows*)
             AC_EGREP_CPP([Known], [
 #ifdef __MINGW32__
  Known

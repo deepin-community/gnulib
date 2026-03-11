@@ -1,7 +1,7 @@
 /*
  * Test the safe-alloc macros
  *
- * Copyright (C) 2009-2023 Free Software Foundation, Inc.
+ * Copyright (C) 2009-2025 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,5 +50,5 @@ main ()
   FREE (p);
   ASSERT (p == NULL);
 
-  return 0;
+  return test_exit_status;
 }

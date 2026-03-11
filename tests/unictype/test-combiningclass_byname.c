@@ -1,5 +1,5 @@
 /* Test the Unicode character Arabic joining group functions.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2011.
 
    This program is free software: you can redistribute it and/or modify it
@@ -114,5 +114,5 @@ main ()
   ASSERT (uc_combining_class_byname ("Iota_Subscript") == UC_CCC_IS);
   ASSERT (uc_combining_class_byname ("IotaSubscript") == UC_CCC_IS);
 
-  return 0;
+  return test_exit_status;
 }

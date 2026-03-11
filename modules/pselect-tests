@@ -5,14 +5,14 @@ tests/macros.h
 tests/signature.h
 
 Depends-on:
-stdbool
-netinet_in
-arpa_inet
-unistd
-sys_ioctl
+bool
+netinet_in-h
+arpa_inet-h
+unistd-h
+sys_ioctl-h
 extensions
 inet_pton
-errno
+errno-h
 perror
 pipe-posix
 socket

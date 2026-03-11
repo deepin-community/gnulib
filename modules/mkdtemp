@@ -6,8 +6,8 @@ lib/mkdtemp.c
 m4/mkdtemp.m4
 
 Depends-on:
-stdlib
-stdint          [test $HAVE_MKDTEMP = 0]
+stdlib-h
+stdint-h        [test $HAVE_MKDTEMP = 0]
 tempname        [test $HAVE_MKDTEMP = 0]
 
 configure.ac:

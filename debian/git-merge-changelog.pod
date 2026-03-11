@@ -58,8 +58,8 @@ lines
 
 =item -
 
-In every directory that contains a ChangeLog file, add a file
-'.gitattributes' with this line:
+Add to the top-level directory of the checkout a file '.gitattributes'
+with this line:
 
  ChangeLog    merge=merge-changelog
 
@@ -259,11 +259,11 @@ of git-merge-changelog.c.
 
 git-merge-changelog is part of the GNU gnulib project.
 
-Gnulib home page: L<http://www.gnu.org/software/gnulib/>
+Gnulib home page: L<https://www.gnu.org/software/gnulib/>
 
 =head1 COPYRIGHT
 
-Copyright (C) 2008-2010 Bruno Haible E<lt>bruno@clisp.orgE<gt>
+Copyright (C) 2008-2025 Bruno Haible E<lt>bruno@clisp.orgE<gt>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,8 +1,8 @@
 @node pathconf
-@section @code{pathconf}
+@subsection @code{pathconf}
 @findex pathconf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pathconf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pathconf.html}
 
 Gnulib module: ---
 

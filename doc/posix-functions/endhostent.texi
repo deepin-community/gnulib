@@ -1,8 +1,8 @@
 @node endhostent
-@section @code{endhostent}
+@subsection @code{endhostent}
 @findex endhostent
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/endhostent.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/endhostent.html}
 
 Gnulib module: ---
 

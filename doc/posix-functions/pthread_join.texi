@@ -1,10 +1,11 @@
 @node pthread_join
-@section @code{pthread_join}
+@subsection @code{pthread_join}
 @findex pthread_join
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_join.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_join.html}
 
 Gnulib module: pthread-thread
+@mindex pthread-thread
 
 Portability problems fixed by Gnulib:
 @itemize

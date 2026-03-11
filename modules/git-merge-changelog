@@ -8,9 +8,9 @@ Depends-on:
 c99
 getopt-gnu
 idx
-stdbool
-stdint
-stdlib
+bool
+stdint-h
+stdlib-h
 error
 read-file
 xlist

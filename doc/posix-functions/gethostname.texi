@@ -1,16 +1,17 @@
 @node gethostname
-@section @code{gethostname}
+@subsection @code{gethostname}
 @findex gethostname
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/gethostname.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/gethostname.html}
 
 Gnulib module: gethostname
+@mindex gethostname
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
-This function is declared in a different header file (namely,
-@code{<winsock2.h>}) on some platforms:
+This function is declared in @code{<winsock2.h>} instead of @code{<unistd.h>}
+on some platforms:
 MSVC 14.
 @item
 On mingw and MSVC 14, this function has a prototype that differs from that
@@ -22,7 +23,7 @@ Portability problems not fixed by Gnulib:
 @item
 This function's second argument type is @code{int} instead of @code{size_t}
 on some platforms:
-Solaris 10.
+Solaris 10, Solaris 11 OmniOS.
 @item
 If the given buffer is too small for the host name, some implementations
 fail with @code{EINVAL}, instead of returning a truncated host name.

@@ -1,10 +1,11 @@
 @node strncmp
-@section @code{strncmp}
+@subsection @code{strncmp}
 @findex strncmp
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/strncmp.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/strncmp.html}
 
-Gnulib module: ---
+Gnulib module: strncmp
+@mindex strncmp
 
 Portability problems fixed by Gnulib:
 @itemize

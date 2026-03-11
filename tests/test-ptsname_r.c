@@ -1,5 +1,5 @@
 /* Test of ptsname_r(3).
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ same_slave (const char *slave_name1, const char *slave_name2)
   return (strcmp (slave_name1, slave_name2) == 0
           || (stat (slave_name1, &statbuf1) >= 0
               && stat (slave_name2, &statbuf2) >= 0
-              && SAME_INODE (statbuf1, statbuf2)));
+              && psame_inode (&statbuf1, &statbuf2)));
 }
 
 static void
@@ -136,6 +136,8 @@ main (void)
     fd = open ("/dev/tty", O_RDONLY);
     if (fd < 0)
       {
+        if (test_exit_status != EXIT_SUCCESS)
+          return test_exit_status;
         fprintf (stderr, "Skipping test: cannot open controlling tty\n");
         return 77;
       }
@@ -164,6 +166,8 @@ main (void)
     fd = open ("/dev/ptmx", O_RDWR | O_NOCTTY);
     if (fd < 0)
       {
+        if (test_exit_status != EXIT_SUCCESS)
+          return test_exit_status;
         fprintf (stderr, "Skipping test: cannot open pseudo-terminal\n");
         return 77;
       }
@@ -195,6 +199,8 @@ main (void)
     fd = open ("/dev/ptc", O_RDWR | O_NOCTTY);
     if (fd < 0)
       {
+        if (test_exit_status != EXIT_SUCCESS)
+          return test_exit_status;
         fprintf (stderr, "Skipping test: cannot open pseudo-terminal\n");
         return 77;
       }
@@ -312,5 +318,5 @@ main (void)
 
 #endif
 
-  return 0;
+  return test_exit_status;
 }

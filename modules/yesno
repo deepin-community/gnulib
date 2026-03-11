@@ -10,7 +10,7 @@ m4/yesno.m4
 Depends-on:
 getline
 rpmatch
-stdbool
+bool
 
 configure.ac:
 gl_YESNO

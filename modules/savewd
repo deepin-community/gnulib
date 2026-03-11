@@ -10,17 +10,16 @@ Depends-on:
 assure
 attribute
 chdir
-errno
+errno-h
 extern-inline
 fchdir
-fcntl-safer
 fcntl-h
 filename
 raise
-stdbool
-stdlib
-sys_wait
-unistd
+bool
+stdlib-h
+sys_wait-h
+unistd-h
 xalloc
 
 configure.ac:

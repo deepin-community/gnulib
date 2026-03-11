@@ -1,6 +1,6 @@
 @c GNU extern-inline module documentation
 
-@c Copyright (C) 2013--2023 Free Software Foundation, Inc.
+@c Copyright (C) 2013--2025 Free Software Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document
 @c under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -15,6 +15,7 @@
 
 @cindex extern inline
 @cindex inline
+@mindex extern-inline
 
 The @code{extern-inline} module supports the use of C99-style
 @code{extern inline} functions so that the code still runs on
@@ -66,8 +67,8 @@ and @file{aaa.c} can do this:
 
 @example
 /* aaa.c */
-#include <config.h>
 #define AAA_INLINE _GL_EXTERN_INLINE
+#include <config.h>
 #include <aaa.h>
 @end example
 
@@ -80,6 +81,21 @@ Non-C99 compilers that are compatible with GCC use GCC-specific syntax
 to accomplish the same ends.  Other non-C99 compilers use @code{static
 inline} so they suffer from code bloat, but they are not mainline
 platforms and will die out eventually.
+
+In this coding idiom,
+the compilation unit should define @code{AAA_INLINE} before
+including the @file{aaa.h} header that conditionally defines it.
+In the unusual and not-recommended case where @file{config.h}
+itself includes @file{aaa.h}, the compilation unit should
+define @code{AAA_INLINE} before including @file{config.h},
+not merely before including @file{aaa.h}.  Also,
+you need one @code{AAA_INLINE}-like macro per compilation unit,
+not one per header file.
+In other words, if the header file @file{aaa.h} defines functions
+defined in @file{aaa-foo.c} and @file{aaa-bar.c},
+you need different macros @code{AAA_FOO_INLINE} and @code{AAA_BAR_INLINE}.
+Use @code{AAA_FOO_INLINE} for the functions defined in @file{aaa-foo.c},
+and use @code{AAA_BAR_INLINE} for the functions defined in @file{aaa-bar.c}.
 
 @findex _GL_INLINE
 @code{_GL_INLINE} is a portable alternative to C99 plain @code{inline}.

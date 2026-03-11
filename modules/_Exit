@@ -6,8 +6,8 @@ lib/_Exit.c
 m4/_Exit.m4
 
 Depends-on:
-stdlib
-unistd
+stdlib-h
+unistd-h
 
 configure.ac:
 gl_FUNC__EXIT

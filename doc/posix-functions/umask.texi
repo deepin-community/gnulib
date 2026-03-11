@@ -1,8 +1,8 @@
 @node umask
-@section @code{umask}
+@subsection @code{umask}
 @findex umask
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/umask.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/umask.html}
 
 Gnulib module: ---
 

@@ -1,8 +1,10 @@
-# mbrtoc16.m4 serial 1
-dnl Copyright (C) 2014-2023 Free Software Foundation, Inc.
+# mbrtoc16.m4
+# serial 4
+dnl Copyright (C) 2014-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_MBRTOC16],
 [
@@ -72,7 +74,7 @@ AC_DEFUN([gl_MBRTOC16_NULL_DESTINATION],
 [
   AC_REQUIRE([AC_PROG_CC])
   AC_REQUIRE([gl_TYPE_CHAR16_T])
-  AC_REQUIRE([gt_LOCALE_FR_UTF8])
+  AC_REQUIRE([gt_LOCALE_EN_UTF8])
   AC_REQUIRE([AC_CANONICAL_HOST]) dnl for cross-compiles
   AC_CACHE_CHECK([whether mbrtoc16 supports a NULL destination],
     [gl_cv_func_mbrtoc16_null_destination],
@@ -81,13 +83,15 @@ AC_DEFUN([gl_MBRTOC16_NULL_DESTINATION],
       dnl is present.
 changequote(,)dnl
       case "$host_os" in
-                       # Guess no on glibc systems.
-        *-gnu* | gnu*) gl_cv_func_mbrtoc16_null_destination="guessing no" ;;
-                       # Guess yes otherwise.
-        *)             gl_cv_func_mbrtoc16_null_destination="guessing yes" ;;
+          # Guess no on glibc systems, on OpenBSD, and on Android.
+        *-gnu* | gnu* | openbsd* | *-android*)
+          gl_cv_func_mbrtoc16_null_destination="guessing no" ;;
+          # Guess yes otherwise.
+        *)
+          gl_cv_func_mbrtoc16_null_destination="guessing yes" ;;
       esac
 changequote([,])dnl
-      if test $LOCALE_FR_UTF8 != none; then
+      if test "$LOCALE_EN_UTF8" != none; then
         AC_RUN_IFELSE(
           [AC_LANG_SOURCE([[
              #include <locale.h>
@@ -99,7 +103,7 @@ changequote([,])dnl
              int
              main (void)
              {
-               if (setlocale (LC_ALL, "$LOCALE_FR_UTF8") == NULL
+               if (setlocale (LC_ALL, "$LOCALE_EN_UTF8") == NULL
                  return 1;
                mbstate_t state;
                size_t ret;
@@ -138,12 +142,12 @@ AC_DEFUN([gl_MBRTOC16_RETVAL],
       dnl is present.
 changequote(,)dnl
       case "$host_os" in
-                         # Guess no on Android.
-        linux*-android*) gl_cv_func_mbrtoc16_retval="guessing no" ;;
-                         # Guess no on native Windows.
-        mingw*)          gl_cv_func_mbrtoc16_retval="guessing no" ;;
-                         # Guess yes otherwise.
-        *)               gl_cv_func_mbrtoc16_retval="guessing yes" ;;
+                           # Guess no on Android.
+        linux*-android*)   gl_cv_func_mbrtoc16_retval="guessing no" ;;
+                           # Guess no on native Windows.
+        mingw* | windows*) gl_cv_func_mbrtoc16_retval="guessing no" ;;
+                           # Guess yes otherwise.
+        *)                 gl_cv_func_mbrtoc16_retval="guessing yes" ;;
       esac
 changequote([,])dnl
       AC_RUN_IFELSE(
@@ -301,9 +305,9 @@ AC_DEFUN([gl_MBRTOC16_C_LOCALE],
        [gl_cv_func_mbrtoc16_C_locale_sans_EILSEQ=yes],
        [gl_cv_func_mbrtoc16_C_locale_sans_EILSEQ=no],
        [case "$host_os" in
-                  # Guess yes on native Windows.
-          mingw*) gl_cv_func_mbrtoc16_C_locale_sans_EILSEQ="guessing yes" ;;
-          *)      gl_cv_func_mbrtoc16_C_locale_sans_EILSEQ="$gl_cross_guess_normal" ;;
+                             # Guess yes on native Windows.
+          mingw* | windows*) gl_cv_func_mbrtoc16_C_locale_sans_EILSEQ="guessing yes" ;;
+          *)                 gl_cv_func_mbrtoc16_C_locale_sans_EILSEQ="$gl_cross_guess_normal" ;;
         esac
        ])
     ])
@@ -331,7 +335,7 @@ AC_DEFUN([gl_MBRTOC16_SANITYCHECK],
 changequote(,)dnl
         case "$host_os" in
           # Guess no on FreeBSD, Solaris, native Windows.
-          freebsd* | midnightbsd* | solaris* | mingw*)
+          freebsd* | midnightbsd* | solaris* | mingw* | windows*)
             gl_cv_func_mbrtoc16_sanitycheck="guessing no"
             ;;
           # Guess yes otherwise.

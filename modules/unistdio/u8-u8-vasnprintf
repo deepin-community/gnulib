@@ -7,7 +7,6 @@ lib/vasnprintf.c
 m4/vasnprintf.m4
 m4/printf.m4
 m4/math_h.m4
-m4/wchar_t.m4
 m4/wint_t.m4
 m4/intmax_t.m4
 m4/stdint_h.m4
@@ -31,27 +30,23 @@ unistr/u16-strmblen
 unistr/u32-strlen
 unistr/u32-strmblen
 attribute
-isnand-nolibm
-isnanl-nolibm
-frexpl-nolibm
-printf-frexp
-printf-frexpl
-signbit
-fpucw
+stdint-h
+mixin/printf-posix
 nocrash
 printf-safe
 alloca-opt
 localcharset
 xsize
-errno
+errno-h
 free-posix
 memchr
 multiarch
 assert-h
+mbszero
 
 configure.ac:
 gl_PREREQ_VASNPRINTF_WITH_POSIX_EXTRAS
-gl_LIBUNISTRING_MODULE([1.2], [unistdio/u8-u8-vasnprintf])
+gl_LIBUNISTRING_MODULE(m4_ifdef([gl_PRINTF_SUPPORT_N_DIRECTIVE],[999.9],[1.2]), [unistdio/u8-u8-vasnprintf])
 
 Makefile.am:
 if LIBUNISTRING_COMPILE_UNISTDIO_U8_U8_VASNPRINTF

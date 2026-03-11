@@ -1,9 +1,10 @@
 @node glob.h
 @section @file{glob.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/glob.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/glob.h.html}
 
 Gnulib module: glob-h
+@mindex glob-h
 
 Portability problems fixed by Gnulib:
 @itemize

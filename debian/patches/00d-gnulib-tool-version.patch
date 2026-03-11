@@ -1,0 +1,22 @@
+Subject: Debianize gnulib-tool --version; show snapshot and debian version
+Forwarded: not-needed
+Date: Sat, 5 Sep 2009 06:48:56 +0100
+Author: Ian Beckwith <ianb@erislabs.net>
+Author: Simon Josefsson <simon@josefsson.org>
+Last-Update: 2024-05-10
+
+diff --git a/gnulib-tool b/gnulib-tool
+index ac53480dbf..6a003ad0c7 100755
+--- a/gnulib-tool
++++ b/gnulib-tool
+@@ -368,8 +368,8 @@ q
+     version=' '`cd "$gnulib_dir" && ./build-aux/git-version-gen /dev/null | sed -e 's/-dirty/-modified/'`
+   else
+     # gnulib copy without versioning information.
+-    date=`sed -e 's/ .*//;q' "$gnulib_dir"/ChangeLog`
+-    version=
++    date=`dpkg-query --show --showformat '${source:Version}' gnulib`" Debian"
++    version=" "`git bundle list-heads /usr/share/gnulib/gnulib.bundle refs/heads/master | cut -f1 -d" "`
+   fi
+   year=`"$gnulib_dir"/build-aux/mdate-sh "$self_abspathname" | sed -e 's,^.* ,,'`
+   echo "\

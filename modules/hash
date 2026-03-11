@@ -7,8 +7,11 @@ lib/hash.h
 
 Depends-on:
 bitrotate
-stdbool
-stdint
+calloc-posix
+free-posix
+malloc-posix
+bool
+stdint-h
 xalloc-oversized
 
 configure.ac:

@@ -1,5 +1,5 @@
 /* Test of POSIX compatible vasnwprintf() and asnwprintf() functions.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -83,7 +83,8 @@ main (int argc, char *argv[])
 {
 #if (__GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 3)) && !defined __UCLIBC__
   /* Select a locale with Arabic 'outdigits'.  */
-  if (setlocale (LC_ALL, "fa_IR.UTF-8") == NULL)
+  if (setlocale (LC_ALL, "fa_IR.UTF-8") == NULL
+      && setlocale (LC_ALL, "fa_IR") == NULL)
     {
       fprintf (stderr, "Skipping test: no Iranian locale is installed\n");
       return 77;
@@ -92,7 +93,7 @@ main (int argc, char *argv[])
   test_vasnwprintf ();
   test_asnwprintf ();
 
-  return 0;
+  return test_exit_status;
 #else
   fprintf (stderr, "Skipping test: not a glibc >= 2.3 system\n");
   return 77;

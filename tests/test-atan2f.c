@@ -1,5 +1,5 @@
 /* Test of atan2f() function.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,5 +56,5 @@ main ()
   z = atan2f (y, x);
   ASSERT (z >= -0.9272953f && z <= -0.92729515f);
 
-  return 0;
+  return test_exit_status;
 }

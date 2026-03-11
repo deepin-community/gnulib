@@ -1,5 +1,5 @@
 /* Tests of statat and lstatat.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,7 +18,8 @@
 
 #include "openat.h"
 
-#if 4 < __GNUC__ + (3 <= __GNUC_MINOR__)
+/* This program tests deprecated functions 'statat' and 'lstatat'.  */
+#if _GL_GNUC_PREREQ (4, 3)
 # pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 

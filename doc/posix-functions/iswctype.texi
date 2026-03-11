@@ -1,10 +1,11 @@
 @node iswctype
-@section @code{iswctype}
+@subsection @code{iswctype}
 @findex iswctype
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/iswctype.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/iswctype.html}
 
 Gnulib module: iswctype
+@mindex iswctype
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -18,7 +19,7 @@ HP-UX 11.00.
 @item
 This function cannot be called from plain inline or extern inline functions
 on some platforms:
-OS X 10.8.
+macOS 10.8.
 @end itemize
 
 Portability problems not fixed by Gnulib:
@@ -26,4 +27,8 @@ Portability problems not fixed by Gnulib:
 @item
 On Windows and 32-bit AIX platforms, @code{wchar_t} is a 16-bit type and therefore cannot
 accommodate all Unicode characters.
+@mindex c32_apply_type_test
+However, the Gnulib function @code{c32_apply_type_test}, provided by Gnulib
+module @code{c32_apply_type_test}, operates on 32-bit wide characters and
+therefore does not have this limitation.
 @end itemize

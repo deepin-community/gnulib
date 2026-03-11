@@ -7,9 +7,9 @@ m4/settime.m4
 
 Depends-on:
 clock-time
-errno
+errno-h
 extensions
-sys_time
+sys_time-h
 timespec
 
 configure.ac:

@@ -1,10 +1,11 @@
 @node pthread_attr_init
-@section @code{pthread_attr_init}
+@subsection @code{pthread_attr_init}
 @findex pthread_attr_init
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_attr_init.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_attr_init.html}
 
 Gnulib module: pthread-thread
+@mindex pthread-thread
 
 Portability problems fixed by Gnulib:
 @itemize

@@ -1,10 +1,11 @@
 @node acos
-@section @code{acos}
+@subsection @code{acos}
 @findex acos
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/acos.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/acos.html}
 
 Gnulib module: acos
+@mindex acos
 
 Portability problems fixed by Gnulib:
 @itemize

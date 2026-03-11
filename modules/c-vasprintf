@@ -7,7 +7,8 @@ lib/c-asprintf.c
 lib/c-vasprintf.c
 
 Depends-on:
-stdio
+stdint-h
+stdio-h
 c-vasnprintf
 
 configure.ac:
@@ -19,7 +20,7 @@ Include:
 "c-vasprintf.h"
 
 License:
-GPL
+LGPLv2+
 
 Maintainer:
 Ben Pfaff

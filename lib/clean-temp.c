@@ -1,5 +1,5 @@
 /* Temporary directories and temporary files with automatic cleanup.
-   Copyright (C) 2001, 2003, 2006-2007, 2009-2023 Free Software Foundation,
+   Copyright (C) 2001, 2003, 2006-2007, 2009-2025 Free Software Foundation,
    Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
@@ -36,7 +36,7 @@
 
 #include "clean-temp-simple.h"
 #include "clean-temp-private.h"
-#include "error.h"
+#include <error.h>
 #include "fatal-signal.h"
 #include "asyncsafe-spin.h"
 #include "pathmax.h"
@@ -65,7 +65,7 @@
 # include "stdio--.h"
 #endif
 
-#define _(str) gettext (str)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 /* GNU Hurd doesn't have PATH_MAX.  Use a fallback.
    Temporary directory names are usually not that long.  */

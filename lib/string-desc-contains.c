@@ -1,5 +1,5 @@
 /* String descriptors.
-   Copyright (C) 2023 Free Software Foundation, Inc.
+   Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -35,6 +35,8 @@ string_desc_contains (string_desc_t haystack, string_desc_t needle)
 {
   if (needle._nbytes == 0)
     return 0;
+  if (haystack._nbytes == 0)
+    return -1;
   void *found =
     memmem (haystack._data, haystack._nbytes, needle._data, needle._nbytes);
   if (found != NULL)

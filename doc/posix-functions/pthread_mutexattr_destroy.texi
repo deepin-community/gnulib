@@ -1,10 +1,11 @@
 @node pthread_mutexattr_destroy
-@section @code{pthread_mutexattr_destroy}
+@subsection @code{pthread_mutexattr_destroy}
 @findex pthread_mutexattr_destroy
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutexattr_destroy.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutexattr_destroy.html}
 
 Gnulib module: pthread-mutex
+@mindex pthread-mutex
 
 Portability problems fixed by Gnulib:
 @itemize

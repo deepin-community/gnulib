@@ -1,10 +1,12 @@
 @node fabs
-@section @code{fabs}
+@subsection @code{fabs}
 @findex fabs
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/fabs.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/fabs.html}
 
-Gnulib module: fabs
+Gnulib module: fabs or fabs-ieee
+@mindex fabs
+@mindex fabs-ieee
 
 Portability problems fixed by Gnulib:
 @itemize

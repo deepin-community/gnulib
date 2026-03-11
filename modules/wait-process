@@ -13,10 +13,11 @@ error
 xalloc
 xalloc-die
 gettext-h
-stdbool
-stdlib
-sys_wait
-unistd
+gnulib-i18n
+bool
+stdlib-h
+sys_wait-h
+unistd-h
 atexit
 waitpid
 

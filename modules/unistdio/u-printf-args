@@ -12,10 +12,10 @@ m4/stdint_h.m4
 m4/inttypes_h.m4
 
 Depends-on:
-stdint
+stdint-h
 limits-h
-unitypes
-wchar
+unitypes-h
+wchar-h
 
 configure.ac:
 gl_PREREQ_PRINTF_ARGS

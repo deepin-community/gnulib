@@ -1,8 +1,8 @@
 @node asinhf
-@section @code{asinhf}
+@subsection @code{asinhf}
 @findex asinhf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/asinhf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/asinhf.html}
 
 Gnulib module: ---
 
@@ -14,5 +14,5 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-Minix 3.1.8, AIX 5.1, HP-UX 11, IRIX 6.5, Solaris 9, mingw, MSVC 9.
+Minix 3.1.8, AIX 5.1, HP-UX 11, Solaris 9, mingw, MSVC 9.
 @end itemize

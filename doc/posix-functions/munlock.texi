@@ -1,8 +1,8 @@
 @node munlock
-@section @code{munlock}
+@subsection @code{munlock}
 @findex munlock
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/munlock.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/munlock.html}
 
 Gnulib module: ---
 

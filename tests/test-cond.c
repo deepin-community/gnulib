@@ -1,5 +1,5 @@
 /* Test of condition variables in multithreaded situations.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,6 +43,8 @@
 #include "glthread/thread.h"
 #include "glthread/yield.h"
 
+#include "virtualbox.h"
+
 #if ENABLE_DEBUGGING
 # define dbgprintf printf
 #else
@@ -59,7 +61,10 @@
 /*
  * Condition check
  */
-static int cond_value = 0;
+
+/* Marked volatile so that different threads see the same value.  This is
+   good enough in practice, although in theory stdatomic.h should be used.  */
+static int volatile cond_value;
 gl_cond_define_initialized(static, condtest)
 gl_lock_define_initialized(static, lockcond)
 
@@ -67,9 +72,19 @@ static void *
 cond_routine (void *arg)
 {
   gl_lock_lock (lockcond);
-  while (!cond_value)
+  if (cond_value)
     {
-      gl_cond_wait (condtest, lockcond);
+      /* The main thread already slept, and nevertheless this thread comes
+         too late.  */
+      *(int *)arg = 1;
+    }
+  else
+    {
+      do
+        {
+          gl_cond_wait (condtest, lockcond);
+        }
+      while (!cond_value);
     }
   gl_lock_unlock (lockcond);
 
@@ -78,23 +93,30 @@ cond_routine (void *arg)
   return NULL;
 }
 
-static void
+static int
 test_cond ()
 {
-  int remain = 2;
+  int skipped = 0;
   gl_thread_t thread;
 
   cond_value = 0;
 
-  thread = gl_thread_create (cond_routine, NULL);
-  do
-    {
-      yield ();
-      remain = sleep (remain);
-    }
-  while (remain);
+  /* Create a separate thread.  */
+  thread = gl_thread_create (cond_routine, &skipped);
 
-  /* signal condition */
+  /* Sleep for 2 seconds.  */
+  {
+    int remaining = 2;
+
+    do
+      {
+        yield ();
+       remaining = sleep (remaining);
+      }
+    while (remaining);
+  }
+
+  /* Tell one of the waiting threads (if any) to continue.  */
   gl_lock_lock (lockcond);
   cond_value = 1;
   gl_cond_signal (condtest);
@@ -104,14 +126,20 @@ test_cond ()
 
   if (cond_value != 2)
     abort ();
+
+  return skipped;
 }
 
 
 /*
  * Timed Condition check
  */
-static int cond_timeout;
 
+/* Marked volatile so that different threads see the same value.  This is
+   good enough in practice, although in theory stdatomic.h should be used.  */
+static int volatile cond_timed_out;
+
+/* Stores in *TS the current time plus 1 second.  */
 static void
 get_ts (struct timespec *ts)
 {
@@ -130,35 +158,52 @@ timedcond_routine (void *arg)
   struct timespec ts;
 
   gl_lock_lock (lockcond);
-  while (!cond_value)
+  if (cond_value)
     {
-      get_ts (&ts);
-      ret = glthread_cond_timedwait (&condtest, &lockcond, &ts);
-      if (ret == ETIMEDOUT)
-        cond_timeout = 1;
+      /* The main thread already slept, and nevertheless this thread comes
+         too late.  */
+      *(int *)arg = 1;
+    }
+  else
+    {
+      do
+        {
+          get_ts (&ts);
+          ret = glthread_cond_timedwait (&condtest, &lockcond, &ts);
+          if (ret == ETIMEDOUT)
+            cond_timed_out = 1;
+        }
+      while (!cond_value);
     }
   gl_lock_unlock (lockcond);
 
   return NULL;
 }
 
-static void
+static int
 test_timedcond (void)
 {
-  int remain = 2;
+  int skipped = 0;
   gl_thread_t thread;
 
-  cond_value = cond_timeout = 0;
+  cond_value = cond_timed_out = 0;
 
-  thread = gl_thread_create (timedcond_routine, NULL);
-  do
-    {
-      yield ();
-      remain = sleep (remain);
-    }
-  while (remain);
+  /* Create a separate thread.  */
+  thread = gl_thread_create (timedcond_routine, &skipped);
 
-  /* signal condition */
+  /* Sleep for 2 seconds.  */
+  {
+    int remaining = 2;
+
+    do
+      {
+        yield ();
+        remaining = sleep (remaining);
+      }
+    while (remaining);
+  }
+
+  /* Tell one of the waiting threads (if any) to continue.  */
   gl_lock_lock (lockcond);
   cond_value = 1;
   gl_cond_signal (condtest);
@@ -166,22 +211,39 @@ test_timedcond (void)
 
   gl_thread_join (thread, NULL);
 
-  if (!cond_timeout)
+  if (!cond_timed_out)
     abort ();
+
+  return skipped;
 }
+
 
 int
 main ()
 {
+  /* This test occasionally fails on Linux (glibc or musl libc), in a
+     VirtualBox VM with paravirtualization = Default or KVM, with ≥ 2 CPUs.
+     Skip the test in this situation.  */
+  if (is_running_under_virtualbox_kvm () && num_cpus () > 1)
+    {
+      fputs ("Skipping test: avoiding VirtualBox bug with KVM paravirtualization\n",
+             stderr);
+      return 77;
+    }
+
 #if DO_TEST_COND
   printf ("Starting test_cond ..."); fflush (stdout);
-  test_cond ();
-  printf (" OK\n"); fflush (stdout);
+  {
+    int skipped = test_cond ();
+    printf (skipped ? " SKIP\n" : " OK\n"); fflush (stdout);
+  }
 #endif
 #if DO_TEST_TIMEDCOND
   printf ("Starting test_timedcond ..."); fflush (stdout);
-  test_timedcond ();
-  printf (" OK\n"); fflush (stdout);
+  {
+    int skipped = test_timedcond ();
+    printf (skipped ? " SKIP\n" : " OK\n"); fflush (stdout);
+  }
 #endif
 
   return 0;

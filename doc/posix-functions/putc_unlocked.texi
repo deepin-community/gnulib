@@ -1,8 +1,8 @@
 @node putc_unlocked
-@section @code{putc_unlocked}
+@subsection @code{putc_unlocked}
 @findex putc_unlocked
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/putc_unlocked.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/putc_unlocked.html}
 
 Gnulib module: ---
 
@@ -11,7 +11,7 @@ Portability problems fixed by Gnulib:
 @item
 This function cannot be called from plain inline or extern inline functions
 on some platforms:
-OS X 10.8.
+macOS 10.8.
 @end itemize
 
 Portability problems not fixed by Gnulib:

@@ -1,5 +1,5 @@
 /* Test the Unicode character Arabic joining type functions.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2011.
 
    This program is free software: you can redistribute it and/or modify it
@@ -35,5 +35,5 @@ main ()
   ASSERT (strcmp (uc_joining_type_long_name (UC_JOINING_TYPE_D), "Dual Joining") == 0);
   ASSERT (uc_joining_type_long_name (-1) == NULL);
 
-  return 0;
+  return test_exit_status;
 }

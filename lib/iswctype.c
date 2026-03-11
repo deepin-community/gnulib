@@ -1,10 +1,10 @@
 /* Test whether a wide character has a given property.
-   Copyright (C) 2011-2023 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2011.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
-   published by the Free Software Foundation, either version 3 of the
+   published by the Free Software Foundation; either version 2.1 of the
    License, or (at your option) any later version.
 
    This file is distributed in the hope that it will be useful,
@@ -20,7 +20,7 @@
 /* Specification.  */
 #include <wctype.h>
 
-#if GNULIB_defined_wint_t
+#if GNULIB_defined_wint_t && !GNULIB_defined_wctype_t
 
 int
 iswctype (wint_t wc, wctype_t desc)

@@ -1,5 +1,5 @@
 /* Test of locking in multithreaded situations.
-   Copyright (C) 2005, 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -50,8 +50,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "glthread/lock.h"
-
 #if HAVE_DECL_ALARM
 # include <signal.h>
 # include <unistd.h>
@@ -92,7 +90,7 @@ static int account[ACCOUNT_COUNT];
 static int
 random_account (void)
 {
-  return ((unsigned int) rand () >> 3) % ACCOUNT_COUNT;
+  return ((unsigned long) random () >> 3) % ACCOUNT_COUNT;
 }
 
 static void
@@ -131,7 +129,7 @@ lock_mutator_thread (void *arg)
 
       i1 = random_account ();
       i2 = random_account ();
-      value = ((unsigned int) rand () >> 3) % 10;
+      value = ((unsigned long) random () >> 3) % 10;
       account[i1] += value;
       account[i2] -= value;
 
@@ -220,12 +218,12 @@ recshuffle (void)
 
   i1 = random_account ();
   i2 = random_account ();
-  value = ((unsigned int) rand () >> 3) % 10;
+  value = ((unsigned long) random () >> 3) % 10;
   account[i1] += value;
   account[i2] -= value;
 
   /* Recursive with probability 0.5.  */
-  if (((unsigned int) rand () >> 3) % 2)
+  if (((unsigned long) random () >> 3) % 2)
     recshuffle ();
 
   dbgprintf ("Mutator %p before unlock\n", thrd_current_pointer ());
@@ -331,5 +329,5 @@ main ()
   printf (" OK\n"); fflush (stdout);
 #endif
 
-  return 0;
+  return test_exit_status;
 }

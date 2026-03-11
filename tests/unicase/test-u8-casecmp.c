@@ -1,5 +1,5 @@
 /* Test of case and normalization insensitive comparison of UTF-8 strings.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -326,5 +326,5 @@ main ()
   test_ascii (u8_casecmp, UNINORM_NFD);
   test_nonascii (u8_casecmp);
 
-  return 0;
+  return test_exit_status;
 }

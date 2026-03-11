@@ -1,8 +1,8 @@
 @node getchar_unlocked
-@section @code{getchar_unlocked}
+@subsection @code{getchar_unlocked}
 @findex getchar_unlocked
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getchar_unlocked.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getchar_unlocked.html}
 
 Gnulib module: ---
 

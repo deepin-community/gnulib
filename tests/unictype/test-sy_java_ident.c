@@ -1,5 +1,5 @@
 /* Test the Unicode character type functions.
-   Copyright (C) 2007-2009 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -34,5 +34,5 @@ main ()
   ASSERT (uc_java_ident_category (0x001B) == UC_IDENTIFIER_IGNORABLE);
   ASSERT (uc_java_ident_category (0xE0001) == UC_IDENTIFIER_IGNORABLE);
 
-  return 0;
+  return test_exit_status;
 }

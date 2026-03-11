@@ -1,10 +1,13 @@
 @node read
-@section @code{read}
+@subsection @code{read}
 @findex read
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/read.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/read.html}
 
-Gnulib module: read, stdio, nonblocking
+Gnulib module: read, stdio-h, nonblocking
+@mindex read
+@mindex stdio-h
+@mindex nonblocking
 
 Portability problems fixed by Gnulib module @code{read}:
 @itemize
@@ -17,7 +20,7 @@ This function crashes when invoked with invalid arguments on some platforms:
 MSVC 14.
 @end itemize
 
-Portability problems fixed by Gnulib module @code{stdio}, together with module @code{nonblocking}:
+Portability problems fixed by Gnulib module @code{stdio-h}, together with module @code{nonblocking}:
 @itemize
 @item
 When reading from a non-blocking pipe whose buffer is empty, this function
@@ -31,8 +34,9 @@ Portability problems not fixed by Gnulib:
 @item
 This function may fail with error @code{EINTR}, even in programs that don't
 install any signal handlers, on some platforms:
-macOS 11.1.
+macOS 14.
 @end itemize
 
+@mindex safe-read
 For handling @code{EINTR}, Gnulib provides a module @samp{safe-read} with a
 function @code{safe_read}.

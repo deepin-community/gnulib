@@ -6,9 +6,9 @@ tests/macros.h
 
 Depends-on:
 ignore-value
-errno
-stdbool
-sys_stat
+errno-h
+bool
+sys_stat-h
 
 configure.ac:
 

@@ -3,6 +3,7 @@
 @setfilename gnulib.info
 @settitle GNU Gnulib
 @documentencoding UTF-8
+
 @c These two require Texinfo 5.0 or later, so we use the older
 @c equivalent @set variables supported in 4.11 and hence
 @ignore
@@ -11,14 +12,36 @@
 @end ignore
 @set txicodequoteundirected
 @set txicodequotebacktick
+
+@c In PDF output, use a brown colour for interactive links,
+@c like it was before commit
+@c https://git.savannah.gnu.org/gitweb/?p=texinfo.git;a=commitdiff;h=b4f50b9f4c083327e81ec5c7cde9b87234a19646
+@tex
+\global\def\linkcolor{\rgbDarkRed}
+\global\def\urlcolor{\rgbDarkRed}
+@end tex
+
+@c Indices:
+@c   cp = concept              @cindex
+@c   fn = function             @findex
+@c   ky = keystroke            @kindex
+@c   m  = module               @mindex
+@c   pg = program              @pindex
+@c   tp = type                 @tindex
+@c   um = undocumented module  @umindex
+@c   vr = variable             @vindex
+@defcodeindex m
+@defcodeindex um
 @c Define a new index for the magic constants in regex.texi.
 @defcodeindex cn
+@c Define which indices are merged together.
 @syncodeindex fn cp
 @syncodeindex ky cp
 @syncodeindex pg cp
 @syncodeindex tp cp
 @syncodeindex vr cp
 @syncodeindex cn cp
+
 @ifclear texi2html
 @firstparagraphindent insert
 @end ifclear
@@ -32,7 +55,7 @@ This manual is for GNU Gnulib (updated @value{UPDATED}),
 which is a library of common routines intended to be shared at the
 source level.
 
-Copyright @copyright{} 2004--2023 Free Software Foundation, Inc.
+Copyright @copyright{} 2004--2025 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -89,11 +112,14 @@ Documentation License''.
 * Build Infrastructure Files::      Non-modules files for the build system.
 * Release Management Files::        Non-modules files for preparing releases.
 * GNU Free Documentation License::  Copying and sharing this manual.
+* Gnulib history::
+* Module Index::
+* Undocumented Module Index::
 * Index::
 @end menu
 
 @c Location of the POSIX specification on the web.
-@set POSIXURL http://pubs.opengroup.org/onlinepubs/9699919799
+@set POSIXURL https://pubs.opengroup.org/onlinepubs/9799919799
 
 @c Macro for referencing a POSIX header.
 @ifinfo
@@ -434,6 +460,10 @@ is applied to @code{@var{tests_base}/Makefile.am} (normally
 both @code{Makefile.am}s.  This is useful for modules which provide
 Makefile.am macros rather than compiled source code.
 
+@item Usable-in-testdir
+This field should contain @samp{no} if the module cannot be used in a
+test directory created with @code{gnulib-tool --create-testdir}.
+
 @item Files
 This field contains a newline separated list of the files that are part of
 the module.  @code{gnulib-tool} copies these files into the package that
@@ -581,6 +611,27 @@ is the @code{Depends-on} section of the module description and the
 @item
 The Autoconf macros are often large enough that splitting them eases
 maintenance.
+@end enumerate
+
+Autoconf macro files in Gnulib all start with a header consisting of
+@c https://lists.gnu.org/archive/html/bug-gnulib/2024-04/msg00053.html
+@enumerate
+@item
+A comment line with the file name.
+This is useful because in some cases the generated @code{aclocal.m4}
+file does not contain a reference to the @code{.m4} file but its entire
+contents.
+The comment makes it clear which @code{.m4} file is where in the
+@code{aclocal.m4} file.
+@item
+A comment line with a serial number.
+This is useful when people use the @samp{aclocal --install} command.
+@code{aclocal} will then refrain from copying a file with a smaller
+serial number onto a file with a larger serial number.
+The serial number should be a positive integer on the main branch,
+or a positive fractional number on a stable branch.
+@item
+The copyright and license header, as usual.
 @end enumerate
 
 
@@ -777,7 +828,7 @@ Git, however, doesn't address the distribution issue.  When a package
 either has to put a comment into @file{foobar/autogen.sh} saying
 ``Attention! This doesn't work with a pristine Gnulib, you need this
 and that patch after checking out Gnulib,'' or it has to use the
-@samp{--avoid=stdint} option and provide the modified @code{stdint}
+@samp{--avoid=stdint-h} option and provide the modified @code{stdint-h}
 module in a different directory.
 
 The @option{--local-dir} option to @command{gnulib-tool} solves this
@@ -912,15 +963,13 @@ substituted by Gnulib.
 @section @code{alignof} and @code{alignas}
 
 Gnulib module: alignasof
+@mindex alignasof
 
 The @code{alignasof} module arranges for @code{alignas} and @code{alignof}
 to be more like standard C@.
 
 Portability problems fixed by Gnulib:
 @itemize
-@item
-Pre-C11 platforms lack @code{alignas} and @code{alignof}.
-
 @item
 On pre-C23 platforms, @code{<stdalign.h>} must be included before
 using @code{alignas} or @code{alignof}.
@@ -930,13 +979,34 @@ using @code{alignas} or @code{alignof}.
 Portability problems not fixed by Gnulib:
 @itemize
 @item
+The set of alignments supported by @code{alignas} is implementation
+dependent, and implementations need not support alignments greater
+than @code{alignof (max_align_t)}.
+
+@item
+Some older platforms do not support @code{alignas}.
+To test this, use the @code{alignasof} module
+along with the @code{#if} conditional
+@code{(defined alignas || defined __alignas_is_defined
+|| 202311 <= __STDC_VERSION__ || 201103 <= __cplusplus)}.
+Platforms where @code{alignas} does not work include:
+IBM XL C for AIX V16.1.
+
+@item
+On some platforms, the argument of @code{alignas} must be an integer
+constant like @samp{8}, instead of an integer constant expression
+like @samp{4 + 4} that evaluates to 8:
+GCC 4.9.
+
+@item
 On pre-C23 platforms, @code{alignas} and @code{alignof} are macros.
 @end itemize
 
 @node bool
 @section @code{bool}
 
-Gnulib module: stdbool
+Gnulib module: bool
+@mindex bool
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -958,6 +1028,7 @@ On pre-C23 platforms, the keyword substitutes assume C99 or later.
 @section @code{nullptr}
 
 Gnulib module: nullptr
+@mindex nullptr
 
 @cindex null pointer
 The @code{nullptr} module arranges for @code{nullptr} to act
@@ -978,6 +1049,10 @@ Portability problems fixed by Gnulib:
 Some platforms lack @code{nullptr}:
 For C: GCC 12, Clang 15, and other pre-2023 C compilers.
 For C++: pre-2011 C++ compilers.
+
+@item
+Some platforms incorrectly warn when @code{nullptr} is a sentinel argument:
+GCC 13.2 and 14.0.
 @end itemize
 
 Portability problems not fixed by Gnulib:
@@ -995,12 +1070,17 @@ null pointer type checking is more error prone.  In C, @code{_Generic}
 expressions cannot reliably distinguish the type of @code{nullptr}
 from integer or @code{void *} types.  C++ overloading has similar
 limitations.
+
+@item
+GCC 14 defines @code{nullptr_t} even when @code{<stddef.h>} is not
+included.  This bug should be fixed in GCC 15.
 @end itemize
 
 @node static_assert
 @section @code{static_assert}
 
 Gnulib module: assert-h
+@mindex assert-h
 
 The @code{assert-h} module arranges for both @code{static_assert} and
 @code{<assert.h>} to be like standard C@.  @xref{assert.h}.
@@ -1037,8 +1117,10 @@ which (known) portability problems are not worked around by Gnulib.
 * complex.h::
 * cpio.h::
 * ctype.h::
+* devctl.h::
 * dirent.h::
 * dlfcn.h::
+* endian.h::
 * errno.h::
 * fcntl.h::
 * fenv.h::
@@ -1053,6 +1135,7 @@ which (known) portability problems are not worked around by Gnulib.
 * iso646.h::
 * langinfo.h::
 * libgen.h::
+* libintl.h::
 * limits.h::
 * locale.h::
 * math.h::
@@ -1077,6 +1160,7 @@ which (known) portability problems are not worked around by Gnulib.
 * stdalign.h::
 * stdarg.h::
 * stdatomic.h::
+* stdbit.h::
 * stdbool.h::
 * stdckdint.h::
 * stddef.h::
@@ -1129,8 +1213,10 @@ which (known) portability problems are not worked around by Gnulib.
 @include posix-headers/complex.texi
 @include posix-headers/cpio.texi
 @include posix-headers/ctype.texi
+@include posix-headers/devctl.texi
 @include posix-headers/dirent.texi
 @include posix-headers/dlfcn.texi
+@include posix-headers/endian.texi
 @include posix-headers/errno.texi
 @include posix-headers/fcntl.texi
 @include posix-headers/fenv.texi
@@ -1145,6 +1231,7 @@ which (known) portability problems are not worked around by Gnulib.
 @include posix-headers/iso646.texi
 @include posix-headers/langinfo.texi
 @include posix-headers/libgen.texi
+@include posix-headers/libintl.texi
 @include posix-headers/limits.texi
 @include posix-headers/locale.texi
 @include posix-headers/math.texi
@@ -1169,6 +1256,7 @@ which (known) portability problems are not worked around by Gnulib.
 @include posix-headers/stdalign.texi
 @include posix-headers/stdarg.texi
 @include posix-headers/stdatomic.texi
+@include posix-headers/stdbit.texi
 @include posix-headers/stdbool.texi
 @include posix-headers/stdckdint.texi
 @include posix-headers/stddef.texi
@@ -1224,28 +1312,88 @@ problems are not worked around by Gnulib.
 
 @nosuchmodulenote function
 
+This list of functions is sorted according to the header that declares them.
+
 @menu
-* FD_CLR::
-* FD_ISSET::
-* FD_SET::
-* FD_ZERO::
-* _Exit::
-* _exit::
-* _longjmp::
-* _setjmp::
-* _tolower::
-* _toupper::
-* a64l::
-* abort::
-* abs::
-* accept::
-* access::
-* acos::
-* acosf::
-* acosh::
-* acoshf::
-* acoshl::
-* acosl::
+* Functions in <aio.h>::
+* Functions in <arpa/inet.h>::
+* Functions in <assert.h>::
+* Functions in <complex.h>::
+* Functions in <ctype.h>::
+* Functions in <devctl.h>::
+* Functions in <dirent.h>::
+* Functions in <dlfcn.h>::
+* Functions in <endian.h>::
+* Functions in <errno.h>::
+* Functions in <fcntl.h>::
+* Functions in <fenv.h>::
+* Functions in <fmtmsg.h>::
+* Functions in <fnmatch.h>::
+* Functions in <ftw.h>::
+* Functions in <glob.h>::
+* Functions in <grp.h>::
+* Functions in <iconv.h>::
+* Functions in <inttypes.h>::
+* Functions in <langinfo.h>::
+* Functions in <libgen.h>::
+* Functions in <libintl.h>::
+* Functions in <locale.h>::
+* Functions in <math.h>::
+* Functions in <monetary.h>::
+* Functions in <mqueue.h>::
+* Functions in <ndbm.h>::
+* Functions in <net/if.h>::
+* Functions in <netdb.h>::
+* Functions in <netinet/in.h>::
+* Functions in <nl_types.h>::
+* Functions in <poll.h>::
+* Functions in <pthread.h>::
+* Functions in <pwd.h>::
+* Functions in <regex.h>::
+* Functions in <sched.h>::
+* Functions in <search.h>::
+* Functions in <semaphore.h>::
+* Functions in <setjmp.h>::
+* Functions in <signal.h>::
+* Functions in <spawn.h>::
+* Functions in <stdarg.h>::
+* Functions in <stdatomic.h>::
+* Functions in <stdbit.h>::
+* Functions in <stdio.h>::
+* Functions in <stdlib.h>::
+* Functions in <string.h>::
+* Functions in <strings.h>::
+* Functions in <sys/ipc.h>::
+* Functions in <sys/mman.h>::
+* Functions in <sys/msg.h>::
+* Functions in <sys/resource.h>::
+* Functions in <sys/select.h>::
+* Functions in <sys/sem.h>::
+* Functions in <sys/shm.h>::
+* Functions in <sys/socket.h>::
+* Functions in <sys/stat.h>::
+* Functions in <sys/statvfs.h>::
+* Functions in <sys/time.h>::
+* Functions in <sys/times.h>::
+* Functions in <sys/uio.h>::
+* Functions in <sys/utsname.h>::
+* Functions in <sys/wait.h>::
+* Functions in <syslog.h>::
+* Functions in <termios.h>::
+* Functions in <threads.h>::
+* Functions in <time.h>::
+* Functions in <uchar.h>::
+* Functions in <unistd.h>::
+* Functions in <utmpx.h>::
+* Functions in <wchar.h>::
+* Functions in <wctype.h>::
+* Functions in <wordexp.h>::
+@end menu
+
+@node Functions in <aio.h>
+@section Functions in @code{<aio.h>}
+
+@menu
 * aio_cancel::
 * aio_error::
 * aio_fsync::
@@ -1253,39 +1401,57 @@ problems are not worked around by Gnulib.
 * aio_return::
 * aio_suspend::
 * aio_write::
-* alarm::
-* aligned_alloc::
-* alphasort::
-* asctime::
-* asctime_r::
-* asin::
-* asinf::
-* asinh::
-* asinhf::
-* asinhl::
-* asinl::
+* lio_listio::
+@end menu
+
+@include posix-functions/aio_cancel.texi
+@include posix-functions/aio_error.texi
+@include posix-functions/aio_fsync.texi
+@include posix-functions/aio_read.texi
+@include posix-functions/aio_return.texi
+@include posix-functions/aio_suspend.texi
+@include posix-functions/aio_write.texi
+@include posix-functions/lio_listio.texi
+
+@node Functions in <arpa/inet.h>
+@section Functions in @code{<arpa/inet.h>}
+
+@menu
+* htonl::
+* htons::
+* inet_addr::
+* inet_ntoa::
+* inet_ntop::
+* inet_pton::
+* ntohl::
+* ntohs::
+@end menu
+
+@include posix-functions/htonl.texi
+@include posix-functions/htons.texi
+@include posix-functions/inet_addr.texi
+@include posix-functions/inet_ntoa.texi
+@include posix-functions/inet_ntop.texi
+@include posix-functions/inet_pton.texi
+@include posix-functions/ntohl.texi
+@include posix-functions/ntohs.texi
+
+@node Functions in <assert.h>
+@section Functions in @code{<assert.h>}
+
+@menu
 * assert::
-* atan::
-* atan2::
-* atan2f::
-* atan2l::
-* atanf::
-* atanh::
-* atanhf::
-* atanhl::
-* atanl::
-* atexit::
-* atof::
-* atoi::
-* atol::
-* atoll::
-* basename::
-* bind::
-* bsearch::
-* btowc::
-* c8rtomb::
-* c16rtomb::
-* c32rtomb::
+@end menu
+
+@include posix-functions/assert.texi
+
+@node Functions in <complex.h>
+@section Functions in @code{<complex.h>}
+
+@menu
+* CMPLX::
+* CMPLXF::
+* CMPLXL::
 * cabs::
 * cabsf::
 * cabsl::
@@ -1295,11 +1461,6 @@ problems are not worked around by Gnulib.
 * cacoshf::
 * cacoshl::
 * cacosl::
-* calloc::
-* call_once::
-* canonicalize::
-* canonicalizef::
-* canonicalizel::
 * carg::
 * cargf::
 * cargl::
@@ -1315,67 +1476,24 @@ problems are not worked around by Gnulib.
 * catanhf::
 * catanhl::
 * catanl::
-* catclose::
-* catgets::
-* catopen::
-* cbrt::
-* cbrtf::
-* cbrtl::
 * ccos::
 * ccosf::
 * ccosh::
 * ccoshf::
 * ccoshl::
 * ccosl::
-* ceil::
-* ceilf::
-* ceill::
 * cexp::
 * cexpf::
 * cexpl::
-* cfgetispeed::
-* cfgetospeed::
-* cfsetispeed::
-* cfsetospeed::
-* chdir::
-* chmod::
-* chown::
 * cimag::
 * cimagf::
 * cimagl::
-* clearerr::
-* clock::
-* clock_getcpuclockid::
-* clock_getres::
-* clock_gettime::
-* clock_nanosleep::
-* clock_settime::
 * clog::
 * clogf::
 * clogl::
-* close::
-* closedir::
-* closelog::
-* cnd_broadcast::
-* cnd_destroy::
-* cnd_init::
-* cnd_signal::
-* cnd_timedwait::
-* cnd_wait::
-* confstr::
 * conj::
 * conjf::
 * conjl::
-* connect::
-* copysign::
-* copysignf::
-* copysignl::
-* cos::
-* cosf::
-* cosh::
-* coshf::
-* coshl::
-* cosl::
 * cpow::
 * cpowf::
 * cpowl::
@@ -1385,8 +1503,6 @@ problems are not worked around by Gnulib.
 * creal::
 * crealf::
 * creall::
-* creat::
-* crypt::
 * csin::
 * csinf::
 * csinh::
@@ -1402,101 +1518,271 @@ problems are not worked around by Gnulib.
 * ctanhf::
 * ctanhl::
 * ctanl::
-* ctermid::
-* ctime::
-* ctime_r::
-* daddl::
-* daylight::
-* dbm_clearerr::
-* dbm_close::
-* dbm_delete::
-* dbm_error::
-* dbm_fetch::
-* dbm_firstkey::
-* dbm_nextkey::
-* dbm_open::
-* dbm_store::
-* ddivl::
-* difftime::
+@end menu
+
+@include posix-functions/CMPLX.texi
+@include posix-functions/CMPLXF.texi
+@include posix-functions/CMPLXL.texi
+@include posix-functions/cabs.texi
+@include posix-functions/cabsf.texi
+@include posix-functions/cabsl.texi
+@include posix-functions/cacos.texi
+@include posix-functions/cacosf.texi
+@include posix-functions/cacosh.texi
+@include posix-functions/cacoshf.texi
+@include posix-functions/cacoshl.texi
+@include posix-functions/cacosl.texi
+@include posix-functions/carg.texi
+@include posix-functions/cargf.texi
+@include posix-functions/cargl.texi
+@include posix-functions/casin.texi
+@include posix-functions/casinf.texi
+@include posix-functions/casinh.texi
+@include posix-functions/casinhf.texi
+@include posix-functions/casinhl.texi
+@include posix-functions/casinl.texi
+@include posix-functions/catan.texi
+@include posix-functions/catanf.texi
+@include posix-functions/catanh.texi
+@include posix-functions/catanhf.texi
+@include posix-functions/catanhl.texi
+@include posix-functions/catanl.texi
+@include posix-functions/ccos.texi
+@include posix-functions/ccosf.texi
+@include posix-functions/ccosh.texi
+@include posix-functions/ccoshf.texi
+@include posix-functions/ccoshl.texi
+@include posix-functions/ccosl.texi
+@include posix-functions/cexp.texi
+@include posix-functions/cexpf.texi
+@include posix-functions/cexpl.texi
+@include posix-functions/cimag.texi
+@include posix-functions/cimagf.texi
+@include posix-functions/cimagl.texi
+@include posix-functions/clog.texi
+@include posix-functions/clogf.texi
+@include posix-functions/clogl.texi
+@include posix-functions/conj.texi
+@include posix-functions/conjf.texi
+@include posix-functions/conjl.texi
+@include posix-functions/cpow.texi
+@include posix-functions/cpowf.texi
+@include posix-functions/cpowl.texi
+@include posix-functions/cproj.texi
+@include posix-functions/cprojf.texi
+@include posix-functions/cprojl.texi
+@include posix-functions/creal.texi
+@include posix-functions/crealf.texi
+@include posix-functions/creall.texi
+@include posix-functions/csin.texi
+@include posix-functions/csinf.texi
+@include posix-functions/csinh.texi
+@include posix-functions/csinhf.texi
+@include posix-functions/csinhl.texi
+@include posix-functions/csinl.texi
+@include posix-functions/csqrt.texi
+@include posix-functions/csqrtf.texi
+@include posix-functions/csqrtl.texi
+@include posix-functions/ctan.texi
+@include posix-functions/ctanf.texi
+@include posix-functions/ctanh.texi
+@include posix-functions/ctanhf.texi
+@include posix-functions/ctanhl.texi
+@include posix-functions/ctanl.texi
+
+@c @node Functions in <cpio.h>
+@c @section Functions in @code{<cpio.h>}
+
+@node Functions in <ctype.h>
+@section Functions in @code{<ctype.h>}
+
+@menu
+* isalnum::
+* isalnum_l::
+* isalpha::
+* isalpha_l::
+* isblank::
+* isblank_l::
+* iscntrl::
+* iscntrl_l::
+* isdigit::
+* isdigit_l::
+* isgraph::
+* isgraph_l::
+* islower::
+* islower_l::
+* isprint::
+* isprint_l::
+* ispunct::
+* ispunct_l::
+* isspace::
+* isspace_l::
+* isupper::
+* isupper_l::
+* isxdigit::
+* isxdigit_l::
+* tolower::
+* tolower_l::
+* toupper::
+* toupper_l::
+@end menu
+
+@include posix-functions/isalnum.texi
+@include posix-functions/isalnum_l.texi
+@include posix-functions/isalpha.texi
+@include posix-functions/isalpha_l.texi
+@include posix-functions/isblank.texi
+@include posix-functions/isblank_l.texi
+@include posix-functions/iscntrl.texi
+@include posix-functions/iscntrl_l.texi
+@include posix-functions/isdigit.texi
+@include posix-functions/isdigit_l.texi
+@include posix-functions/isgraph.texi
+@include posix-functions/isgraph_l.texi
+@include posix-functions/islower.texi
+@include posix-functions/islower_l.texi
+@include posix-functions/isprint.texi
+@include posix-functions/isprint_l.texi
+@include posix-functions/ispunct.texi
+@include posix-functions/ispunct_l.texi
+@include posix-functions/isspace.texi
+@include posix-functions/isspace_l.texi
+@include posix-functions/isupper.texi
+@include posix-functions/isupper_l.texi
+@include posix-functions/isxdigit.texi
+@include posix-functions/isxdigit_l.texi
+@include posix-functions/tolower.texi
+@include posix-functions/tolower_l.texi
+@include posix-functions/toupper.texi
+@include posix-functions/toupper_l.texi
+
+@node Functions in <devctl.h>
+@section Functions in @code{<devctl.h>}
+
+@menu
+* posix_devctl::
+@end menu
+
+@include posix-functions/posix_devctl.texi
+
+@node Functions in <dirent.h>
+@section Functions in @code{<dirent.h>}
+
+@menu
+* alphasort::
+* closedir::
 * dirfd::
-* dirname::
-* div::
+* fdopendir::
+* opendir::
+* posix_getdents::
+* readdir::
+* readdir_r::
+* rewinddir::
+* scandir::
+* seekdir::
+* telldir::
+@end menu
+
+@include posix-functions/alphasort.texi
+@include posix-functions/closedir.texi
+@include posix-functions/dirfd.texi
+@include posix-functions/fdopendir.texi
+@include posix-functions/opendir.texi
+@include posix-functions/posix_getdents.texi
+@include posix-functions/readdir.texi
+@include posix-functions/readdir_r.texi
+@include posix-functions/rewinddir.texi
+@include posix-functions/scandir.texi
+@include posix-functions/seekdir.texi
+@include posix-functions/telldir.texi
+
+@node Functions in <dlfcn.h>
+@section Functions in @code{<dlfcn.h>}
+
+@menu
+* dladdr::
 * dlclose::
 * dlerror::
 * dlopen::
 * dlsym::
-* dmull::
-* dprintf::
-* drand48::
-* dsubl::
-* dup::
-* dup2::
-* duplocale::
-* encrypt::
-* endgrent::
-* endhostent::
-* endnetent::
-* endprotoent::
-* endpwent::
-* endservent::
-* endutxent::
-* environ::
-* erand48::
-* erf::
-* erfc::
-* erfcf::
-* erfcl::
-* erff::
-* erfl::
+@end menu
+
+@include posix-functions/dladdr.texi
+@include posix-functions/dlclose.texi
+@include posix-functions/dlerror.texi
+@include posix-functions/dlopen.texi
+@include posix-functions/dlsym.texi
+
+@node Functions in <endian.h>
+@section Functions in @code{<endian.h>}
+
+@menu
+* be16toh::
+* be32toh::
+* be64toh::
+* htobe16::
+* htobe32::
+* htobe64::
+* htole16::
+* htole32::
+* htole64::
+* le16toh::
+* le32toh::
+* le64toh::
+@end menu
+
+@include posix-functions/be16toh.texi
+@include posix-functions/be32toh.texi
+@include posix-functions/be64toh.texi
+@include posix-functions/htobe16.texi
+@include posix-functions/htobe32.texi
+@include posix-functions/htobe64.texi
+@include posix-functions/htole16.texi
+@include posix-functions/htole32.texi
+@include posix-functions/htole64.texi
+@include posix-functions/le16toh.texi
+@include posix-functions/le32toh.texi
+@include posix-functions/le64toh.texi
+
+@node Functions in <errno.h>
+@section Functions in @code{<errno.h>}
+
+@menu
 * errno::
-* execl::
-* execle::
-* execlp::
-* execv::
-* execve::
-* execvp::
-* exit::
-* exp::
-* exp2::
-* exp2f::
-* exp2l::
-* expf::
-* expl::
-* expm1::
-* expm1f::
-* expm1l::
-* fabs::
-* fabsf::
-* fabsl::
-* faccessat::
-* fadd::
-* faddl::
-* fattach::
-* fchdir::
-* fchmod::
-* fchmodat::
-* fchown::
-* fchownat::
-* fclose::
+@end menu
+
+@include posix-functions/errno.texi
+
+@node Functions in <fcntl.h>
+@section Functions in @code{<fcntl.h>}
+
+@menu
+* creat::
 * fcntl::
-* fdatasync::
-* fdetach::
-* fdim::
-* fdimf::
-* fdiml::
-* fdiv::
-* fdivl::
-* fdopen::
-* fdopendir::
+* open::
+* openat::
+* posix_fadvise::
+* posix_fallocate::
+@end menu
+
+@include posix-functions/creat.texi
+@include posix-functions/fcntl.texi
+@include posix-functions/open.texi
+@include posix-functions/openat.texi
+@include posix-functions/posix_fadvise.texi
+@include posix-functions/posix_fallocate.texi
+
+@node Functions in <fenv.h>
+@section Functions in @code{<fenv.h>}
+
+@menu
 * feclearexcept::
 * fegetenv::
 * fegetexceptflag::
 * fegetmode::
 * fegetround::
 * feholdexcept::
-* feof::
 * feraiseexcept::
-* ferror::
 * fesetenv::
 * fesetexcept::
 * fesetexceptflag::
@@ -1505,16 +1791,307 @@ problems are not worked around by Gnulib.
 * fetestexcept::
 * fetestexceptflag::
 * feupdateenv::
-* fexecve::
-* fflush::
-* ffs::
-* fgetc::
-* fgetpos::
-* fgets::
-* fgetwc::
-* fgetws::
-* fileno::
-* flockfile::
+@end menu
+
+@include posix-functions/feclearexcept.texi
+@include posix-functions/fegetenv.texi
+@include posix-functions/fegetexceptflag.texi
+@include posix-functions/fegetmode.texi
+@include posix-functions/fegetround.texi
+@include posix-functions/feholdexcept.texi
+@include posix-functions/feraiseexcept.texi
+@include posix-functions/fesetenv.texi
+@include posix-functions/fesetexcept.texi
+@include posix-functions/fesetexceptflag.texi
+@include posix-functions/fesetmode.texi
+@include posix-functions/fesetround.texi
+@include posix-functions/fetestexcept.texi
+@include posix-functions/fetestexceptflag.texi
+@include posix-functions/feupdateenv.texi
+
+@c @node Functions in <float.h>
+@c @section Functions in @code{<float.h>}
+
+@node Functions in <fmtmsg.h>
+@section Functions in @code{<fmtmsg.h>}
+
+@menu
+* fmtmsg::
+@end menu
+
+@include posix-functions/fmtmsg.texi
+
+@node Functions in <fnmatch.h>
+@section Functions in @code{<fnmatch.h>}
+
+@menu
+* fnmatch::
+@end menu
+
+@include posix-functions/fnmatch.texi
+
+@node Functions in <ftw.h>
+@section Functions in @code{<ftw.h>}
+
+@menu
+* nftw::
+@end menu
+
+@include posix-functions/nftw.texi
+
+@node Functions in <glob.h>
+@section Functions in @code{<glob.h>}
+
+@menu
+* glob::
+* globfree::
+@end menu
+
+@include posix-functions/glob.texi
+@include posix-functions/globfree.texi
+
+@node Functions in <grp.h>
+@section Functions in @code{<grp.h>}
+
+@menu
+* endgrent::
+* getgrent::
+* getgrgid::
+* getgrgid_r::
+* getgrnam::
+* getgrnam_r::
+* setgrent::
+@end menu
+
+@include posix-functions/endgrent.texi
+@include posix-functions/getgrent.texi
+@include posix-functions/getgrgid.texi
+@include posix-functions/getgrgid_r.texi
+@include posix-functions/getgrnam.texi
+@include posix-functions/getgrnam_r.texi
+@include posix-functions/setgrent.texi
+
+@node Functions in <iconv.h>
+@section Functions in @code{<iconv.h>}
+
+@menu
+* iconv::
+* iconv_close::
+* iconv_open::
+@end menu
+
+@include posix-functions/iconv.texi
+@include posix-functions/iconv_close.texi
+@include posix-functions/iconv_open.texi
+
+@node Functions in <inttypes.h>
+@section Functions in @code{<inttypes.h>}
+
+@menu
+* imaxabs::
+* imaxdiv::
+* strtoimax::
+* strtoumax::
+* wcstoimax::
+* wcstoumax::
+@end menu
+
+@include posix-functions/imaxabs.texi
+@include posix-functions/imaxdiv.texi
+@include posix-functions/strtoimax.texi
+@include posix-functions/strtoumax.texi
+@include posix-functions/wcstoimax.texi
+@include posix-functions/wcstoumax.texi
+
+@c @node Functions in <iso646.h>
+@c @section Functions in @code{<iso646.h>}
+
+@node Functions in <langinfo.h>
+@section Functions in @code{<langinfo.h>}
+
+@menu
+* nl_langinfo::
+* nl_langinfo_l::
+@end menu
+
+@include posix-functions/nl_langinfo.texi
+@include posix-functions/nl_langinfo_l.texi
+
+@node Functions in <libgen.h>
+@section Functions in @code{<libgen.h>}
+
+@menu
+* basename::
+* dirname::
+@end menu
+
+@include posix-functions/basename.texi
+@include posix-functions/dirname.texi
+
+@node Functions in <libintl.h>
+@section Functions in @code{<libintl.h>}
+
+@menu
+* bind_textdomain_codeset::
+* bindtextdomain::
+* dcgettext::
+* dcgettext_l::
+* dcngettext::
+* dcngettext_l::
+* dgettext::
+* dgettext_l::
+* dngettext::
+* dngettext_l::
+* gettext::
+* gettext_l::
+* ngettext::
+* ngettext_l::
+* textdomain::
+@end menu
+
+@include posix-functions/bind_textdomain_codeset.texi
+@include posix-functions/bindtextdomain.texi
+@include posix-functions/dcgettext.texi
+@include posix-functions/dcgettext_l.texi
+@include posix-functions/dcngettext.texi
+@include posix-functions/dcngettext_l.texi
+@include posix-functions/dgettext.texi
+@include posix-functions/dgettext_l.texi
+@include posix-functions/dngettext.texi
+@include posix-functions/dngettext_l.texi
+@include posix-functions/gettext.texi
+@include posix-functions/gettext_l.texi
+@include posix-functions/ngettext.texi
+@include posix-functions/ngettext_l.texi
+@include posix-functions/textdomain.texi
+
+@c @node Functions in <limits.h>
+@c @section Functions in @code{<limits.h>}
+
+@node Functions in <locale.h>
+@section Functions in @code{<locale.h>}
+
+@menu
+* duplocale::
+* freelocale::
+* getlocalename_l::
+* localeconv::
+* newlocale::
+* setlocale::
+* uselocale::
+@end menu
+
+@include posix-functions/duplocale.texi
+@include posix-functions/freelocale.texi
+@include posix-functions/getlocalename_l.texi
+@include posix-functions/localeconv.texi
+@include posix-functions/newlocale.texi
+@include posix-functions/setlocale.texi
+@include posix-functions/uselocale.texi
+
+@node Functions in <math.h>
+@section Functions in @code{<math.h>}
+
+@menu
+* acos::
+* acosf::
+* acosh::
+* acoshf::
+* acoshl::
+* acosl::
+* acospi::
+* acospif::
+* acospil::
+* asin::
+* asinf::
+* asinh::
+* asinhf::
+* asinhl::
+* asinl::
+* asinpi::
+* asinpif::
+* asinpil::
+* atan::
+* atan2::
+* atan2f::
+* atan2l::
+* atan2pi::
+* atan2pif::
+* atan2pil::
+* atanf::
+* atanh::
+* atanhf::
+* atanhl::
+* atanl::
+* atanpi::
+* atanpif::
+* atanpil::
+* canonicalize::
+* canonicalizef::
+* canonicalizel::
+* cbrt::
+* cbrtf::
+* cbrtl::
+* ceil::
+* ceilf::
+* ceill::
+* compoundn::
+* compoundnf::
+* compoundnl::
+* copysign::
+* copysignf::
+* copysignl::
+* cos::
+* cosf::
+* cosh::
+* coshf::
+* coshl::
+* cosl::
+* cospi::
+* cospif::
+* cospil::
+* daddl::
+* ddivl::
+* dfmal::
+* dmull::
+* dsqrtl::
+* dsubl::
+* erf::
+* erfc::
+* erfcf::
+* erfcl::
+* erff::
+* erfl::
+* exp::
+* exp10::
+* exp10f::
+* exp10l::
+* exp10m1::
+* exp10m1f::
+* exp10m1l::
+* exp2::
+* exp2f::
+* exp2l::
+* exp2m1::
+* exp2m1f::
+* exp2m1l::
+* expf::
+* expl::
+* expm1::
+* expm1f::
+* expm1l::
+* fabs::
+* fabsf::
+* fabsl::
+* fadd::
+* faddl::
+* fdim::
+* fdimf::
+* fdiml::
+* fdiv::
+* fdivl::
+* ffma::
+* ffmal::
 * floor::
 * floorf::
 * floorl::
@@ -1523,13 +2100,36 @@ problems are not worked around by Gnulib.
 * fmal::
 * fmax::
 * fmaxf::
+* fmaximum::
+* fmaximum_mag::
+* fmaximum_magf::
+* fmaximum_magl::
+* fmaximum_mag_num::
+* fmaximum_mag_numf::
+* fmaximum_mag_numl::
+* fmaximum_num::
+* fmaximum_numf::
+* fmaximum_numl::
+* fmaximumf::
+* fmaximuml::
 * fmaxl::
 * fmaxmag::
 * fmaxmagf::
 * fmaxmagl::
-* fmemopen::
 * fmin::
 * fminf::
+* fminimum::
+* fminimum_mag::
+* fminimum_magf::
+* fminimum_magl::
+* fminimum_mag_num::
+* fminimum_mag_numf::
+* fminimum_mag_numl::
+* fminimum_num::
+* fminimum_numf::
+* fminimum_numl::
+* fminimumf::
+* fminimuml::
 * fminl::
 * fminmag::
 * fminmagf::
@@ -1537,24 +2137,9 @@ problems are not worked around by Gnulib.
 * fmod::
 * fmodf::
 * fmodl::
-* fmtmsg::
 * fmul::
 * fmull::
-* fnmatch::
-* fopen::
-* fork::
-* fpathconf::
 * fpclassify::
-* fprintf::
-* fputc::
-* fputs::
-* fputwc::
-* fputws::
-* fread::
-* free::
-* freeaddrinfo::
-* freelocale::
-* freopen::
 * frexp::
 * frexpf::
 * frexpl::
@@ -1564,163 +2149,2565 @@ problems are not worked around by Gnulib.
 * fromfpx::
 * fromfpxf::
 * fromfpxl::
-* fscanf::
-* fseek::
-* fseeko::
-* fsetpos::
-* fstat::
-* fstatat::
-* fstatvfs::
+* fsqrt::
+* fsqrtl::
 * fsub::
 * fsubl::
-* fsync::
-* ftell::
-* ftello::
-* ftok::
-* ftruncate::
-* ftrylockfile::
-* ftw::
-* funlockfile::
-* futimens::
-* fwide::
-* fwprintf::
-* fwrite::
-* fwscanf::
-* gai_strerror::
-* getaddrinfo::
-* getc::
-* getc_unlocked::
-* getchar::
-* getchar_unlocked::
-* getcwd::
-* getdate::
-* getdate_err::
-* getdelim::
-* getegid::
-* getenv::
-* geteuid::
-* getgid::
-* getgrent::
-* getgrgid::
-* getgrgid_r::
-* getgrnam::
-* getgrnam_r::
-* getgroups::
-* gethostent::
-* gethostid::
-* gethostname::
-* getitimer::
-* getline::
-* getlogin::
-* getlogin_r::
-* getmsg::
-* getnameinfo::
-* getnetbyaddr::
-* getnetbyname::
-* getnetent::
-* getopt::
 * getpayload::
 * getpayloadf::
 * getpayloadl::
-* getpeername::
-* getpgid::
-* getpgrp::
-* getpid::
-* getpmsg::
-* getppid::
-* getpriority::
-* getprotobyname::
-* getprotobynumber::
-* getprotoent::
-* getpwent::
-* getpwnam::
-* getpwnam_r::
-* getpwuid::
-* getpwuid_r::
-* getrlimit::
-* getrusage::
-* gets::
-* getservbyname::
-* getservbyport::
-* getservent::
-* getsid::
-* getsockname::
-* getsockopt::
-* getsubopt::
-* gettimeofday::
-* getuid::
-* getutxent::
-* getutxid::
-* getutxline::
-* getwc::
-* getwchar::
-* glob::
-* globfree::
-* gmtime::
-* gmtime_r::
-* grantpt::
-* hcreate::
-* hdestroy::
-* hsearch::
-* htonl::
-* htons::
 * hypot::
 * hypotf::
 * hypotl::
-* iconv::
-* iconv_close::
-* iconv_open::
-* if_freenameindex::
-* if_indextoname::
-* if_nameindex::
-* if_nametoindex::
 * ilogb::
 * ilogbf::
 * ilogbl::
-* imaxabs::
-* imaxdiv::
-* inet_addr::
-* inet_ntoa::
-* inet_ntop::
-* inet_pton::
-* initstate::
-* insque::
-* ioctl::
-* isalnum::
-* isalnum_l::
-* isalpha::
-* isalpha_l::
-* isascii::
-* isastream::
-* isatty::
-* isblank::
-* isblank_l::
-* iscntrl::
-* iscntrl_l::
-* isdigit::
-* isdigit_l::
 * isfinite::
-* isgraph::
-* isgraph_l::
 * isgreater::
 * isgreaterequal::
 * isinf::
 * isless::
 * islessequal::
 * islessgreater::
-* islower::
-* islower_l::
 * isnan::
 * isnormal::
-* isprint::
-* isprint_l::
-* ispunct::
-* ispunct_l::
-* isspace::
-* isspace_l::
 * isunordered::
-* isupper::
-* isupper_l::
+* j0::
+* j1::
+* jn::
+* ldexp::
+* ldexpf::
+* ldexpl::
+* lgamma::
+* lgammaf::
+* lgammal::
+* llogb::
+* llogbf::
+* llogbl::
+* llrint::
+* llrintf::
+* llrintl::
+* llround::
+* llroundf::
+* llroundl::
+* log::
+* log10::
+* log10f::
+* log10l::
+* log10p1::
+* log10p1f::
+* log10p1l::
+* log1p::
+* log1pf::
+* log1pl::
+* log2::
+* log2f::
+* log2l::
+* log2p1::
+* log2p1f::
+* log2p1l::
+* logb::
+* logbf::
+* logbl::
+* logf::
+* logl::
+* logp1::
+* logp1f::
+* logp1l::
+* lrint::
+* lrintf::
+* lrintl::
+* lround::
+* lroundf::
+* lroundl::
+* math_errhandling::
+* modf::
+* modff::
+* modfl::
+* nan::
+* nanf::
+* nanl::
+* nearbyint::
+* nearbyintf::
+* nearbyintl::
+* nextafter::
+* nextafterf::
+* nextafterl::
+* nextdown::
+* nextdownf::
+* nextdownl::
+* nexttoward::
+* nexttowardf::
+* nexttowardl::
+* nextup::
+* nextupf::
+* nextupl::
+* pow::
+* powf::
+* powl::
+* pown::
+* pownf::
+* pownl::
+* powr::
+* powrf::
+* powrl::
+* remainder::
+* remainderf::
+* remainderl::
+* remquo::
+* remquof::
+* remquol::
+* rint::
+* rintf::
+* rintl::
+* rootn::
+* rootnf::
+* rootnl::
+* round::
+* roundeven::
+* roundevenf::
+* roundevenl::
+* roundf::
+* roundl::
+* rsqrt::
+* rsqrtf::
+* rsqrtl::
+* scalbln::
+* scalblnf::
+* scalblnl::
+* scalbn::
+* scalbnf::
+* scalbnl::
+* setpayload::
+* setpayloadf::
+* setpayloadl::
+* setpayloadsig::
+* setpayloadsigf::
+* setpayloadsigl::
+* signbit::
+* signgam::
+* sin::
+* sinf::
+* sinh::
+* sinhf::
+* sinhl::
+* sinl::
+* sinpi::
+* sinpif::
+* sinpil::
+* sqrt::
+* sqrtf::
+* sqrtl::
+* tan::
+* tanf::
+* tanh::
+* tanhf::
+* tanhl::
+* tanl::
+* tanpi::
+* tanpif::
+* tanpil::
+* tgamma::
+* tgammaf::
+* tgammal::
+* totalorder::
+* totalorderf::
+* totalorderl::
+* totalordermag::
+* totalordermagf::
+* totalordermagl::
+* trunc::
+* truncf::
+* truncl::
+* ufromfp::
+* ufromfpf::
+* ufromfpl::
+* ufromfpx::
+* ufromfpxf::
+* ufromfpxl::
+* y0::
+* y1::
+* yn::
+@end menu
+
+@include posix-functions/acos.texi
+@include posix-functions/acosf.texi
+@include posix-functions/acosh.texi
+@include posix-functions/acoshf.texi
+@include posix-functions/acoshl.texi
+@include posix-functions/acosl.texi
+@include posix-functions/acospi.texi
+@include posix-functions/acospif.texi
+@include posix-functions/acospil.texi
+@include posix-functions/asin.texi
+@include posix-functions/asinf.texi
+@include posix-functions/asinh.texi
+@include posix-functions/asinhf.texi
+@include posix-functions/asinhl.texi
+@include posix-functions/asinl.texi
+@include posix-functions/asinpi.texi
+@include posix-functions/asinpif.texi
+@include posix-functions/asinpil.texi
+@include posix-functions/atan.texi
+@include posix-functions/atan2.texi
+@include posix-functions/atan2f.texi
+@include posix-functions/atan2l.texi
+@include posix-functions/atan2pi.texi
+@include posix-functions/atan2pif.texi
+@include posix-functions/atan2pil.texi
+@include posix-functions/atanf.texi
+@include posix-functions/atanh.texi
+@include posix-functions/atanhf.texi
+@include posix-functions/atanhl.texi
+@include posix-functions/atanl.texi
+@include posix-functions/atanpi.texi
+@include posix-functions/atanpif.texi
+@include posix-functions/atanpil.texi
+@include posix-functions/canonicalize.texi
+@include posix-functions/canonicalizef.texi
+@include posix-functions/canonicalizel.texi
+@include posix-functions/cbrt.texi
+@include posix-functions/cbrtf.texi
+@include posix-functions/cbrtl.texi
+@include posix-functions/ceil.texi
+@include posix-functions/ceilf.texi
+@include posix-functions/ceill.texi
+@include posix-functions/compoundn.texi
+@include posix-functions/compoundnf.texi
+@include posix-functions/compoundnl.texi
+@include posix-functions/copysign.texi
+@include posix-functions/copysignf.texi
+@include posix-functions/copysignl.texi
+@include posix-functions/cos.texi
+@include posix-functions/cosf.texi
+@include posix-functions/cosh.texi
+@include posix-functions/coshf.texi
+@include posix-functions/coshl.texi
+@include posix-functions/cosl.texi
+@include posix-functions/cospi.texi
+@include posix-functions/cospif.texi
+@include posix-functions/cospil.texi
+@include posix-functions/daddl.texi
+@include posix-functions/ddivl.texi
+@include posix-functions/dfmal.texi
+@include posix-functions/dmull.texi
+@include posix-functions/dsqrtl.texi
+@include posix-functions/dsubl.texi
+@include posix-functions/erf.texi
+@include posix-functions/erfc.texi
+@include posix-functions/erfcf.texi
+@include posix-functions/erfcl.texi
+@include posix-functions/erff.texi
+@include posix-functions/erfl.texi
+@include posix-functions/exp.texi
+@include posix-functions/exp10.texi
+@include posix-functions/exp10f.texi
+@include posix-functions/exp10l.texi
+@include posix-functions/exp10m1.texi
+@include posix-functions/exp10m1f.texi
+@include posix-functions/exp10m1l.texi
+@include posix-functions/exp2.texi
+@include posix-functions/exp2f.texi
+@include posix-functions/exp2l.texi
+@include posix-functions/exp2m1.texi
+@include posix-functions/exp2m1f.texi
+@include posix-functions/exp2m1l.texi
+@include posix-functions/expf.texi
+@include posix-functions/expl.texi
+@include posix-functions/expm1.texi
+@include posix-functions/expm1f.texi
+@include posix-functions/expm1l.texi
+@include posix-functions/fabs.texi
+@include posix-functions/fabsf.texi
+@include posix-functions/fabsl.texi
+@include posix-functions/fadd.texi
+@include posix-functions/faddl.texi
+@include posix-functions/fdim.texi
+@include posix-functions/fdimf.texi
+@include posix-functions/fdiml.texi
+@include posix-functions/fdiv.texi
+@include posix-functions/fdivl.texi
+@include posix-functions/ffma.texi
+@include posix-functions/ffmal.texi
+@include posix-functions/floor.texi
+@include posix-functions/floorf.texi
+@include posix-functions/floorl.texi
+@include posix-functions/fma.texi
+@include posix-functions/fmaf.texi
+@include posix-functions/fmal.texi
+@include posix-functions/fmax.texi
+@include posix-functions/fmaxf.texi
+@include posix-functions/fmaximum.texi
+@include posix-functions/fmaximum_mag.texi
+@include posix-functions/fmaximum_magf.texi
+@include posix-functions/fmaximum_magl.texi
+@include posix-functions/fmaximum_mag_num.texi
+@include posix-functions/fmaximum_mag_numf.texi
+@include posix-functions/fmaximum_mag_numl.texi
+@include posix-functions/fmaximum_num.texi
+@include posix-functions/fmaximum_numf.texi
+@include posix-functions/fmaximum_numl.texi
+@include posix-functions/fmaximumf.texi
+@include posix-functions/fmaximuml.texi
+@include posix-functions/fmaxl.texi
+@include posix-functions/fmaxmag.texi
+@include posix-functions/fmaxmagf.texi
+@include posix-functions/fmaxmagl.texi
+@include posix-functions/fmin.texi
+@include posix-functions/fminf.texi
+@include posix-functions/fminimum.texi
+@include posix-functions/fminimum_mag.texi
+@include posix-functions/fminimum_magf.texi
+@include posix-functions/fminimum_magl.texi
+@include posix-functions/fminimum_mag_num.texi
+@include posix-functions/fminimum_mag_numf.texi
+@include posix-functions/fminimum_mag_numl.texi
+@include posix-functions/fminimum_num.texi
+@include posix-functions/fminimum_numf.texi
+@include posix-functions/fminimum_numl.texi
+@include posix-functions/fminimumf.texi
+@include posix-functions/fminimuml.texi
+@include posix-functions/fminl.texi
+@include posix-functions/fminmag.texi
+@include posix-functions/fminmagf.texi
+@include posix-functions/fminmagl.texi
+@include posix-functions/fmod.texi
+@include posix-functions/fmodf.texi
+@include posix-functions/fmodl.texi
+@include posix-functions/fmul.texi
+@include posix-functions/fmull.texi
+@include posix-functions/fpclassify.texi
+@include posix-functions/frexp.texi
+@include posix-functions/frexpf.texi
+@include posix-functions/frexpl.texi
+@include posix-functions/fromfp.texi
+@include posix-functions/fromfpf.texi
+@include posix-functions/fromfpl.texi
+@include posix-functions/fromfpx.texi
+@include posix-functions/fromfpxf.texi
+@include posix-functions/fromfpxl.texi
+@include posix-functions/fsqrt.texi
+@include posix-functions/fsqrtl.texi
+@include posix-functions/fsub.texi
+@include posix-functions/fsubl.texi
+@include posix-functions/getpayload.texi
+@include posix-functions/getpayloadf.texi
+@include posix-functions/getpayloadl.texi
+@include posix-functions/hypot.texi
+@include posix-functions/hypotf.texi
+@include posix-functions/hypotl.texi
+@include posix-functions/ilogb.texi
+@include posix-functions/ilogbf.texi
+@include posix-functions/ilogbl.texi
+@include posix-functions/isfinite.texi
+@include posix-functions/isgreater.texi
+@include posix-functions/isgreaterequal.texi
+@include posix-functions/isinf.texi
+@include posix-functions/isless.texi
+@include posix-functions/islessequal.texi
+@include posix-functions/islessgreater.texi
+@include posix-functions/isnan.texi
+@include posix-functions/isnormal.texi
+@include posix-functions/isunordered.texi
+@include posix-functions/j0.texi
+@include posix-functions/j1.texi
+@include posix-functions/jn.texi
+@include posix-functions/ldexp.texi
+@include posix-functions/ldexpf.texi
+@include posix-functions/ldexpl.texi
+@include posix-functions/lgamma.texi
+@include posix-functions/lgammaf.texi
+@include posix-functions/lgammal.texi
+@include posix-functions/llogb.texi
+@include posix-functions/llogbf.texi
+@include posix-functions/llogbl.texi
+@include posix-functions/llrint.texi
+@include posix-functions/llrintf.texi
+@include posix-functions/llrintl.texi
+@include posix-functions/llround.texi
+@include posix-functions/llroundf.texi
+@include posix-functions/llroundl.texi
+@include posix-functions/log.texi
+@include posix-functions/log10.texi
+@include posix-functions/log10f.texi
+@include posix-functions/log10l.texi
+@include posix-functions/log10p1.texi
+@include posix-functions/log10p1f.texi
+@include posix-functions/log10p1l.texi
+@include posix-functions/log1p.texi
+@include posix-functions/log1pf.texi
+@include posix-functions/log1pl.texi
+@include posix-functions/log2.texi
+@include posix-functions/log2f.texi
+@include posix-functions/log2l.texi
+@include posix-functions/log2p1.texi
+@include posix-functions/log2p1f.texi
+@include posix-functions/log2p1l.texi
+@include posix-functions/logb.texi
+@include posix-functions/logbf.texi
+@include posix-functions/logbl.texi
+@include posix-functions/logf.texi
+@include posix-functions/logl.texi
+@include posix-functions/logp1.texi
+@include posix-functions/logp1f.texi
+@include posix-functions/logp1l.texi
+@include posix-functions/lrint.texi
+@include posix-functions/lrintf.texi
+@include posix-functions/lrintl.texi
+@include posix-functions/lround.texi
+@include posix-functions/lroundf.texi
+@include posix-functions/lroundl.texi
+@include posix-functions/math_errhandling.texi
+@include posix-functions/modf.texi
+@include posix-functions/modff.texi
+@include posix-functions/modfl.texi
+@include posix-functions/nan.texi
+@include posix-functions/nanf.texi
+@include posix-functions/nanl.texi
+@include posix-functions/nearbyint.texi
+@include posix-functions/nearbyintf.texi
+@include posix-functions/nearbyintl.texi
+@include posix-functions/nextafter.texi
+@include posix-functions/nextafterf.texi
+@include posix-functions/nextafterl.texi
+@include posix-functions/nextdown.texi
+@include posix-functions/nextdownf.texi
+@include posix-functions/nextdownl.texi
+@include posix-functions/nexttoward.texi
+@include posix-functions/nexttowardf.texi
+@include posix-functions/nexttowardl.texi
+@include posix-functions/nextup.texi
+@include posix-functions/nextupf.texi
+@include posix-functions/nextupl.texi
+@include posix-functions/pow.texi
+@include posix-functions/powf.texi
+@include posix-functions/powl.texi
+@include posix-functions/pown.texi
+@include posix-functions/pownf.texi
+@include posix-functions/pownl.texi
+@include posix-functions/powr.texi
+@include posix-functions/powrf.texi
+@include posix-functions/powrl.texi
+@include posix-functions/remainder.texi
+@include posix-functions/remainderf.texi
+@include posix-functions/remainderl.texi
+@include posix-functions/remquo.texi
+@include posix-functions/remquof.texi
+@include posix-functions/remquol.texi
+@include posix-functions/rint.texi
+@include posix-functions/rintf.texi
+@include posix-functions/rintl.texi
+@include posix-functions/rootn.texi
+@include posix-functions/rootnf.texi
+@include posix-functions/rootnl.texi
+@include posix-functions/round.texi
+@include posix-functions/roundeven.texi
+@include posix-functions/roundevenf.texi
+@include posix-functions/roundevenl.texi
+@include posix-functions/roundf.texi
+@include posix-functions/roundl.texi
+@include posix-functions/rsqrt.texi
+@include posix-functions/rsqrtf.texi
+@include posix-functions/rsqrtl.texi
+@include posix-functions/scalbln.texi
+@include posix-functions/scalblnf.texi
+@include posix-functions/scalblnl.texi
+@include posix-functions/scalbn.texi
+@include posix-functions/scalbnf.texi
+@include posix-functions/scalbnl.texi
+@include posix-functions/setpayload.texi
+@include posix-functions/setpayloadf.texi
+@include posix-functions/setpayloadl.texi
+@include posix-functions/setpayloadsig.texi
+@include posix-functions/setpayloadsigf.texi
+@include posix-functions/setpayloadsigl.texi
+@include posix-functions/signbit.texi
+@include posix-functions/signgam.texi
+@include posix-functions/sin.texi
+@include posix-functions/sinf.texi
+@include posix-functions/sinh.texi
+@include posix-functions/sinhf.texi
+@include posix-functions/sinhl.texi
+@include posix-functions/sinl.texi
+@include posix-functions/sinpi.texi
+@include posix-functions/sinpif.texi
+@include posix-functions/sinpil.texi
+@include posix-functions/sqrt.texi
+@include posix-functions/sqrtf.texi
+@include posix-functions/sqrtl.texi
+@include posix-functions/tan.texi
+@include posix-functions/tanf.texi
+@include posix-functions/tanh.texi
+@include posix-functions/tanhf.texi
+@include posix-functions/tanhl.texi
+@include posix-functions/tanl.texi
+@include posix-functions/tanpi.texi
+@include posix-functions/tanpif.texi
+@include posix-functions/tanpil.texi
+@include posix-functions/tgamma.texi
+@include posix-functions/tgammaf.texi
+@include posix-functions/tgammal.texi
+@include posix-functions/totalorder.texi
+@include posix-functions/totalorderf.texi
+@include posix-functions/totalorderl.texi
+@include posix-functions/totalordermag.texi
+@include posix-functions/totalordermagf.texi
+@include posix-functions/totalordermagl.texi
+@include posix-functions/trunc.texi
+@include posix-functions/truncf.texi
+@include posix-functions/truncl.texi
+@include posix-functions/ufromfp.texi
+@include posix-functions/ufromfpf.texi
+@include posix-functions/ufromfpl.texi
+@include posix-functions/ufromfpx.texi
+@include posix-functions/ufromfpxf.texi
+@include posix-functions/ufromfpxl.texi
+@include posix-functions/y0.texi
+@include posix-functions/y1.texi
+@include posix-functions/yn.texi
+
+@node Functions in <monetary.h>
+@section Functions in @code{<monetary.h>}
+
+@menu
+* strfmon::
+* strfmon_l::
+@end menu
+
+@include posix-functions/strfmon.texi
+@include posix-functions/strfmon_l.texi
+
+@node Functions in <mqueue.h>
+@section Functions in @code{<mqueue.h>}
+
+@menu
+* mq_close::
+* mq_getattr::
+* mq_notify::
+* mq_open::
+* mq_receive::
+* mq_send::
+* mq_setattr::
+* mq_timedreceive::
+* mq_timedsend::
+* mq_unlink::
+@end menu
+
+@include posix-functions/mq_close.texi
+@include posix-functions/mq_getattr.texi
+@include posix-functions/mq_notify.texi
+@include posix-functions/mq_open.texi
+@include posix-functions/mq_receive.texi
+@include posix-functions/mq_send.texi
+@include posix-functions/mq_setattr.texi
+@include posix-functions/mq_timedreceive.texi
+@include posix-functions/mq_timedsend.texi
+@include posix-functions/mq_unlink.texi
+
+@node Functions in <ndbm.h>
+@section Functions in @code{<ndbm.h>}
+
+@menu
+* dbm_clearerr::
+* dbm_close::
+* dbm_delete::
+* dbm_error::
+* dbm_fetch::
+* dbm_firstkey::
+* dbm_nextkey::
+* dbm_open::
+* dbm_store::
+@end menu
+
+@include posix-functions/dbm_clearerr.texi
+@include posix-functions/dbm_close.texi
+@include posix-functions/dbm_delete.texi
+@include posix-functions/dbm_error.texi
+@include posix-functions/dbm_fetch.texi
+@include posix-functions/dbm_firstkey.texi
+@include posix-functions/dbm_nextkey.texi
+@include posix-functions/dbm_open.texi
+@include posix-functions/dbm_store.texi
+
+@node Functions in <net/if.h>
+@section Functions in @code{<net/if.h>}
+
+@menu
+* if_freenameindex::
+* if_indextoname::
+* if_nameindex::
+* if_nametoindex::
+@end menu
+
+@include posix-functions/if_freenameindex.texi
+@include posix-functions/if_indextoname.texi
+@include posix-functions/if_nameindex.texi
+@include posix-functions/if_nametoindex.texi
+
+@node Functions in <netdb.h>
+@section Functions in @code{<netdb.h>}
+
+@menu
+* endhostent::
+* endnetent::
+* endprotoent::
+* endservent::
+* freeaddrinfo::
+* gai_strerror::
+* getaddrinfo::
+* gethostent::
+* getnameinfo::
+* getnetbyaddr::
+* getnetbyname::
+* getnetent::
+* getprotobyname::
+* getprotobynumber::
+* getprotoent::
+* getservbyname::
+* getservbyport::
+* getservent::
+* sethostent::
+* setnetent::
+* setprotoent::
+* setservent::
+@end menu
+
+@include posix-functions/endhostent.texi
+@include posix-functions/endnetent.texi
+@include posix-functions/endprotoent.texi
+@include posix-functions/endservent.texi
+@include posix-functions/freeaddrinfo.texi
+@include posix-functions/gai_strerror.texi
+@include posix-functions/getaddrinfo.texi
+@include posix-functions/gethostent.texi
+@include posix-functions/getnameinfo.texi
+@include posix-functions/getnetbyaddr.texi
+@include posix-functions/getnetbyname.texi
+@include posix-functions/getnetent.texi
+@include posix-functions/getprotobyname.texi
+@include posix-functions/getprotobynumber.texi
+@include posix-functions/getprotoent.texi
+@include posix-functions/getservbyname.texi
+@include posix-functions/getservbyport.texi
+@include posix-functions/getservent.texi
+@include posix-functions/sethostent.texi
+@include posix-functions/setnetent.texi
+@include posix-functions/setprotoent.texi
+@include posix-functions/setservent.texi
+
+@node Functions in <netinet/in.h>
+@section Functions in @code{<netinet/in.h>}
+
+@menu
+* in6addr_any::
+* in6addr_loopback::
+@end menu
+
+@include posix-functions/in6addr_any.texi
+@include posix-functions/in6addr_loopback.texi
+
+@c @node Functions in <netinet/tcp.h>
+@c @section Functions in @code{<netinet/tcp.h>}
+
+@node Functions in <nl_types.h>
+@section Functions in @code{<nl_types.h>}
+
+@menu
+* catclose::
+* catgets::
+* catopen::
+@end menu
+
+@include posix-functions/catclose.texi
+@include posix-functions/catgets.texi
+@include posix-functions/catopen.texi
+
+@node Functions in <poll.h>
+@section Functions in @code{<poll.h>}
+
+@menu
+* poll::
+* ppoll::
+@end menu
+
+@include posix-functions/poll.texi
+@include posix-functions/ppoll.texi
+
+@node Functions in <pthread.h>
+@section Functions in @code{<pthread.h>}
+
+@menu
+* pthread_atfork::
+* pthread_attr_destroy::
+* pthread_attr_getdetachstate::
+* pthread_attr_getguardsize::
+* pthread_attr_getinheritsched::
+* pthread_attr_getschedparam::
+* pthread_attr_getschedpolicy::
+* pthread_attr_getscope::
+* pthread_attr_getstack::
+* pthread_attr_getstacksize::
+* pthread_attr_init::
+* pthread_attr_setdetachstate::
+* pthread_attr_setguardsize::
+* pthread_attr_setinheritsched::
+* pthread_attr_setschedparam::
+* pthread_attr_setschedpolicy::
+* pthread_attr_setscope::
+* pthread_attr_setstack::
+* pthread_attr_setstacksize::
+* pthread_barrier_destroy::
+* pthread_barrier_init::
+* pthread_barrier_wait::
+* pthread_barrierattr_destroy::
+* pthread_barrierattr_getpshared::
+* pthread_barrierattr_init::
+* pthread_barrierattr_setpshared::
+* pthread_cancel::
+* pthread_cleanup_pop::
+* pthread_cleanup_push::
+* pthread_cond_broadcast::
+* pthread_cond_clockwait::
+* pthread_cond_destroy::
+* pthread_cond_init::
+* pthread_cond_signal::
+* pthread_cond_timedwait::
+* pthread_cond_wait::
+* pthread_condattr_destroy::
+* pthread_condattr_getclock::
+* pthread_condattr_getpshared::
+* pthread_condattr_init::
+* pthread_condattr_setclock::
+* pthread_condattr_setpshared::
+* pthread_create::
+* pthread_detach::
+* pthread_equal::
+* pthread_exit::
+* pthread_getcpuclockid::
+* pthread_getschedparam::
+* pthread_getspecific::
+* pthread_join::
+* pthread_key_create::
+* pthread_key_delete::
+* pthread_mutex_clocklock::
+* pthread_mutex_consistent::
+* pthread_mutex_destroy::
+* pthread_mutex_getprioceiling::
+* pthread_mutex_init::
+* pthread_mutex_lock::
+* pthread_mutex_setprioceiling::
+* pthread_mutex_timedlock::
+* pthread_mutex_trylock::
+* pthread_mutex_unlock::
+* pthread_mutexattr_destroy::
+* pthread_mutexattr_getprioceiling::
+* pthread_mutexattr_getprotocol::
+* pthread_mutexattr_getpshared::
+* pthread_mutexattr_getrobust::
+* pthread_mutexattr_gettype::
+* pthread_mutexattr_init::
+* pthread_mutexattr_setprioceiling::
+* pthread_mutexattr_setprotocol::
+* pthread_mutexattr_setpshared::
+* pthread_mutexattr_setrobust::
+* pthread_mutexattr_settype::
+* pthread_once::
+* pthread_rwlock_clockrdlock::
+* pthread_rwlock_clockwrlock::
+* pthread_rwlock_destroy::
+* pthread_rwlock_init::
+* pthread_rwlock_rdlock::
+* pthread_rwlock_timedrdlock::
+* pthread_rwlock_timedwrlock::
+* pthread_rwlock_tryrdlock::
+* pthread_rwlock_trywrlock::
+* pthread_rwlock_unlock::
+* pthread_rwlock_wrlock::
+* pthread_rwlockattr_destroy::
+* pthread_rwlockattr_getpshared::
+* pthread_rwlockattr_init::
+* pthread_rwlockattr_setpshared::
+* pthread_self::
+* pthread_setcancelstate::
+* pthread_setcanceltype::
+* pthread_setschedparam::
+* pthread_setschedprio::
+* pthread_setspecific::
+* pthread_spin_destroy::
+* pthread_spin_init::
+* pthread_spin_lock::
+* pthread_spin_trylock::
+* pthread_spin_unlock::
+* pthread_testcancel::
+@end menu
+
+@include posix-functions/pthread_atfork.texi
+@include posix-functions/pthread_attr_destroy.texi
+@include posix-functions/pthread_attr_getdetachstate.texi
+@include posix-functions/pthread_attr_getguardsize.texi
+@include posix-functions/pthread_attr_getinheritsched.texi
+@include posix-functions/pthread_attr_getschedparam.texi
+@include posix-functions/pthread_attr_getschedpolicy.texi
+@include posix-functions/pthread_attr_getscope.texi
+@include posix-functions/pthread_attr_getstack.texi
+@include posix-functions/pthread_attr_getstacksize.texi
+@include posix-functions/pthread_attr_init.texi
+@include posix-functions/pthread_attr_setdetachstate.texi
+@include posix-functions/pthread_attr_setguardsize.texi
+@include posix-functions/pthread_attr_setinheritsched.texi
+@include posix-functions/pthread_attr_setschedparam.texi
+@include posix-functions/pthread_attr_setschedpolicy.texi
+@include posix-functions/pthread_attr_setscope.texi
+@include posix-functions/pthread_attr_setstack.texi
+@include posix-functions/pthread_attr_setstacksize.texi
+@include posix-functions/pthread_barrier_destroy.texi
+@include posix-functions/pthread_barrier_init.texi
+@include posix-functions/pthread_barrier_wait.texi
+@include posix-functions/pthread_barrierattr_destroy.texi
+@include posix-functions/pthread_barrierattr_getpshared.texi
+@include posix-functions/pthread_barrierattr_init.texi
+@include posix-functions/pthread_barrierattr_setpshared.texi
+@include posix-functions/pthread_cancel.texi
+@include posix-functions/pthread_cleanup_pop.texi
+@include posix-functions/pthread_cleanup_push.texi
+@include posix-functions/pthread_cond_broadcast.texi
+@include posix-functions/pthread_cond_clockwait.texi
+@include posix-functions/pthread_cond_destroy.texi
+@include posix-functions/pthread_cond_init.texi
+@include posix-functions/pthread_cond_signal.texi
+@include posix-functions/pthread_cond_timedwait.texi
+@include posix-functions/pthread_cond_wait.texi
+@include posix-functions/pthread_condattr_destroy.texi
+@include posix-functions/pthread_condattr_getclock.texi
+@include posix-functions/pthread_condattr_getpshared.texi
+@include posix-functions/pthread_condattr_init.texi
+@include posix-functions/pthread_condattr_setclock.texi
+@include posix-functions/pthread_condattr_setpshared.texi
+@include posix-functions/pthread_create.texi
+@include posix-functions/pthread_detach.texi
+@include posix-functions/pthread_equal.texi
+@include posix-functions/pthread_exit.texi
+@include posix-functions/pthread_getcpuclockid.texi
+@include posix-functions/pthread_getschedparam.texi
+@include posix-functions/pthread_getspecific.texi
+@include posix-functions/pthread_join.texi
+@include posix-functions/pthread_key_create.texi
+@include posix-functions/pthread_key_delete.texi
+@include posix-functions/pthread_mutex_clocklock.texi
+@include posix-functions/pthread_mutex_consistent.texi
+@include posix-functions/pthread_mutex_destroy.texi
+@include posix-functions/pthread_mutex_getprioceiling.texi
+@include posix-functions/pthread_mutex_init.texi
+@include posix-functions/pthread_mutex_lock.texi
+@include posix-functions/pthread_mutex_setprioceiling.texi
+@include posix-functions/pthread_mutex_timedlock.texi
+@include posix-functions/pthread_mutex_trylock.texi
+@include posix-functions/pthread_mutex_unlock.texi
+@include posix-functions/pthread_mutexattr_destroy.texi
+@include posix-functions/pthread_mutexattr_getprioceiling.texi
+@include posix-functions/pthread_mutexattr_getprotocol.texi
+@include posix-functions/pthread_mutexattr_getpshared.texi
+@include posix-functions/pthread_mutexattr_getrobust.texi
+@include posix-functions/pthread_mutexattr_gettype.texi
+@include posix-functions/pthread_mutexattr_init.texi
+@include posix-functions/pthread_mutexattr_setprioceiling.texi
+@include posix-functions/pthread_mutexattr_setprotocol.texi
+@include posix-functions/pthread_mutexattr_setpshared.texi
+@include posix-functions/pthread_mutexattr_setrobust.texi
+@include posix-functions/pthread_mutexattr_settype.texi
+@include posix-functions/pthread_once.texi
+@include posix-functions/pthread_rwlock_clockrdlock.texi
+@include posix-functions/pthread_rwlock_clockwrlock.texi
+@include posix-functions/pthread_rwlock_destroy.texi
+@include posix-functions/pthread_rwlock_init.texi
+@include posix-functions/pthread_rwlock_rdlock.texi
+@include posix-functions/pthread_rwlock_timedrdlock.texi
+@include posix-functions/pthread_rwlock_timedwrlock.texi
+@include posix-functions/pthread_rwlock_tryrdlock.texi
+@include posix-functions/pthread_rwlock_trywrlock.texi
+@include posix-functions/pthread_rwlock_unlock.texi
+@include posix-functions/pthread_rwlock_wrlock.texi
+@include posix-functions/pthread_rwlockattr_destroy.texi
+@include posix-functions/pthread_rwlockattr_getpshared.texi
+@include posix-functions/pthread_rwlockattr_init.texi
+@include posix-functions/pthread_rwlockattr_setpshared.texi
+@include posix-functions/pthread_self.texi
+@include posix-functions/pthread_setcancelstate.texi
+@include posix-functions/pthread_setcanceltype.texi
+@include posix-functions/pthread_setschedparam.texi
+@include posix-functions/pthread_setschedprio.texi
+@include posix-functions/pthread_setspecific.texi
+@include posix-functions/pthread_spin_destroy.texi
+@include posix-functions/pthread_spin_init.texi
+@include posix-functions/pthread_spin_lock.texi
+@include posix-functions/pthread_spin_trylock.texi
+@include posix-functions/pthread_spin_unlock.texi
+@include posix-functions/pthread_testcancel.texi
+
+@node Functions in <pwd.h>
+@section Functions in @code{<pwd.h>}
+
+@menu
+* endpwent::
+* getpwent::
+* getpwnam::
+* getpwnam_r::
+* getpwuid::
+* getpwuid_r::
+* setpwent::
+@end menu
+
+@include posix-functions/endpwent.texi
+@include posix-functions/getpwent.texi
+@include posix-functions/getpwnam.texi
+@include posix-functions/getpwnam_r.texi
+@include posix-functions/getpwuid.texi
+@include posix-functions/getpwuid_r.texi
+@include posix-functions/setpwent.texi
+
+@node Functions in <regex.h>
+@section Functions in @code{<regex.h>}
+
+@menu
+* regcomp::
+* regerror::
+* regexec::
+* regfree::
+@end menu
+
+@include posix-functions/regcomp.texi
+@include posix-functions/regerror.texi
+@include posix-functions/regexec.texi
+@include posix-functions/regfree.texi
+
+@node Functions in <sched.h>
+@section Functions in @code{<sched.h>}
+
+@menu
+* sched_get_priority_max::
+* sched_get_priority_min::
+* sched_getparam::
+* sched_getscheduler::
+* sched_rr_get_interval::
+* sched_setparam::
+* sched_setscheduler::
+* sched_yield::
+@end menu
+
+@include posix-functions/sched_get_priority_max.texi
+@include posix-functions/sched_get_priority_min.texi
+@include posix-functions/sched_getparam.texi
+@include posix-functions/sched_getscheduler.texi
+@include posix-functions/sched_rr_get_interval.texi
+@include posix-functions/sched_setparam.texi
+@include posix-functions/sched_setscheduler.texi
+@include posix-functions/sched_yield.texi
+
+@node Functions in <search.h>
+@section Functions in @code{<search.h>}
+
+@menu
+* hcreate::
+* hdestroy::
+* hsearch::
+* insque::
+* lfind::
+* lsearch::
+* remque::
+* tdelete::
+* tfind::
+* tsearch::
+* twalk::
+@end menu
+
+@include posix-functions/hcreate.texi
+@include posix-functions/hdestroy.texi
+@include posix-functions/hsearch.texi
+@include posix-functions/insque.texi
+@include posix-functions/lfind.texi
+@include posix-functions/lsearch.texi
+@include posix-functions/remque.texi
+@include posix-functions/tdelete.texi
+@include posix-functions/tfind.texi
+@include posix-functions/tsearch.texi
+@include posix-functions/twalk.texi
+
+@node Functions in <semaphore.h>
+@section Functions in @code{<semaphore.h>}
+
+@menu
+* sem_clockwait::
+* sem_close::
+* sem_destroy::
+* sem_getvalue::
+* sem_init::
+* sem_open::
+* sem_post::
+* sem_timedwait::
+* sem_trywait::
+* sem_unlink::
+* sem_wait::
+@end menu
+
+@include posix-functions/sem_clockwait.texi
+@include posix-functions/sem_close.texi
+@include posix-functions/sem_destroy.texi
+@include posix-functions/sem_getvalue.texi
+@include posix-functions/sem_init.texi
+@include posix-functions/sem_open.texi
+@include posix-functions/sem_post.texi
+@include posix-functions/sem_timedwait.texi
+@include posix-functions/sem_trywait.texi
+@include posix-functions/sem_unlink.texi
+@include posix-functions/sem_wait.texi
+
+@node Functions in <setjmp.h>
+@section Functions in @code{<setjmp.h>}
+
+@menu
+* longjmp::
+* setjmp::
+* siglongjmp::
+* sigsetjmp::
+@end menu
+
+@include posix-functions/longjmp.texi
+@include posix-functions/setjmp.texi
+@include posix-functions/siglongjmp.texi
+@include posix-functions/sigsetjmp.texi
+
+@node Functions in <signal.h>
+@section Functions in @code{<signal.h>}
+
+@menu
+* kill::
+* killpg::
+* psiginfo::
+* psignal::
+* pthread_kill::
+* pthread_sigmask::
+* raise::
+* sig2str::
+* sigaction::
+* sigaddset::
+* sigaltstack::
+* sigdelset::
+* sigemptyset::
+* sigfillset::
+* sigismember::
+* signal::
+* sigpending::
+* sigprocmask::
+* sigqueue::
+* sigsuspend::
+* sigtimedwait::
+* sigwait::
+* sigwaitinfo::
+* str2sig::
+@end menu
+
+@include posix-functions/kill.texi
+@include posix-functions/killpg.texi
+@include posix-functions/psiginfo.texi
+@include posix-functions/psignal.texi
+@include posix-functions/pthread_kill.texi
+@include posix-functions/pthread_sigmask.texi
+@include posix-functions/raise.texi
+@include posix-functions/sig2str.texi
+@include posix-functions/sigaction.texi
+@include posix-functions/sigaddset.texi
+@include posix-functions/sigaltstack.texi
+@include posix-functions/sigdelset.texi
+@include posix-functions/sigemptyset.texi
+@include posix-functions/sigfillset.texi
+@include posix-functions/sigismember.texi
+@include posix-functions/signal.texi
+@include posix-functions/sigpending.texi
+@include posix-functions/sigprocmask.texi
+@include posix-functions/sigqueue.texi
+@include posix-functions/sigsuspend.texi
+@include posix-functions/sigtimedwait.texi
+@include posix-functions/sigwait.texi
+@include posix-functions/sigwaitinfo.texi
+@include posix-functions/str2sig.texi
+
+@node Functions in <spawn.h>
+@section Functions in @code{<spawn.h>}
+
+@menu
+* posix_spawn::
+* posix_spawn_file_actions_addchdir::
+* posix_spawn_file_actions_addclose::
+* posix_spawn_file_actions_adddup2::
+* posix_spawn_file_actions_addfchdir::
+* posix_spawn_file_actions_addopen::
+* posix_spawn_file_actions_destroy::
+* posix_spawn_file_actions_init::
+* posix_spawnattr_destroy::
+* posix_spawnattr_getflags::
+* posix_spawnattr_getpgroup::
+* posix_spawnattr_getschedparam::
+* posix_spawnattr_getschedpolicy::
+* posix_spawnattr_getsigdefault::
+* posix_spawnattr_getsigmask::
+* posix_spawnattr_init::
+* posix_spawnattr_setflags::
+* posix_spawnattr_setpgroup::
+* posix_spawnattr_setschedparam::
+* posix_spawnattr_setschedpolicy::
+* posix_spawnattr_setsigdefault::
+* posix_spawnattr_setsigmask::
+* posix_spawnp::
+@end menu
+
+@include posix-functions/posix_spawn.texi
+@include posix-functions/posix_spawn_file_actions_addchdir.texi
+@include posix-functions/posix_spawn_file_actions_addclose.texi
+@include posix-functions/posix_spawn_file_actions_adddup2.texi
+@include posix-functions/posix_spawn_file_actions_addfchdir.texi
+@include posix-functions/posix_spawn_file_actions_addopen.texi
+@include posix-functions/posix_spawn_file_actions_destroy.texi
+@include posix-functions/posix_spawn_file_actions_init.texi
+@include posix-functions/posix_spawnattr_destroy.texi
+@include posix-functions/posix_spawnattr_getflags.texi
+@include posix-functions/posix_spawnattr_getpgroup.texi
+@include posix-functions/posix_spawnattr_getschedparam.texi
+@include posix-functions/posix_spawnattr_getschedpolicy.texi
+@include posix-functions/posix_spawnattr_getsigdefault.texi
+@include posix-functions/posix_spawnattr_getsigmask.texi
+@include posix-functions/posix_spawnattr_init.texi
+@include posix-functions/posix_spawnattr_setflags.texi
+@include posix-functions/posix_spawnattr_setpgroup.texi
+@include posix-functions/posix_spawnattr_setschedparam.texi
+@include posix-functions/posix_spawnattr_setschedpolicy.texi
+@include posix-functions/posix_spawnattr_setsigdefault.texi
+@include posix-functions/posix_spawnattr_setsigmask.texi
+@include posix-functions/posix_spawnp.texi
+
+@c @node Functions in <stdalign.h>
+@c @section Functions in @code{<stdalign.h>}
+
+@node Functions in <stdarg.h>
+@section Functions in @code{<stdarg.h>}
+
+@menu
+* va_arg::
+* va_copy::
+* va_end::
+* va_start::
+@end menu
+
+@include posix-functions/va_arg.texi
+@include posix-functions/va_copy.texi
+@include posix-functions/va_end.texi
+@include posix-functions/va_start.texi
+
+@node Functions in <stdatomic.h>
+@section Functions in @code{<stdatomic.h>}
+
+@menu
+* atomic_compare_exchange_strong::
+* atomic_compare_exchange_strong_explicit::
+* atomic_compare_exchange_weak::
+* atomic_compare_exchange_weak_explicit::
+* atomic_exchange::
+* atomic_exchange_explicit::
+* atomic_fetch_add::
+* atomic_fetch_add_explicit::
+* atomic_fetch_and::
+* atomic_fetch_and_explicit::
+* atomic_fetch_or::
+* atomic_fetch_or_explicit::
+* atomic_fetch_sub::
+* atomic_fetch_sub_explicit::
+* atomic_fetch_xor::
+* atomic_fetch_xor_explicit::
+* atomic_flag_clear::
+* atomic_flag_clear_explicit::
+* atomic_flag_test_and_set::
+* atomic_flag_test_and_set_explicit::
+* atomic_init::
+* atomic_is_lock_free::
+* atomic_load::
+* atomic_load_explicit::
+* atomic_signal_fence::
+* atomic_store::
+* atomic_store_explicit::
+* atomic_thread_fence::
+* kill_dependency::
+@end menu
+
+@include posix-functions/atomic_compare_exchange_strong.texi
+@include posix-functions/atomic_compare_exchange_strong_explicit.texi
+@include posix-functions/atomic_compare_exchange_weak.texi
+@include posix-functions/atomic_compare_exchange_weak_explicit.texi
+@include posix-functions/atomic_exchange.texi
+@include posix-functions/atomic_exchange_explicit.texi
+@include posix-functions/atomic_fetch_add.texi
+@include posix-functions/atomic_fetch_add_explicit.texi
+@include posix-functions/atomic_fetch_and.texi
+@include posix-functions/atomic_fetch_and_explicit.texi
+@include posix-functions/atomic_fetch_or.texi
+@include posix-functions/atomic_fetch_or_explicit.texi
+@include posix-functions/atomic_fetch_sub.texi
+@include posix-functions/atomic_fetch_sub_explicit.texi
+@include posix-functions/atomic_fetch_xor.texi
+@include posix-functions/atomic_fetch_xor_explicit.texi
+@include posix-functions/atomic_flag_clear.texi
+@include posix-functions/atomic_flag_clear_explicit.texi
+@include posix-functions/atomic_flag_test_and_set.texi
+@include posix-functions/atomic_flag_test_and_set_explicit.texi
+@include posix-functions/atomic_init.texi
+@include posix-functions/atomic_is_lock_free.texi
+@include posix-functions/atomic_load.texi
+@include posix-functions/atomic_load_explicit.texi
+@include posix-functions/atomic_signal_fence.texi
+@include posix-functions/atomic_store.texi
+@include posix-functions/atomic_store_explicit.texi
+@include posix-functions/atomic_thread_fence.texi
+@include posix-functions/kill_dependency.texi
+
+@node Functions in <stdbit.h>
+@section Functions in @code{<stdbit.h>}
+
+@menu
+* stdc_bit_ceil::
+* stdc_bit_floor::
+* stdc_bit_width::
+* stdc_count_ones::
+* stdc_count_zeros::
+* stdc_first_leading_one::
+* stdc_first_leading_zero::
+* stdc_first_trailing_one::
+* stdc_first_trailing_zero::
+* stdc_has_single_bit::
+* stdc_leading_ones::
+* stdc_leading_zeros::
+* stdc_trailing_ones::
+* stdc_trailing_zeros::
+@end menu
+
+@include posix-functions/stdc_bit_ceil.texi
+@include posix-functions/stdc_bit_floor.texi
+@include posix-functions/stdc_bit_width.texi
+@include posix-functions/stdc_count_ones.texi
+@include posix-functions/stdc_count_zeros.texi
+@include posix-functions/stdc_first_leading_one.texi
+@include posix-functions/stdc_first_leading_zero.texi
+@include posix-functions/stdc_first_trailing_one.texi
+@include posix-functions/stdc_first_trailing_zero.texi
+@include posix-functions/stdc_has_single_bit.texi
+@include posix-functions/stdc_leading_ones.texi
+@include posix-functions/stdc_leading_zeros.texi
+@include posix-functions/stdc_trailing_ones.texi
+@include posix-functions/stdc_trailing_zeros.texi
+
+@c @node Functions in <stdbool.h>
+@c @section Functions in @code{<stdbool.h>}
+
+@c @node Functions in <stdckdint.h>
+@c @section Functions in @code{<stdckdint.h>}
+
+@c @node Functions in <stddef.h>
+@c @section Functions in @code{<stddef.h>}
+
+@c @node Functions in <stdint.h>
+@c @section Functions in @code{<stdint.h>}
+
+@node Functions in <stdio.h>
+@section Functions in @code{<stdio.h>}
+
+@menu
+* asprintf::
+* clearerr::
+* ctermid::
+* dprintf::
+* fclose::
+* fdopen::
+* feof::
+* ferror::
+* fflush::
+* fgetc::
+* fgetpos::
+* fgets::
+* fileno::
+* flockfile::
+* fmemopen::
+* fopen::
+* fprintf::
+* fputc::
+* fputs::
+* fread::
+* freopen::
+* fscanf::
+* fseek::
+* fseeko::
+* fsetpos::
+* ftell::
+* ftello::
+* ftrylockfile::
+* funlockfile::
+* fwrite::
+* getc::
+* getc_unlocked::
+* getchar::
+* getchar_unlocked::
+* getdelim::
+* getline::
+* open_memstream::
+* pclose::
+* perror::
+* popen::
+* printf::
+* putc::
+* putc_unlocked::
+* putchar::
+* putchar_unlocked::
+* puts::
+* remove::
+* rename::
+* renameat::
+* rewind::
+* scanf::
+* setbuf::
+* setvbuf::
+* snprintf::
+* sprintf::
+* sscanf::
+* stderr::
+* stdin::
+* stdout::
+* tmpfile::
+* tmpnam::
+* ungetc::
+* vasprintf::
+* vdprintf::
+* vfprintf::
+* vfscanf::
+* vprintf::
+* vscanf::
+* vsnprintf::
+* vsprintf::
+* vsscanf::
+@end menu
+
+@include posix-functions/asprintf.texi
+@include posix-functions/clearerr.texi
+@include posix-functions/ctermid.texi
+@include posix-functions/dprintf.texi
+@include posix-functions/fclose.texi
+@include posix-functions/fdopen.texi
+@include posix-functions/feof.texi
+@include posix-functions/ferror.texi
+@include posix-functions/fflush.texi
+@include posix-functions/fgetc.texi
+@include posix-functions/fgetpos.texi
+@include posix-functions/fgets.texi
+@include posix-functions/fileno.texi
+@include posix-functions/flockfile.texi
+@include posix-functions/fmemopen.texi
+@include posix-functions/fopen.texi
+@include posix-functions/fprintf.texi
+@include posix-functions/fputc.texi
+@include posix-functions/fputs.texi
+@include posix-functions/fread.texi
+@include posix-functions/freopen.texi
+@include posix-functions/fscanf.texi
+@include posix-functions/fseek.texi
+@include posix-functions/fseeko.texi
+@include posix-functions/fsetpos.texi
+@include posix-functions/ftell.texi
+@include posix-functions/ftello.texi
+@include posix-functions/ftrylockfile.texi
+@include posix-functions/funlockfile.texi
+@include posix-functions/fwrite.texi
+@include posix-functions/getc.texi
+@include posix-functions/getc_unlocked.texi
+@include posix-functions/getchar.texi
+@include posix-functions/getchar_unlocked.texi
+@include posix-functions/getdelim.texi
+@include posix-functions/getline.texi
+@include posix-functions/open_memstream.texi
+@include posix-functions/pclose.texi
+@include posix-functions/perror.texi
+@include posix-functions/popen.texi
+@include posix-functions/printf.texi
+@include posix-functions/putc.texi
+@include posix-functions/putc_unlocked.texi
+@include posix-functions/putchar.texi
+@include posix-functions/putchar_unlocked.texi
+@include posix-functions/puts.texi
+@include posix-functions/remove.texi
+@include posix-functions/rename.texi
+@include posix-functions/renameat.texi
+@include posix-functions/rewind.texi
+@include posix-functions/scanf.texi
+@include posix-functions/setbuf.texi
+@include posix-functions/setvbuf.texi
+@include posix-functions/snprintf.texi
+@include posix-functions/sprintf.texi
+@include posix-functions/sscanf.texi
+@include posix-functions/stderr.texi
+@include posix-functions/stdin.texi
+@include posix-functions/stdout.texi
+@include posix-functions/tmpfile.texi
+@include posix-functions/tmpnam.texi
+@include posix-functions/ungetc.texi
+@include posix-functions/vasprintf.texi
+@include posix-functions/vdprintf.texi
+@include posix-functions/vfprintf.texi
+@include posix-functions/vfscanf.texi
+@include posix-functions/vprintf.texi
+@include posix-functions/vscanf.texi
+@include posix-functions/vsnprintf.texi
+@include posix-functions/vsprintf.texi
+@include posix-functions/vsscanf.texi
+
+@node Functions in <stdlib.h>
+@section Functions in @code{<stdlib.h>}
+
+@menu
+* _Exit::
+* a64l::
+* abort::
+* abs::
+* aligned_alloc::
+* at_quick_exit::
+* atexit::
+* atof::
+* atoi::
+* atol::
+* atoll::
+* bsearch::
+* calloc::
+* div::
+* drand48::
+* erand48::
+* exit::
+* free::
+* getenv::
+* getsubopt::
+* grantpt::
+* initstate::
+* jrand48::
+* l64a::
+* labs::
+* lcong48::
+* ldiv::
+* llabs::
+* lldiv::
+* lrand48::
+* malloc::
+* mblen::
+* mbstowcs::
+* mbtowc::
+* mkdtemp::
+* mkostemp::
+* mkstemp::
+* mrand48::
+* nrand48::
+* posix_memalign::
+* posix_openpt::
+* ptsname::
+* ptsname_r::
+* putenv::
+* qsort::
+* qsort_r::
+* quick_exit::
+* rand::
+* rand_r::
+* random::
+* realloc::
+* reallocarray::
+* realpath::
+* secure_getenv::
+* seed48::
+* setenv::
+* setkey::
+* setstate::
+* srand::
+* srand48::
+* srandom::
+* strfromd::
+* strfromf::
+* strfroml::
+* strtod::
+* strtof::
+* strtol::
+* strtold::
+* strtoll::
+* strtoul::
+* strtoull::
+* system::
+* unlockpt::
+* unsetenv::
+* wcstombs::
+* wctomb::
+@end menu
+
+@include posix-functions/_Exit_C99.texi
+@include posix-functions/a64l.texi
+@include posix-functions/abort.texi
+@include posix-functions/abs.texi
+@include posix-functions/aligned_alloc.texi
+@include posix-functions/at_quick_exit.texi
+@include posix-functions/atexit.texi
+@include posix-functions/atof.texi
+@include posix-functions/atoi.texi
+@include posix-functions/atol.texi
+@include posix-functions/atoll.texi
+@include posix-functions/bsearch.texi
+@include posix-functions/calloc.texi
+@include posix-functions/div.texi
+@include posix-functions/drand48.texi
+@include posix-functions/erand48.texi
+@include posix-functions/exit.texi
+@include posix-functions/free.texi
+@include posix-functions/getenv.texi
+@include posix-functions/getsubopt.texi
+@include posix-functions/grantpt.texi
+@include posix-functions/initstate.texi
+@include posix-functions/jrand48.texi
+@include posix-functions/l64a.texi
+@include posix-functions/labs.texi
+@include posix-functions/lcong48.texi
+@include posix-functions/ldiv.texi
+@include posix-functions/llabs.texi
+@include posix-functions/lldiv.texi
+@include posix-functions/lrand48.texi
+@include posix-functions/malloc.texi
+@include posix-functions/mblen.texi
+@include posix-functions/mbstowcs.texi
+@include posix-functions/mbtowc.texi
+@include posix-functions/mkdtemp.texi
+@include posix-functions/mkostemp.texi
+@include posix-functions/mkstemp.texi
+@include posix-functions/mrand48.texi
+@include posix-functions/nrand48.texi
+@include posix-functions/posix_memalign.texi
+@include posix-functions/posix_openpt.texi
+@include posix-functions/ptsname.texi
+@include posix-functions/ptsname_r.texi
+@include posix-functions/putenv.texi
+@include posix-functions/qsort.texi
+@include posix-functions/qsort_r.texi
+@include posix-functions/quick_exit.texi
+@include posix-functions/rand.texi
+@include posix-functions/rand_r.texi
+@include posix-functions/random.texi
+@include posix-functions/realloc.texi
+@include posix-functions/reallocarray.texi
+@include posix-functions/realpath.texi
+@include posix-functions/secure_getenv.texi
+@include posix-functions/seed48.texi
+@include posix-functions/setenv.texi
+@include posix-functions/setkey.texi
+@include posix-functions/setstate.texi
+@include posix-functions/srand.texi
+@include posix-functions/srand48.texi
+@include posix-functions/srandom.texi
+@include posix-functions/strfromd.texi
+@include posix-functions/strfromf.texi
+@include posix-functions/strfroml.texi
+@include posix-functions/strtod.texi
+@include posix-functions/strtof.texi
+@include posix-functions/strtol.texi
+@include posix-functions/strtold.texi
+@include posix-functions/strtoll.texi
+@include posix-functions/strtoul.texi
+@include posix-functions/strtoull.texi
+@include posix-functions/system.texi
+@include posix-functions/unlockpt.texi
+@include posix-functions/unsetenv.texi
+@include posix-functions/wcstombs.texi
+@include posix-functions/wctomb.texi
+
+@c @node Functions in <stdnoreturn.h>
+@c @section Functions in @code{<stdnoreturn.h>}
+
+@node Functions in <string.h>
+@section Functions in @code{<string.h>}
+
+@menu
+* memccpy::
+* memchr::
+* memcmp::
+* memcpy::
+* memmem::
+* memmove::
+* memset::
+* memset_explicit::
+* stpcpy::
+* stpncpy::
+* strcat::
+* strchr::
+* strcmp::
+* strcoll::
+* strcoll_l::
+* strcpy::
+* strcspn::
+* strdup::
+* strerror::
+* strerror_l::
+* strerror_r::
+* strlcat::
+* strlcpy::
+* strlen::
+* strncat::
+* strncmp::
+* strncpy::
+* strndup::
+* strnlen::
+* strpbrk::
+* strrchr::
+* strsignal::
+* strspn::
+* strstr::
+* strtok::
+* strtok_r::
+* strxfrm::
+* strxfrm_l::
+@end menu
+
+@include posix-functions/memccpy.texi
+@include posix-functions/memchr.texi
+@include posix-functions/memcmp.texi
+@include posix-functions/memcpy.texi
+@include posix-functions/memmem.texi
+@include posix-functions/memmove.texi
+@include posix-functions/memset.texi
+@include posix-functions/memset_explicit.texi
+@include posix-functions/stpcpy.texi
+@include posix-functions/stpncpy.texi
+@include posix-functions/strcat.texi
+@include posix-functions/strchr.texi
+@include posix-functions/strcmp.texi
+@include posix-functions/strcoll.texi
+@include posix-functions/strcoll_l.texi
+@include posix-functions/strcpy.texi
+@include posix-functions/strcspn.texi
+@include posix-functions/strdup.texi
+@include posix-functions/strerror.texi
+@include posix-functions/strerror_l.texi
+@include posix-functions/strerror_r.texi
+@include posix-functions/strlcat.texi
+@include posix-functions/strlcpy.texi
+@include posix-functions/strlen.texi
+@include posix-functions/strncat.texi
+@include posix-functions/strncmp.texi
+@include posix-functions/strncpy.texi
+@include posix-functions/strndup.texi
+@include posix-functions/strnlen.texi
+@include posix-functions/strpbrk.texi
+@include posix-functions/strrchr.texi
+@include posix-functions/strsignal.texi
+@include posix-functions/strspn.texi
+@include posix-functions/strstr.texi
+@include posix-functions/strtok.texi
+@include posix-functions/strtok_r.texi
+@include posix-functions/strxfrm.texi
+@include posix-functions/strxfrm_l.texi
+
+@node Functions in <strings.h>
+@section Functions in @code{<strings.h>}
+
+@menu
+* ffs::
+* ffsl::
+* ffsll::
+* strcasecmp::
+* strcasecmp_l::
+* strncasecmp::
+* strncasecmp_l::
+@end menu
+
+@include posix-functions/ffs.texi
+@include posix-functions/ffsl.texi
+@include posix-functions/ffsll.texi
+@include posix-functions/strcasecmp.texi
+@include posix-functions/strcasecmp_l.texi
+@include posix-functions/strncasecmp.texi
+@include posix-functions/strncasecmp_l.texi
+
+@c @node Functions in <stropts.h>
+@c @section Functions in @code{<stropts.h>}
+
+@node Functions in <sys/ipc.h>
+@section Functions in @code{<sys/ipc.h>}
+
+@menu
+* ftok::
+@end menu
+
+@include posix-functions/ftok.texi
+
+@node Functions in <sys/mman.h>
+@section Functions in @code{<sys/mman.h>}
+
+@menu
+* mlock::
+* mlockall::
+* mmap::
+* mprotect::
+* msync::
+* munlock::
+* munlockall::
+* munmap::
+* posix_madvise::
+* posix_mem_offset::
+* posix_typed_mem_get_info::
+* posix_typed_mem_open::
+* shm_open::
+* shm_unlink::
+@end menu
+
+@include posix-functions/mlock.texi
+@include posix-functions/mlockall.texi
+@include posix-functions/mmap.texi
+@include posix-functions/mprotect.texi
+@include posix-functions/msync.texi
+@include posix-functions/munlock.texi
+@include posix-functions/munlockall.texi
+@include posix-functions/munmap.texi
+@include posix-functions/posix_madvise.texi
+@include posix-functions/posix_mem_offset.texi
+@include posix-functions/posix_typed_mem_get_info.texi
+@include posix-functions/posix_typed_mem_open.texi
+@include posix-functions/shm_open.texi
+@include posix-functions/shm_unlink.texi
+
+@node Functions in <sys/msg.h>
+@section Functions in @code{<sys/msg.h>}
+
+@menu
+* msgctl::
+* msgget::
+* msgrcv::
+* msgsnd::
+@end menu
+
+@include posix-functions/msgctl.texi
+@include posix-functions/msgget.texi
+@include posix-functions/msgrcv.texi
+@include posix-functions/msgsnd.texi
+
+@node Functions in <sys/resource.h>
+@section Functions in @code{<sys/resource.h>}
+
+@menu
+* getpriority::
+* getrlimit::
+* getrusage::
+* setpriority::
+* setrlimit::
+@end menu
+
+@include posix-functions/getpriority.texi
+@include posix-functions/getrlimit.texi
+@include posix-functions/getrusage.texi
+@include posix-functions/setpriority.texi
+@include posix-functions/setrlimit.texi
+
+@node Functions in <sys/select.h>
+@section Functions in @code{<sys/select.h>}
+
+@menu
+* FD_CLR::
+* FD_ISSET::
+* FD_SET::
+* FD_ZERO::
+* pselect::
+* select::
+@end menu
+
+@include posix-functions/FD_CLR.texi
+@include posix-functions/FD_ISSET.texi
+@include posix-functions/FD_SET.texi
+@include posix-functions/FD_ZERO.texi
+@include posix-functions/pselect.texi
+@include posix-functions/select.texi
+
+@node Functions in <sys/sem.h>
+@section Functions in @code{<sys/sem.h>}
+
+@menu
+* semctl::
+* semget::
+* semop::
+@end menu
+
+@include posix-functions/semctl.texi
+@include posix-functions/semget.texi
+@include posix-functions/semop.texi
+
+@node Functions in <sys/shm.h>
+@section Functions in @code{<sys/shm.h>}
+
+@menu
+* shmat::
+* shmctl::
+* shmdt::
+* shmget::
+@end menu
+
+@include posix-functions/shmat.texi
+@include posix-functions/shmctl.texi
+@include posix-functions/shmdt.texi
+@include posix-functions/shmget.texi
+
+@node Functions in <sys/socket.h>
+@section Functions in @code{<sys/socket.h>}
+
+@menu
+* accept::
+* accept4::
+* bind::
+* connect::
+* getpeername::
+* getsockname::
+* getsockopt::
+* listen::
+* recv::
+* recvfrom::
+* recvmsg::
+* send::
+* sendmsg::
+* sendto::
+* setsockopt::
+* shutdown::
+* sockatmark::
+* socket::
+* socketpair::
+@end menu
+
+@include posix-functions/accept.texi
+@include posix-functions/accept4.texi
+@include posix-functions/bind.texi
+@include posix-functions/connect.texi
+@include posix-functions/getpeername.texi
+@include posix-functions/getsockname.texi
+@include posix-functions/getsockopt.texi
+@include posix-functions/listen.texi
+@include posix-functions/recv.texi
+@include posix-functions/recvfrom.texi
+@include posix-functions/recvmsg.texi
+@include posix-functions/send.texi
+@include posix-functions/sendmsg.texi
+@include posix-functions/sendto.texi
+@include posix-functions/setsockopt.texi
+@include posix-functions/shutdown.texi
+@include posix-functions/sockatmark.texi
+@include posix-functions/socket.texi
+@include posix-functions/socketpair.texi
+
+@node Functions in <sys/stat.h>
+@section Functions in @code{<sys/stat.h>}
+
+@menu
+* chmod::
+* fchmod::
+* fchmodat::
+* fstat::
+* fstatat::
+* futimens::
+* lstat::
+* mkdir::
+* mkdirat::
+* mkfifo::
+* mkfifoat::
+* mknod::
+* mknodat::
+* stat::
+* umask::
+* utimensat::
+@end menu
+
+@include posix-functions/chmod.texi
+@include posix-functions/fchmod.texi
+@include posix-functions/fchmodat.texi
+@include posix-functions/fstat.texi
+@include posix-functions/fstatat.texi
+@include posix-functions/futimens.texi
+@include posix-functions/lstat.texi
+@include posix-functions/mkdir.texi
+@include posix-functions/mkdirat.texi
+@include posix-functions/mkfifo.texi
+@include posix-functions/mkfifoat.texi
+@include posix-functions/mknod.texi
+@include posix-functions/mknodat.texi
+@include posix-functions/stat.texi
+@include posix-functions/umask.texi
+@include posix-functions/utimensat.texi
+
+@node Functions in <sys/statvfs.h>
+@section Functions in @code{<sys/statvfs.h>}
+
+@menu
+* fstatvfs::
+* statvfs::
+@end menu
+
+@include posix-functions/fstatvfs.texi
+@include posix-functions/statvfs.texi
+
+@node Functions in <sys/time.h>
+@section Functions in @code{<sys/time.h>}
+
+@menu
+* utimes::
+@end menu
+
+@include posix-functions/utimes.texi
+
+@c @node Functions in <sys/timeb.h>
+@c @section Functions in @code{<sys/timeb.h>}
+
+@node Functions in <sys/times.h>
+@section Functions in @code{<sys/times.h>}
+
+@menu
+* times::
+@end menu
+
+@include posix-functions/times.texi
+
+@c @node Functions in <sys/types.h>
+@c @section Functions in @code{<sys/types.h>}
+
+@node Functions in <sys/uio.h>
+@section Functions in @code{<sys/uio.h>}
+
+@menu
+* readv::
+* writev::
+@end menu
+
+@include posix-functions/readv.texi
+@include posix-functions/writev.texi
+
+@c @node Functions in <sys/un.h>
+@c @section Functions in @code{<sys/un.h>}
+
+@node Functions in <sys/utsname.h>
+@section Functions in @code{<sys/utsname.h>}
+
+@menu
+* uname::
+@end menu
+
+@include posix-functions/uname.texi
+
+@node Functions in <sys/wait.h>
+@section Functions in @code{<sys/wait.h>}
+
+@menu
+* wait::
+* waitid::
+* waitpid::
+@end menu
+
+@include posix-functions/wait.texi
+@include posix-functions/waitid.texi
+@include posix-functions/waitpid.texi
+
+@node Functions in <syslog.h>
+@section Functions in @code{<syslog.h>}
+
+@menu
+* closelog::
+* openlog::
+* setlogmask::
+* syslog::
+@end menu
+
+@include posix-functions/closelog.texi
+@include posix-functions/openlog.texi
+@include posix-functions/setlogmask.texi
+@include posix-functions/syslog.texi
+
+@c @node Functions in <tar.h>
+@c @section Functions in @code{<tar.h>}
+
+@node Functions in <termios.h>
+@section Functions in @code{<termios.h>}
+
+@menu
+* cfgetispeed::
+* cfgetospeed::
+* cfsetispeed::
+* cfsetospeed::
+* tcdrain::
+* tcflow::
+* tcflush::
+* tcgetattr::
+* tcgetsid::
+* tcgetwinsize::
+* tcsendbreak::
+* tcsetattr::
+* tcsetwinsize::
+@end menu
+
+@include posix-functions/cfgetispeed.texi
+@include posix-functions/cfgetospeed.texi
+@include posix-functions/cfsetispeed.texi
+@include posix-functions/cfsetospeed.texi
+@include posix-functions/tcdrain.texi
+@include posix-functions/tcflow.texi
+@include posix-functions/tcflush.texi
+@include posix-functions/tcgetattr.texi
+@include posix-functions/tcgetsid.texi
+@include posix-functions/tcgetwinsize.texi
+@include posix-functions/tcsendbreak.texi
+@include posix-functions/tcsetattr.texi
+@include posix-functions/tcsetwinsize.texi
+
+@c @node Functions in <tgmath.h>
+@c @section Functions in @code{<tgmath.h>}
+
+@node Functions in <threads.h>
+@section Functions in @code{<threads.h>}
+
+@menu
+* call_once::
+* cnd_broadcast::
+* cnd_destroy::
+* cnd_init::
+* cnd_signal::
+* cnd_timedwait::
+* cnd_wait::
+* mtx_destroy::
+* mtx_init::
+* mtx_lock::
+* mtx_timedlock::
+* mtx_trylock::
+* mtx_unlock::
+* thrd_create::
+* thrd_current::
+* thrd_detach::
+* thrd_equal::
+* thrd_exit::
+* thrd_join::
+* thrd_sleep::
+* thrd_yield::
+* tss_create::
+* tss_delete::
+* tss_get::
+* tss_set::
+@end menu
+
+@include posix-functions/call_once.texi
+@include posix-functions/cnd_broadcast.texi
+@include posix-functions/cnd_destroy.texi
+@include posix-functions/cnd_init.texi
+@include posix-functions/cnd_signal.texi
+@include posix-functions/cnd_timedwait.texi
+@include posix-functions/cnd_wait.texi
+@include posix-functions/mtx_destroy.texi
+@include posix-functions/mtx_init.texi
+@include posix-functions/mtx_lock.texi
+@include posix-functions/mtx_timedlock.texi
+@include posix-functions/mtx_trylock.texi
+@include posix-functions/mtx_unlock.texi
+@include posix-functions/thrd_create.texi
+@include posix-functions/thrd_current.texi
+@include posix-functions/thrd_detach.texi
+@include posix-functions/thrd_equal.texi
+@include posix-functions/thrd_exit.texi
+@include posix-functions/thrd_join.texi
+@include posix-functions/thrd_sleep.texi
+@include posix-functions/thrd_yield.texi
+@include posix-functions/tss_create.texi
+@include posix-functions/tss_delete.texi
+@include posix-functions/tss_get.texi
+@include posix-functions/tss_set.texi
+
+@node Functions in <time.h>
+@section Functions in @code{<time.h>}
+
+@menu
+* asctime::
+* asctime_r::
+* clock::
+* clock_getcpuclockid::
+* clock_getres::
+* clock_gettime::
+* clock_nanosleep::
+* clock_settime::
+* ctime::
+* ctime_r::
+* daylight::
+* difftime::
+* getdate::
+* getdate_err::
+* gmtime::
+* gmtime_r::
+* localtime::
+* localtime_r::
+* mktime::
+* nanosleep::
+* strftime::
+* strftime_l::
+* strptime::
+* time::
+* timegm::
+* timer_create::
+* timer_delete::
+* timer_getoverrun::
+* timer_gettime::
+* timer_settime::
+* timespec_get::
+* timespec_getres::
+* timezone::
+* tzname::
+* tzset::
+@end menu
+
+@include posix-functions/asctime.texi
+@include posix-functions/asctime_r.texi
+@include posix-functions/clock.texi
+@include posix-functions/clock_getcpuclockid.texi
+@include posix-functions/clock_getres.texi
+@include posix-functions/clock_gettime.texi
+@include posix-functions/clock_nanosleep.texi
+@include posix-functions/clock_settime.texi
+@include posix-functions/ctime.texi
+@include posix-functions/ctime_r.texi
+@include posix-functions/daylight.texi
+@include posix-functions/difftime.texi
+@include posix-functions/getdate.texi
+@include posix-functions/getdate_err.texi
+@include posix-functions/gmtime.texi
+@include posix-functions/gmtime_r.texi
+@include posix-functions/localtime.texi
+@include posix-functions/localtime_r.texi
+@include posix-functions/mktime.texi
+@include posix-functions/nanosleep.texi
+@include posix-functions/strftime.texi
+@include posix-functions/strftime_l.texi
+@include posix-functions/strptime.texi
+@include posix-functions/time.texi
+@include posix-functions/timegm.texi
+@include posix-functions/timer_create.texi
+@include posix-functions/timer_delete.texi
+@include posix-functions/timer_getoverrun.texi
+@include posix-functions/timer_gettime.texi
+@include posix-functions/timer_settime.texi
+@include posix-functions/timespec_get.texi
+@include posix-functions/timespec_getres.texi
+@include posix-functions/timezone.texi
+@include posix-functions/tzname.texi
+@include posix-functions/tzset.texi
+
+@c @node Functions in <trace.h>
+@c @section Functions in @code{<trace.h>}
+
+@node Functions in <uchar.h>
+@section Functions in @code{<uchar.h>}
+
+@menu
+* c8rtomb::
+* c16rtomb::
+* c32rtomb::
+* mbrtoc8::
+* mbrtoc16::
+* mbrtoc32::
+@end menu
+
+@include posix-functions/c8rtomb.texi
+@include posix-functions/c16rtomb.texi
+@include posix-functions/c32rtomb.texi
+@include posix-functions/mbrtoc8.texi
+@include posix-functions/mbrtoc16.texi
+@include posix-functions/mbrtoc32.texi
+
+@c @node Functions in <ucontext.h>
+@c @section Functions in @code{<ucontext.h>}
+
+@c @node Functions in <ulimit.h>
+@c @section Functions in @code{<ulimit.h>}
+
+@node Functions in <unistd.h>
+@section Functions in @code{<unistd.h>}
+
+@menu
+* _exit::
+* _Fork::
+* access::
+* alarm::
+* chdir::
+* chown::
+* close::
+* confstr::
+* crypt::
+* dup::
+* dup2::
+* dup3::
+* encrypt::
+* environ::
+* execl::
+* execle::
+* execlp::
+* execv::
+* execve::
+* execvp::
+* faccessat::
+* fchdir::
+* fchown::
+* fchownat::
+* fdatasync::
+* fexecve::
+* fork::
+* fpathconf::
+* fsync::
+* ftruncate::
+* getcwd::
+* getegid::
+* getentropy::
+* geteuid::
+* getgid::
+* getgroups::
+* gethostid::
+* gethostname::
+* getlogin::
+* getlogin_r::
+* getopt::
+* getpgid::
+* getpgrp::
+* getpid::
+* getppid::
+* getresgid::
+* getresuid::
+* getsid::
+* getuid::
+* isatty::
+* lchown::
+* link::
+* linkat::
+* lockf::
+* lseek::
+* nice::
+* optarg::
+* opterr::
+* optind::
+* optopt::
+* pathconf::
+* pause::
+* pipe::
+* pipe2::
+* posix_close::
+* pread::
+* pwrite::
+* read::
+* readlink::
+* readlinkat::
+* rmdir::
+* setegid::
+* seteuid::
+* setgid::
+* setpgid::
+* setregid::
+* setresgid::
+* setresuid::
+* setreuid::
+* setsid::
+* setuid::
+* sleep::
+* swab::
+* symlink::
+* symlinkat::
+* sync::
+* sysconf::
+* tcgetpgrp::
+* tcsetpgrp::
+* truncate::
+* ttyname::
+* ttyname_r::
+* unlink::
+* unlinkat::
+* write::
+@end menu
+
+@include posix-functions/_exit.texi
+@include posix-functions/_Fork.texi
+@include posix-functions/access.texi
+@include posix-functions/alarm.texi
+@include posix-functions/chdir.texi
+@include posix-functions/chown.texi
+@include posix-functions/close.texi
+@include posix-functions/confstr.texi
+@include posix-functions/crypt.texi
+@include posix-functions/dup.texi
+@include posix-functions/dup2.texi
+@include posix-functions/dup3.texi
+@include posix-functions/encrypt.texi
+@include posix-functions/environ.texi
+@include posix-functions/execl.texi
+@include posix-functions/execle.texi
+@include posix-functions/execlp.texi
+@include posix-functions/execv.texi
+@include posix-functions/execve.texi
+@include posix-functions/execvp.texi
+@include posix-functions/faccessat.texi
+@include posix-functions/fchdir.texi
+@include posix-functions/fchown.texi
+@include posix-functions/fchownat.texi
+@include posix-functions/fdatasync.texi
+@include posix-functions/fexecve.texi
+@include posix-functions/fork.texi
+@include posix-functions/fpathconf.texi
+@include posix-functions/fsync.texi
+@include posix-functions/ftruncate.texi
+@include posix-functions/getcwd.texi
+@include posix-functions/getegid.texi
+@include posix-functions/getentropy.texi
+@include posix-functions/geteuid.texi
+@include posix-functions/getgid.texi
+@include posix-functions/getgroups.texi
+@include posix-functions/gethostid.texi
+@include posix-functions/gethostname.texi
+@include posix-functions/getlogin.texi
+@include posix-functions/getlogin_r.texi
+@include posix-functions/getopt.texi
+@include posix-functions/getpgid.texi
+@include posix-functions/getpgrp.texi
+@include posix-functions/getpid.texi
+@include posix-functions/getppid.texi
+@include posix-functions/getresgid.texi
+@include posix-functions/getresuid.texi
+@include posix-functions/getsid.texi
+@include posix-functions/getuid.texi
+@include posix-functions/isatty.texi
+@include posix-functions/lchown.texi
+@include posix-functions/link.texi
+@include posix-functions/linkat.texi
+@include posix-functions/lockf.texi
+@include posix-functions/lseek.texi
+@include posix-functions/nice.texi
+@include posix-functions/optarg.texi
+@include posix-functions/opterr.texi
+@include posix-functions/optind.texi
+@include posix-functions/optopt.texi
+@include posix-functions/pathconf.texi
+@include posix-functions/pause.texi
+@include posix-functions/pipe.texi
+@include posix-functions/pipe2.texi
+@include posix-functions/posix_close.texi
+@include posix-functions/pread.texi
+@include posix-functions/pwrite.texi
+@include posix-functions/read.texi
+@include posix-functions/readlink.texi
+@include posix-functions/readlinkat.texi
+@include posix-functions/rmdir.texi
+@include posix-functions/setegid.texi
+@include posix-functions/seteuid.texi
+@include posix-functions/setgid.texi
+@include posix-functions/setpgid.texi
+@include posix-functions/setregid.texi
+@include posix-functions/setresgid.texi
+@include posix-functions/setresuid.texi
+@include posix-functions/setreuid.texi
+@include posix-functions/setsid.texi
+@include posix-functions/setuid.texi
+@include posix-functions/sleep.texi
+@include posix-functions/swab.texi
+@include posix-functions/symlink.texi
+@include posix-functions/symlinkat.texi
+@include posix-functions/sync.texi
+@include posix-functions/sysconf.texi
+@include posix-functions/tcgetpgrp.texi
+@include posix-functions/tcsetpgrp.texi
+@include posix-functions/truncate.texi
+@include posix-functions/ttyname.texi
+@include posix-functions/ttyname_r.texi
+@include posix-functions/unlink.texi
+@include posix-functions/unlinkat.texi
+@include posix-functions/write.texi
+
+@c @node Functions in <utime.h>
+@c @section Functions in @code{<utime.h>}
+
+@node Functions in <utmpx.h>
+@section Functions in @code{<utmpx.h>}
+
+@menu
+* endutxent::
+* getutxent::
+* getutxid::
+* getutxline::
+* pututxline::
+* setutxent::
+@end menu
+
+@include posix-functions/endutxent.texi
+@include posix-functions/getutxent.texi
+@include posix-functions/getutxid.texi
+@include posix-functions/getutxline.texi
+@include posix-functions/pututxline.texi
+@include posix-functions/setutxent.texi
+
+@node Functions in <wchar.h>
+@section Functions in @code{<wchar.h>}
+
+@menu
+* btowc::
+* fgetwc::
+* fgetws::
+* fputwc::
+* fputws::
+* fwide::
+* fwprintf::
+* fwscanf::
+* getwc::
+* getwchar::
+* mbrlen::
+* mbrtowc::
+* mbsinit::
+* mbsnrtowcs::
+* mbsrtowcs::
+* open_wmemstream::
+* putwc::
+* putwchar::
+* swprintf::
+* swscanf::
+* ungetwc::
+* vfwprintf::
+* vfwscanf::
+* vswprintf::
+* vswscanf::
+* vwprintf::
+* vwscanf::
+* wcpcpy::
+* wcpncpy::
+* wcrtomb::
+* wcscasecmp::
+* wcscasecmp_l::
+* wcscat::
+* wcschr::
+* wcscmp::
+* wcscoll::
+* wcscoll_l::
+* wcscpy::
+* wcscspn::
+* wcsdup::
+* wcsftime::
+* wcslcat::
+* wcslcpy::
+* wcslen::
+* wcsncasecmp::
+* wcsncasecmp_l::
+* wcsncat::
+* wcsncmp::
+* wcsncpy::
+* wcsnlen::
+* wcsnrtombs::
+* wcspbrk::
+* wcsrchr::
+* wcsrtombs::
+* wcsspn::
+* wcsstr::
+* wcstod::
+* wcstof::
+* wcstok::
+* wcstol::
+* wcstold::
+* wcstoll::
+* wcstoul::
+* wcstoull::
+* wcswidth::
+* wcsxfrm::
+* wcsxfrm_l::
+* wctob::
+* wcwidth::
+* wmemchr::
+* wmemcmp::
+* wmemcpy::
+* wmemmove::
+* wmemset::
+* wprintf::
+* wscanf::
+@end menu
+
+@include posix-functions/btowc.texi
+@include posix-functions/fgetwc.texi
+@include posix-functions/fgetws.texi
+@include posix-functions/fputwc.texi
+@include posix-functions/fputws.texi
+@include posix-functions/fwide.texi
+@include posix-functions/fwprintf.texi
+@include posix-functions/fwscanf.texi
+@include posix-functions/getwc.texi
+@include posix-functions/getwchar.texi
+@include posix-functions/mbrlen.texi
+@include posix-functions/mbrtowc.texi
+@include posix-functions/mbsinit.texi
+@include posix-functions/mbsnrtowcs.texi
+@include posix-functions/mbsrtowcs.texi
+@include posix-functions/open_wmemstream.texi
+@include posix-functions/putwc.texi
+@include posix-functions/putwchar.texi
+@include posix-functions/swprintf.texi
+@include posix-functions/swscanf.texi
+@include posix-functions/ungetwc.texi
+@include posix-functions/vfwprintf.texi
+@include posix-functions/vfwscanf.texi
+@include posix-functions/vswprintf.texi
+@include posix-functions/vswscanf.texi
+@include posix-functions/vwprintf.texi
+@include posix-functions/vwscanf.texi
+@include posix-functions/wcpcpy.texi
+@include posix-functions/wcpncpy.texi
+@include posix-functions/wcrtomb.texi
+@include posix-functions/wcscasecmp.texi
+@include posix-functions/wcscasecmp_l.texi
+@include posix-functions/wcscat.texi
+@include posix-functions/wcschr.texi
+@include posix-functions/wcscmp.texi
+@include posix-functions/wcscoll.texi
+@include posix-functions/wcscoll_l.texi
+@include posix-functions/wcscpy.texi
+@include posix-functions/wcscspn.texi
+@include posix-functions/wcsdup.texi
+@include posix-functions/wcsftime.texi
+@include posix-functions/wcslcat.texi
+@include posix-functions/wcslcpy.texi
+@include posix-functions/wcslen.texi
+@include posix-functions/wcsncasecmp.texi
+@include posix-functions/wcsncasecmp_l.texi
+@include posix-functions/wcsncat.texi
+@include posix-functions/wcsncmp.texi
+@include posix-functions/wcsncpy.texi
+@include posix-functions/wcsnlen.texi
+@include posix-functions/wcsnrtombs.texi
+@include posix-functions/wcspbrk.texi
+@include posix-functions/wcsrchr.texi
+@include posix-functions/wcsrtombs.texi
+@include posix-functions/wcsspn.texi
+@include posix-functions/wcsstr.texi
+@include posix-functions/wcstod.texi
+@include posix-functions/wcstof.texi
+@include posix-functions/wcstok.texi
+@include posix-functions/wcstol.texi
+@include posix-functions/wcstold.texi
+@include posix-functions/wcstoll.texi
+@include posix-functions/wcstoul.texi
+@include posix-functions/wcstoull.texi
+@include posix-functions/wcswidth.texi
+@include posix-functions/wcsxfrm.texi
+@include posix-functions/wcsxfrm_l.texi
+@include posix-functions/wctob.texi
+@include posix-functions/wcwidth.texi
+@include posix-functions/wmemchr.texi
+@include posix-functions/wmemcmp.texi
+@include posix-functions/wmemcpy.texi
+@include posix-functions/wmemmove.texi
+@include posix-functions/wmemset.texi
+@include posix-functions/wprintf.texi
+@include posix-functions/wscanf.texi
+
+@node Functions in <wctype.h>
+@section Functions in @code{<wctype.h>}
+
+@menu
 * iswalnum::
 * iswalnum_l::
 * iswalpha::
@@ -1747,202 +4734,113 @@ problems are not worked around by Gnulib.
 * iswupper_l::
 * iswxdigit::
 * iswxdigit_l::
-* isxdigit::
-* isxdigit_l::
-* j0::
-* j1::
-* jn::
-* jrand48::
-* kill::
-* killpg::
-* l64a::
-* labs::
-* lchown::
-* lcong48::
-* ldexp::
-* ldexpf::
-* ldexpl::
-* ldiv::
-* lfind::
-* lgamma::
-* lgammaf::
-* lgammal::
-* link::
-* linkat::
-* lio_listio::
-* listen::
-* llabs::
-* lldiv::
-* llogb::
-* llogbf::
-* llogbl::
-* llrint::
-* llrintf::
-* llrintl::
-* llround::
-* llroundf::
-* llroundl::
-* localeconv::
-* localtime::
-* localtime_r::
-* lockf::
-* log::
-* log10::
-* log10f::
-* log10l::
-* log1p::
-* log1pf::
-* log1pl::
-* log2::
-* log2f::
-* log2l::
-* logb::
-* logbf::
-* logbl::
-* logf::
-* logl::
-* longjmp::
-* lrand48::
-* lrint::
-* lrintf::
-* lrintl::
-* lround::
-* lroundf::
-* lroundl::
-* lsearch::
-* lseek::
-* lstat::
-* malloc::
-* mblen::
-* mbrlen::
-* mbrtoc8::
-* mbrtoc16::
-* mbrtoc32::
-* mbrtowc::
-* mbsinit::
-* mbsnrtowcs::
-* mbsrtowcs::
-* mbstowcs::
-* mbtowc::
-* memccpy::
-* memchr::
-* memcmp::
-* memcpy::
-* memmove::
-* memset::
-* memset_explicit::
-* mkdir::
-* mkdirat::
-* mkdtemp::
-* mkfifo::
-* mkfifoat::
-* mknod::
-* mknodat::
-* mkstemp::
-* mktime::
-* mlock::
-* mlockall::
-* mmap::
-* modf::
-* modff::
-* modfl::
-* mprotect::
-* mq_close::
-* mq_getattr::
-* mq_notify::
-* mq_open::
-* mq_receive::
-* mq_send::
-* mq_setattr::
-* mq_timedreceive::
-* mq_timedsend::
-* mq_unlink::
-* mrand48::
-* msgctl::
-* msgget::
-* msgrcv::
-* msgsnd::
-* msync::
-* mtx_destroy::
-* mtx_init::
-* mtx_lock::
-* mtx_timedlock::
-* mtx_trylock::
-* mtx_unlock::
-* munlock::
-* munlockall::
-* munmap::
-* nan::
-* nanf::
-* nanl::
-* nanosleep::
-* nearbyint::
-* nearbyintf::
-* nearbyintl::
-* newlocale::
-* nextafter::
-* nextafterf::
-* nextafterl::
-* nextdown::
-* nextdownf::
-* nextdownl::
-* nexttoward::
-* nexttowardf::
-* nexttowardl::
-* nextup::
-* nextupf::
-* nextupl::
-* nftw::
-* nice::
-* nl_langinfo::
-* nl_langinfo_l::
-* nrand48::
-* ntohl::
-* ntohs::
-* open::
-* openat::
-* opendir::
-* openlog::
-* open_memstream::
-* open_wmemstream::
-* optarg::
-* opterr::
-* optind::
-* optopt::
-* pathconf::
-* pause::
-* pclose::
-* perror::
-* pipe::
-* poll::
-* popen::
-* posix_fadvise::
-* posix_fallocate::
-* posix_madvise::
-* posix_mem_offset::
-* posix_memalign::
-* posix_openpt::
-* posix_spawn::
-* posix_spawn_file_actions_addclose::
-* posix_spawn_file_actions_adddup2::
-* posix_spawn_file_actions_addopen::
-* posix_spawn_file_actions_destroy::
-* posix_spawn_file_actions_init::
-* posix_spawnattr_destroy::
-* posix_spawnattr_getflags::
-* posix_spawnattr_getpgroup::
-* posix_spawnattr_getschedparam::
-* posix_spawnattr_getschedpolicy::
-* posix_spawnattr_getsigdefault::
-* posix_spawnattr_getsigmask::
-* posix_spawnattr_init::
-* posix_spawnattr_setflags::
-* posix_spawnattr_setpgroup::
-* posix_spawnattr_setschedparam::
-* posix_spawnattr_setschedpolicy::
-* posix_spawnattr_setsigdefault::
-* posix_spawnattr_setsigmask::
-* posix_spawnp::
+* towctrans::
+* towctrans_l::
+* towlower::
+* towlower_l::
+* towupper::
+* towupper_l::
+* wctrans::
+* wctrans_l::
+* wctype::
+* wctype_l::
+@end menu
+
+@include posix-functions/iswalnum.texi
+@include posix-functions/iswalnum_l.texi
+@include posix-functions/iswalpha.texi
+@include posix-functions/iswalpha_l.texi
+@include posix-functions/iswblank.texi
+@include posix-functions/iswblank_l.texi
+@include posix-functions/iswcntrl.texi
+@include posix-functions/iswcntrl_l.texi
+@include posix-functions/iswctype.texi
+@include posix-functions/iswctype_l.texi
+@include posix-functions/iswdigit.texi
+@include posix-functions/iswdigit_l.texi
+@include posix-functions/iswgraph.texi
+@include posix-functions/iswgraph_l.texi
+@include posix-functions/iswlower.texi
+@include posix-functions/iswlower_l.texi
+@include posix-functions/iswprint.texi
+@include posix-functions/iswprint_l.texi
+@include posix-functions/iswpunct.texi
+@include posix-functions/iswpunct_l.texi
+@include posix-functions/iswspace.texi
+@include posix-functions/iswspace_l.texi
+@include posix-functions/iswupper.texi
+@include posix-functions/iswupper_l.texi
+@include posix-functions/iswxdigit.texi
+@include posix-functions/iswxdigit_l.texi
+@include posix-functions/towctrans.texi
+@include posix-functions/towctrans_l.texi
+@include posix-functions/towlower.texi
+@include posix-functions/towlower_l.texi
+@include posix-functions/towupper.texi
+@include posix-functions/towupper_l.texi
+@include posix-functions/wctrans.texi
+@include posix-functions/wctrans_l.texi
+@include posix-functions/wctype.texi
+@include posix-functions/wctype_l.texi
+
+@node Functions in <wordexp.h>
+@section Functions in @code{<wordexp.h>}
+
+@menu
+* wordexp::
+* wordfree::
+@end menu
+
+@include posix-functions/wordexp.texi
+@include posix-functions/wordfree.texi
+
+@node Legacy Function Substitutes
+@chapter Past POSIX Function Substitutes
+
+This chapter describes which functions and function-like macros specified by
+older versions of POSIX are substituted by Gnulib, which
+portability pitfalls are fixed by Gnulib, and which (known) portability
+problems are not worked around by Gnulib.
+
+@nosuchmodulenote function
+
+@menu
+* _longjmp::
+* _setjmp::
+* _tolower::
+* _toupper::
+* bcmp::
+* bcopy::
+* bsd_signal::
+* bzero::
+* ecvt::
+* fattach::
+* fcvt::
+* fdetach::
+* ftime::
+* ftw::
+* gcvt::
+* getcontext::
+* gethostbyaddr::
+* gethostbyname::
+* getitimer::
+* getmsg::
+* getpmsg::
+* gets::
+* gettimeofday::
+* getwd::
+* h_errno::
+@ifhtml
+* _index::
+@end ifhtml
+@ifnothtml
+* index::
+@end ifnothtml
+* ioctl::
+* isascii::
+* isastream::
+* makecontext::
+* mktemp::
 * posix_trace_attr_destroy::
 * posix_trace_attr_getclockres::
 * posix_trace_attr_getcreatetime::
@@ -1993,1897 +4891,139 @@ problems are not worked around by Gnulib.
 * posix_trace_timedgetnext_event::
 * posix_trace_trid_eventid_open::
 * posix_trace_trygetnext_event::
-* posix_typed_mem_get_info::
-* posix_typed_mem_open::
-* pow::
-* powf::
-* powl::
-* pread::
-* printf::
-* pselect::
-* psiginfo::
-* psignal::
-* pthread_atfork::
-* pthread_attr_destroy::
-* pthread_attr_getdetachstate::
-* pthread_attr_getguardsize::
-* pthread_attr_getinheritsched::
-* pthread_attr_getschedparam::
-* pthread_attr_getschedpolicy::
-* pthread_attr_getscope::
-* pthread_attr_getstack::
-* pthread_attr_getstacksize::
-* pthread_attr_init::
-* pthread_attr_setdetachstate::
-* pthread_attr_setguardsize::
-* pthread_attr_setinheritsched::
-* pthread_attr_setschedparam::
-* pthread_attr_setschedpolicy::
-* pthread_attr_setscope::
-* pthread_attr_setstack::
-* pthread_attr_setstacksize::
-* pthread_barrier_destroy::
-* pthread_barrier_init::
-* pthread_barrier_wait::
-* pthread_barrierattr_destroy::
-* pthread_barrierattr_getpshared::
-* pthread_barrierattr_init::
-* pthread_barrierattr_setpshared::
-* pthread_cancel::
-* pthread_cleanup_pop::
-* pthread_cleanup_push::
-* pthread_cond_broadcast::
-* pthread_cond_destroy::
-* pthread_cond_init::
-* pthread_cond_signal::
-* pthread_cond_timedwait::
-* pthread_cond_wait::
-* pthread_condattr_destroy::
-* pthread_condattr_getclock::
-* pthread_condattr_getpshared::
-* pthread_condattr_init::
-* pthread_condattr_setclock::
-* pthread_condattr_setpshared::
-* pthread_create::
-* pthread_detach::
-* pthread_equal::
-* pthread_exit::
-* pthread_getconcurrency::
-* pthread_getcpuclockid::
-* pthread_getschedparam::
-* pthread_getspecific::
-* pthread_join::
-* pthread_key_create::
-* pthread_key_delete::
-* pthread_kill::
-* pthread_mutex_consistent::
-* pthread_mutex_destroy::
-* pthread_mutex_getprioceiling::
-* pthread_mutex_init::
-* pthread_mutex_lock::
-* pthread_mutex_setprioceiling::
-* pthread_mutex_timedlock::
-* pthread_mutex_trylock::
-* pthread_mutex_unlock::
-* pthread_mutexattr_destroy::
-* pthread_mutexattr_getprioceiling::
-* pthread_mutexattr_getprotocol::
-* pthread_mutexattr_getpshared::
-* pthread_mutexattr_getrobust::
-* pthread_mutexattr_gettype::
-* pthread_mutexattr_init::
-* pthread_mutexattr_setprioceiling::
-* pthread_mutexattr_setprotocol::
-* pthread_mutexattr_setpshared::
-* pthread_mutexattr_setrobust::
-* pthread_mutexattr_settype::
-* pthread_once::
-* pthread_rwlock_destroy::
-* pthread_rwlock_init::
-* pthread_rwlock_rdlock::
-* pthread_rwlock_timedrdlock::
-* pthread_rwlock_timedwrlock::
-* pthread_rwlock_tryrdlock::
-* pthread_rwlock_trywrlock::
-* pthread_rwlock_unlock::
-* pthread_rwlock_wrlock::
-* pthread_rwlockattr_destroy::
-* pthread_rwlockattr_getpshared::
-* pthread_rwlockattr_init::
-* pthread_rwlockattr_setpshared::
-* pthread_self::
-* pthread_setcancelstate::
-* pthread_setcanceltype::
-* pthread_setconcurrency::
-* pthread_setschedparam::
-* pthread_setschedprio::
-* pthread_setspecific::
-* pthread_sigmask::
-* pthread_spin_destroy::
-* pthread_spin_init::
-* pthread_spin_lock::
-* pthread_spin_trylock::
-* pthread_spin_unlock::
-* pthread_testcancel::
-* ptsname::
-* putc::
-* putc_unlocked::
-* putchar::
-* putchar_unlocked::
-* putenv::
-* putmsg::
-* putpmsg::
-* puts::
-* pututxline::
-* putwc::
-* putwchar::
-* pwrite::
-* qsort::
-* quick_exit::
-* raise::
-* rand::
-* rand_r::
-* random::
-* read::
-* readdir::
-* readdir_r::
-* readlink::
-* readlinkat::
-* readv::
-* realloc::
-* realpath::
-* recv::
-* recvfrom::
-* recvmsg::
-* regcomp::
-* regerror::
-* regexec::
-* regfree::
-* remainder::
-* remainderf::
-* remainderl::
-* remove::
-* remque::
-* remquo::
-* remquof::
-* remquol::
-* rename::
-* renameat::
-* rewind::
-* rewinddir::
-* rint::
-* rintf::
-* rintl::
-* rmdir::
-* round::
-* roundeven::
-* roundevenf::
-* roundevenl::
-* roundf::
-* roundl::
-* scalbln::
-* scalblnf::
-* scalblnl::
-* scalbn::
-* scalbnf::
-* scalbnl::
-* scandir::
-* scanf::
-* sched_get_priority_max::
-* sched_get_priority_min::
-* sched_getparam::
-* sched_getscheduler::
-* sched_rr_get_interval::
-* sched_setparam::
-* sched_setscheduler::
-* sched_yield::
-* seed48::
-* seekdir::
-* select::
-* sem_close::
-* sem_destroy::
-* sem_getvalue::
-* sem_init::
-* sem_open::
-* sem_post::
-* sem_timedwait::
-* sem_trywait::
-* sem_unlink::
-* sem_wait::
-* semctl::
-* semget::
-* semop::
-* send::
-* sendmsg::
-* sendto::
-* setbuf::
-* setegid::
-* setenv::
-* seteuid::
-* setgid::
-* setgrent::
-* sethostent::
-* setitimer::
-* setjmp::
-* setkey::
-* setlocale::
-* setlogmask::
-* setnetent::
-* setpayload::
-* setpayloadf::
-* setpayloadl::
-* setpayloadsig::
-* setpayloadsigf::
-* setpayloadsigl::
-* setpgid::
-* setpgrp::
-* setpriority::
-* setprotoent::
-* setpwent::
-* setregid::
-* setreuid::
-* setrlimit::
-* setservent::
-* setsid::
-* setsockopt::
-* setstate::
-* setuid::
-* setutxent::
-* setvbuf::
-* shm_open::
-* shm_unlink::
-* shmat::
-* shmctl::
-* shmdt::
-* shmget::
-* shutdown::
-* sigaction::
-* sigaddset::
-* sigaltstack::
-* sigdelset::
-* sigemptyset::
-* sigfillset::
-* sighold::
-* sigignore::
-* siginterrupt::
-* sigismember::
-* siglongjmp::
-* signal::
-* signbit::
-* signgam::
-* sigpause::
-* sigpending::
-* sigprocmask::
-* sigqueue::
-* sigrelse::
-* sigset::
-* sigsetjmp::
-* sigsuspend::
-* sigtimedwait::
-* sigwait::
-* sigwaitinfo::
-* sin::
-* sinf::
-* sinh::
-* sinhf::
-* sinhl::
-* sinl::
-* sleep::
-* snprintf::
-* sockatmark::
-* socket::
-* socketpair::
-* sprintf::
-* sqrt::
-* sqrtf::
-* sqrtl::
-* srand::
-* srand48::
-* srandom::
-* sscanf::
-* stat::
-* statvfs::
-* stderr::
-* stdin::
-* stdout::
-* stpcpy::
-* stpncpy::
-* strcasecmp::
-* strcasecmp_l::
-* strcat::
-* strchr::
-* strcmp::
-* strcoll::
-* strcoll_l::
-* strcpy::
-* strcspn::
-* strdup::
-* strerror::
-* strerror_l::
-* strerror_r::
-* strfmon::
-* strfmon_l::
-* strfromd::
-* strfromf::
-* strfroml::
-* strftime::
-* strftime_l::
-* strlen::
-* strncasecmp::
-* strncasecmp_l::
-* strncat::
-* strncmp::
-* strncpy::
-* strndup::
-* strnlen::
-* strpbrk::
-* strptime::
-* strrchr::
-* strsignal::
-* strspn::
-* strstr::
-* strtod::
-* strtof::
-* strtoimax::
-* strtok::
-* strtok_r::
-* strtol::
-* strtold::
-* strtoll::
-* strtoul::
-* strtoull::
-* strtoumax::
-* strxfrm::
-* strxfrm_l::
-* swab::
-* swprintf::
-* swscanf::
-* symlink::
-* symlinkat::
-* sync::
-* sysconf::
-* syslog::
-* system::
-* tan::
-* tanf::
-* tanh::
-* tanhf::
-* tanhl::
-* tanl::
-* tcdrain::
-* tcflow::
-* tcflush::
-* tcgetattr::
-* tcgetpgrp::
-* tcgetsid::
-* tcsendbreak::
-* tcsetattr::
-* tcsetpgrp::
-* tdelete::
-* telldir::
-* tempnam::
-* tfind::
-* tgamma::
-* tgammaf::
-* tgammal::
-* thrd_create::
-* thrd_current::
-* thrd_detach::
-* thrd_equal::
-* thrd_exit::
-* thrd_join::
-* thrd_sleep::
-* thrd_yield::
-* time::
-* timegm::
-* timer_create::
-* timer_delete::
-* timer_getoverrun::
-* timer_gettime::
-* timer_settime::
-* times::
-* timespec_getres::
-* timezone::
-* tmpfile::
-* tmpnam::
-* toascii::
-* tolower::
-* tolower_l::
-* totalorder::
-* totalorderf::
-* totalorderl::
-* totalordermag::
-* totalordermagf::
-* totalordermagl::
-* toupper::
-* toupper_l::
-* towctrans::
-* towctrans_l::
-* towlower::
-* towlower_l::
-* towupper::
-* towupper_l::
-* trunc::
-* truncate::
-* truncf::
-* truncl::
-* tsearch::
-* tss_create::
-* tss_delete::
-* tss_get::
-* tss_set::
-* ttyname::
-* ttyname_r::
-* twalk::
-* tzname::
-* tzset::
-* ufromfp::
-* ufromfpf::
-* ufromfpl::
-* ufromfpx::
-* ufromfpxf::
-* ufromfpxl::
-* ulimit::
-* umask::
-* uname::
-* ungetc::
-* ungetwc::
-* unlink::
-* unlinkat::
-* unlockpt::
-* unsetenv::
-* uselocale::
-* utime::
-* utimensat::
-* utimes::
-* va_arg::
-* va_copy::
-* va_end::
-* va_start::
-* vdprintf::
-* vfprintf::
-* vfscanf::
-* vfwprintf::
-* vfwscanf::
-* vprintf::
-* vscanf::
-* vsnprintf::
-* vsprintf::
-* vsscanf::
-* vswprintf::
-* vswscanf::
-* vwprintf::
-* vwscanf::
-* wait::
-* waitid::
-* waitpid::
-* wcpcpy::
-* wcpncpy::
-* wcrtomb::
-* wcscasecmp::
-* wcscasecmp_l::
-* wcscat::
-* wcschr::
-* wcscmp::
-* wcscoll::
-* wcscoll_l::
-* wcscpy::
-* wcscspn::
-* wcsdup::
-* wcsftime::
-* wcslen::
-* wcsncasecmp::
-* wcsncasecmp_l::
-* wcsncat::
-* wcsncmp::
-* wcsncpy::
-* wcsnlen::
-* wcsnrtombs::
-* wcspbrk::
-* wcsrchr::
-* wcsrtombs::
-* wcsspn::
-* wcsstr::
-* wcstod::
-* wcstof::
-* wcstoimax::
-* wcstok::
-* wcstol::
-* wcstold::
-* wcstoll::
-* wcstombs::
-* wcstoul::
-* wcstoull::
-* wcstoumax::
-* wcswidth::
-* wcsxfrm::
-* wcsxfrm_l::
-* wctob::
-* wctomb::
-* wctrans::
-* wctrans_l::
-* wctype::
-* wctype_l::
-* wcwidth::
-* wmemchr::
-* wmemcmp::
-* wmemcpy::
-* wmemmove::
-* wmemset::
-* wordexp::
-* wordfree::
-* wprintf::
-* write::
-* writev::
-* wscanf::
-* y0::
-* y1::
-* yn::
-@end menu
-
-@include posix-functions/FD_CLR.texi
-@include posix-functions/FD_ISSET.texi
-@include posix-functions/FD_SET.texi
-@include posix-functions/FD_ZERO.texi
-@include posix-functions/_Exit_C99.texi
-@include posix-functions/_exit.texi
-@include posix-functions/_longjmp.texi
-@include posix-functions/_setjmp.texi
-@include posix-functions/_tolower.texi
-@include posix-functions/_toupper.texi
-@include posix-functions/a64l.texi
-@include posix-functions/abort.texi
-@include posix-functions/abs.texi
-@include posix-functions/accept.texi
-@include posix-functions/access.texi
-@include posix-functions/acos.texi
-@include posix-functions/acosf.texi
-@include posix-functions/acosh.texi
-@include posix-functions/acoshf.texi
-@include posix-functions/acoshl.texi
-@include posix-functions/acosl.texi
-@include posix-functions/aio_cancel.texi
-@include posix-functions/aio_error.texi
-@include posix-functions/aio_fsync.texi
-@include posix-functions/aio_read.texi
-@include posix-functions/aio_return.texi
-@include posix-functions/aio_suspend.texi
-@include posix-functions/aio_write.texi
-@include posix-functions/alarm.texi
-@include posix-functions/aligned_alloc.texi
-@include posix-functions/alphasort.texi
-@include posix-functions/asctime.texi
-@include posix-functions/asctime_r.texi
-@include posix-functions/asin.texi
-@include posix-functions/asinf.texi
-@include posix-functions/asinh.texi
-@include posix-functions/asinhf.texi
-@include posix-functions/asinhl.texi
-@include posix-functions/asinl.texi
-@include posix-functions/assert.texi
-@include posix-functions/atan.texi
-@include posix-functions/atan2.texi
-@include posix-functions/atan2f.texi
-@include posix-functions/atan2l.texi
-@include posix-functions/atanf.texi
-@include posix-functions/atanh.texi
-@include posix-functions/atanhf.texi
-@include posix-functions/atanhl.texi
-@include posix-functions/atanl.texi
-@include posix-functions/atexit.texi
-@include posix-functions/atof.texi
-@include posix-functions/atoi.texi
-@include posix-functions/atol.texi
-@include posix-functions/atoll.texi
-@include posix-functions/basename.texi
-@include posix-functions/bind.texi
-@include posix-functions/bsearch.texi
-@include posix-functions/btowc.texi
-@include posix-functions/c8rtomb.texi
-@include posix-functions/c16rtomb.texi
-@include posix-functions/c32rtomb.texi
-@include posix-functions/cabs.texi
-@include posix-functions/cabsf.texi
-@include posix-functions/cabsl.texi
-@include posix-functions/cacos.texi
-@include posix-functions/cacosf.texi
-@include posix-functions/cacosh.texi
-@include posix-functions/cacoshf.texi
-@include posix-functions/cacoshl.texi
-@include posix-functions/cacosl.texi
-@include posix-functions/calloc.texi
-@include posix-functions/call_once.texi
-@include posix-functions/canonicalize.texi
-@include posix-functions/canonicalizef.texi
-@include posix-functions/canonicalizel.texi
-@include posix-functions/carg.texi
-@include posix-functions/cargf.texi
-@include posix-functions/cargl.texi
-@include posix-functions/casin.texi
-@include posix-functions/casinf.texi
-@include posix-functions/casinh.texi
-@include posix-functions/casinhf.texi
-@include posix-functions/casinhl.texi
-@include posix-functions/casinl.texi
-@include posix-functions/catan.texi
-@include posix-functions/catanf.texi
-@include posix-functions/catanh.texi
-@include posix-functions/catanhf.texi
-@include posix-functions/catanhl.texi
-@include posix-functions/catanl.texi
-@include posix-functions/catclose.texi
-@include posix-functions/catgets.texi
-@include posix-functions/catopen.texi
-@include posix-functions/cbrt.texi
-@include posix-functions/cbrtf.texi
-@include posix-functions/cbrtl.texi
-@include posix-functions/ccos.texi
-@include posix-functions/ccosf.texi
-@include posix-functions/ccosh.texi
-@include posix-functions/ccoshf.texi
-@include posix-functions/ccoshl.texi
-@include posix-functions/ccosl.texi
-@include posix-functions/ceil.texi
-@include posix-functions/ceilf.texi
-@include posix-functions/ceill.texi
-@include posix-functions/cexp.texi
-@include posix-functions/cexpf.texi
-@include posix-functions/cexpl.texi
-@include posix-functions/cfgetispeed.texi
-@include posix-functions/cfgetospeed.texi
-@include posix-functions/cfsetispeed.texi
-@include posix-functions/cfsetospeed.texi
-@include posix-functions/chdir.texi
-@include posix-functions/chmod.texi
-@include posix-functions/chown.texi
-@include posix-functions/cimag.texi
-@include posix-functions/cimagf.texi
-@include posix-functions/cimagl.texi
-@include posix-functions/clearerr.texi
-@include posix-functions/clock.texi
-@include posix-functions/clock_getcpuclockid.texi
-@include posix-functions/clock_getres.texi
-@include posix-functions/clock_gettime.texi
-@include posix-functions/clock_nanosleep.texi
-@include posix-functions/clock_settime.texi
-@include posix-functions/clog.texi
-@include posix-functions/clogf.texi
-@include posix-functions/clogl.texi
-@include posix-functions/close.texi
-@include posix-functions/closedir.texi
-@include posix-functions/closelog.texi
-@include posix-functions/cnd_broadcast.texi
-@include posix-functions/cnd_destroy.texi
-@include posix-functions/cnd_init.texi
-@include posix-functions/cnd_signal.texi
-@include posix-functions/cnd_timedwait.texi
-@include posix-functions/cnd_wait.texi
-@include posix-functions/confstr.texi
-@include posix-functions/conj.texi
-@include posix-functions/conjf.texi
-@include posix-functions/conjl.texi
-@include posix-functions/connect.texi
-@include posix-functions/copysign.texi
-@include posix-functions/copysignf.texi
-@include posix-functions/copysignl.texi
-@include posix-functions/cos.texi
-@include posix-functions/cosf.texi
-@include posix-functions/cosh.texi
-@include posix-functions/coshf.texi
-@include posix-functions/coshl.texi
-@include posix-functions/cosl.texi
-@include posix-functions/cpow.texi
-@include posix-functions/cpowf.texi
-@include posix-functions/cpowl.texi
-@include posix-functions/cproj.texi
-@include posix-functions/cprojf.texi
-@include posix-functions/cprojl.texi
-@include posix-functions/creal.texi
-@include posix-functions/crealf.texi
-@include posix-functions/creall.texi
-@include posix-functions/creat.texi
-@include posix-functions/crypt.texi
-@include posix-functions/csin.texi
-@include posix-functions/csinf.texi
-@include posix-functions/csinh.texi
-@include posix-functions/csinhf.texi
-@include posix-functions/csinhl.texi
-@include posix-functions/csinl.texi
-@include posix-functions/csqrt.texi
-@include posix-functions/csqrtf.texi
-@include posix-functions/csqrtl.texi
-@include posix-functions/ctan.texi
-@include posix-functions/ctanf.texi
-@include posix-functions/ctanh.texi
-@include posix-functions/ctanhf.texi
-@include posix-functions/ctanhl.texi
-@include posix-functions/ctanl.texi
-@include posix-functions/ctermid.texi
-@include posix-functions/ctime.texi
-@include posix-functions/ctime_r.texi
-@include posix-functions/daddl.texi
-@include posix-functions/daylight.texi
-@include posix-functions/dbm_clearerr.texi
-@include posix-functions/dbm_close.texi
-@include posix-functions/dbm_delete.texi
-@include posix-functions/dbm_error.texi
-@include posix-functions/dbm_fetch.texi
-@include posix-functions/dbm_firstkey.texi
-@include posix-functions/dbm_nextkey.texi
-@include posix-functions/dbm_open.texi
-@include posix-functions/dbm_store.texi
-@include posix-functions/ddivl.texi
-@include posix-functions/difftime.texi
-@include posix-functions/dirfd.texi
-@include posix-functions/dirname.texi
-@include posix-functions/div.texi
-@include posix-functions/dlclose.texi
-@include posix-functions/dlerror.texi
-@include posix-functions/dlopen.texi
-@include posix-functions/dlsym.texi
-@include posix-functions/dmull.texi
-@include posix-functions/dprintf.texi
-@include posix-functions/drand48.texi
-@include posix-functions/dsubl.texi
-@include posix-functions/dup.texi
-@include posix-functions/dup2.texi
-@include posix-functions/duplocale.texi
-@include posix-functions/encrypt.texi
-@include posix-functions/endgrent.texi
-@include posix-functions/endhostent.texi
-@include posix-functions/endnetent.texi
-@include posix-functions/endprotoent.texi
-@include posix-functions/endpwent.texi
-@include posix-functions/endservent.texi
-@include posix-functions/endutxent.texi
-@include posix-functions/environ.texi
-@include posix-functions/erand48.texi
-@include posix-functions/erf.texi
-@include posix-functions/erfc.texi
-@include posix-functions/erfcf.texi
-@include posix-functions/erfcl.texi
-@include posix-functions/erff.texi
-@include posix-functions/erfl.texi
-@include posix-functions/errno.texi
-@include posix-functions/execl.texi
-@include posix-functions/execle.texi
-@include posix-functions/execlp.texi
-@include posix-functions/execv.texi
-@include posix-functions/execve.texi
-@include posix-functions/execvp.texi
-@include posix-functions/exit.texi
-@include posix-functions/exp.texi
-@include posix-functions/exp2.texi
-@include posix-functions/exp2f.texi
-@include posix-functions/exp2l.texi
-@include posix-functions/expf.texi
-@include posix-functions/expl.texi
-@include posix-functions/expm1.texi
-@include posix-functions/expm1f.texi
-@include posix-functions/expm1l.texi
-@include posix-functions/fabs.texi
-@include posix-functions/fabsf.texi
-@include posix-functions/fabsl.texi
-@include posix-functions/faccessat.texi
-@include posix-functions/fadd.texi
-@include posix-functions/faddl.texi
-@include posix-functions/fattach.texi
-@include posix-functions/fchdir.texi
-@include posix-functions/fchmod.texi
-@include posix-functions/fchmodat.texi
-@include posix-functions/fchown.texi
-@include posix-functions/fchownat.texi
-@include posix-functions/fclose.texi
-@include posix-functions/fcntl.texi
-@include posix-functions/fdatasync.texi
-@include posix-functions/fdetach.texi
-@include posix-functions/fdim.texi
-@include posix-functions/fdimf.texi
-@include posix-functions/fdiml.texi
-@include posix-functions/fdiv.texi
-@include posix-functions/fdivl.texi
-@include posix-functions/fdopen.texi
-@include posix-functions/fdopendir.texi
-@include posix-functions/feclearexcept.texi
-@include posix-functions/fegetenv.texi
-@include posix-functions/fegetexceptflag.texi
-@include posix-functions/fegetmode.texi
-@include posix-functions/fegetround.texi
-@include posix-functions/feholdexcept.texi
-@include posix-functions/feof.texi
-@include posix-functions/feraiseexcept.texi
-@include posix-functions/ferror.texi
-@include posix-functions/fesetenv.texi
-@include posix-functions/fesetexcept.texi
-@include posix-functions/fesetexceptflag.texi
-@include posix-functions/fesetmode.texi
-@include posix-functions/fesetround.texi
-@include posix-functions/fetestexcept.texi
-@include posix-functions/fetestexceptflag.texi
-@include posix-functions/feupdateenv.texi
-@include posix-functions/fexecve.texi
-@include posix-functions/fflush.texi
-@include posix-functions/ffs.texi
-@include posix-functions/fgetc.texi
-@include posix-functions/fgetpos.texi
-@include posix-functions/fgets.texi
-@include posix-functions/fgetwc.texi
-@include posix-functions/fgetws.texi
-@include posix-functions/fileno.texi
-@include posix-functions/flockfile.texi
-@include posix-functions/floor.texi
-@include posix-functions/floorf.texi
-@include posix-functions/floorl.texi
-@include posix-functions/fma.texi
-@include posix-functions/fmaf.texi
-@include posix-functions/fmal.texi
-@include posix-functions/fmax.texi
-@include posix-functions/fmaxf.texi
-@include posix-functions/fmaxl.texi
-@include posix-functions/fmaxmag.texi
-@include posix-functions/fmaxmagf.texi
-@include posix-functions/fmaxmagl.texi
-@include posix-functions/fmemopen.texi
-@include posix-functions/fmin.texi
-@include posix-functions/fminf.texi
-@include posix-functions/fminl.texi
-@include posix-functions/fminmag.texi
-@include posix-functions/fminmagf.texi
-@include posix-functions/fminmagl.texi
-@include posix-functions/fmod.texi
-@include posix-functions/fmodf.texi
-@include posix-functions/fmodl.texi
-@include posix-functions/fmtmsg.texi
-@include posix-functions/fmul.texi
-@include posix-functions/fmull.texi
-@include posix-functions/fnmatch.texi
-@include posix-functions/fopen.texi
-@include posix-functions/fork.texi
-@include posix-functions/fpathconf.texi
-@include posix-functions/fpclassify.texi
-@include posix-functions/fprintf.texi
-@include posix-functions/fputc.texi
-@include posix-functions/fputs.texi
-@include posix-functions/fputwc.texi
-@include posix-functions/fputws.texi
-@include posix-functions/fread.texi
-@include posix-functions/free.texi
-@include posix-functions/freeaddrinfo.texi
-@include posix-functions/freelocale.texi
-@include posix-functions/freopen.texi
-@include posix-functions/frexp.texi
-@include posix-functions/frexpf.texi
-@include posix-functions/frexpl.texi
-@include posix-functions/fromfp.texi
-@include posix-functions/fromfpf.texi
-@include posix-functions/fromfpl.texi
-@include posix-functions/fromfpx.texi
-@include posix-functions/fromfpxf.texi
-@include posix-functions/fromfpxl.texi
-@include posix-functions/fscanf.texi
-@include posix-functions/fseek.texi
-@include posix-functions/fseeko.texi
-@include posix-functions/fsetpos.texi
-@include posix-functions/fstat.texi
-@include posix-functions/fstatat.texi
-@include posix-functions/fstatvfs.texi
-@include posix-functions/fsub.texi
-@include posix-functions/fsubl.texi
-@include posix-functions/fsync.texi
-@include posix-functions/ftell.texi
-@include posix-functions/ftello.texi
-@include posix-functions/ftok.texi
-@include posix-functions/ftruncate.texi
-@include posix-functions/ftrylockfile.texi
-@include posix-functions/ftw.texi
-@include posix-functions/funlockfile.texi
-@include posix-functions/futimens.texi
-@include posix-functions/fwide.texi
-@include posix-functions/fwprintf.texi
-@include posix-functions/fwrite.texi
-@include posix-functions/fwscanf.texi
-@include posix-functions/gai_strerror.texi
-@include posix-functions/getaddrinfo.texi
-@include posix-functions/getc.texi
-@include posix-functions/getc_unlocked.texi
-@include posix-functions/getchar.texi
-@include posix-functions/getchar_unlocked.texi
-@include posix-functions/getcwd.texi
-@include posix-functions/getdate.texi
-@include posix-functions/getdate_err.texi
-@include posix-functions/getdelim.texi
-@include posix-functions/getegid.texi
-@include posix-functions/getenv.texi
-@include posix-functions/geteuid.texi
-@include posix-functions/getgid.texi
-@include posix-functions/getgrent.texi
-@include posix-functions/getgrgid.texi
-@include posix-functions/getgrgid_r.texi
-@include posix-functions/getgrnam.texi
-@include posix-functions/getgrnam_r.texi
-@include posix-functions/getgroups.texi
-@include posix-functions/gethostent.texi
-@include posix-functions/gethostid.texi
-@include posix-functions/gethostname.texi
-@include posix-functions/getitimer.texi
-@include posix-functions/getline.texi
-@include posix-functions/getlogin.texi
-@include posix-functions/getlogin_r.texi
-@include posix-functions/getmsg.texi
-@include posix-functions/getnameinfo.texi
-@include posix-functions/getnetbyaddr.texi
-@include posix-functions/getnetbyname.texi
-@include posix-functions/getnetent.texi
-@include posix-functions/getopt.texi
-@include posix-functions/getpayload.texi
-@include posix-functions/getpayloadf.texi
-@include posix-functions/getpayloadl.texi
-@include posix-functions/getpeername.texi
-@include posix-functions/getpgid.texi
-@include posix-functions/getpgrp.texi
-@include posix-functions/getpid.texi
-@include posix-functions/getpmsg.texi
-@include posix-functions/getppid.texi
-@include posix-functions/getpriority.texi
-@include posix-functions/getprotobyname.texi
-@include posix-functions/getprotobynumber.texi
-@include posix-functions/getprotoent.texi
-@include posix-functions/getpwent.texi
-@include posix-functions/getpwnam.texi
-@include posix-functions/getpwnam_r.texi
-@include posix-functions/getpwuid.texi
-@include posix-functions/getpwuid_r.texi
-@include posix-functions/getrlimit.texi
-@include posix-functions/getrusage.texi
-@include posix-functions/gets.texi
-@include posix-functions/getservbyname.texi
-@include posix-functions/getservbyport.texi
-@include posix-functions/getservent.texi
-@include posix-functions/getsid.texi
-@include posix-functions/getsockname.texi
-@include posix-functions/getsockopt.texi
-@include posix-functions/getsubopt.texi
-@include posix-functions/gettimeofday.texi
-@include posix-functions/getuid.texi
-@include posix-functions/getutxent.texi
-@include posix-functions/getutxid.texi
-@include posix-functions/getutxline.texi
-@include posix-functions/getwc.texi
-@include posix-functions/getwchar.texi
-@include posix-functions/glob.texi
-@include posix-functions/globfree.texi
-@include posix-functions/gmtime.texi
-@include posix-functions/gmtime_r.texi
-@include posix-functions/grantpt.texi
-@include posix-functions/hcreate.texi
-@include posix-functions/hdestroy.texi
-@include posix-functions/hsearch.texi
-@include posix-functions/htonl.texi
-@include posix-functions/htons.texi
-@include posix-functions/hypot.texi
-@include posix-functions/hypotf.texi
-@include posix-functions/hypotl.texi
-@include posix-functions/iconv.texi
-@include posix-functions/iconv_close.texi
-@include posix-functions/iconv_open.texi
-@include posix-functions/if_freenameindex.texi
-@include posix-functions/if_indextoname.texi
-@include posix-functions/if_nameindex.texi
-@include posix-functions/if_nametoindex.texi
-@include posix-functions/ilogb.texi
-@include posix-functions/ilogbf.texi
-@include posix-functions/ilogbl.texi
-@include posix-functions/imaxabs.texi
-@include posix-functions/imaxdiv.texi
-@include posix-functions/inet_addr.texi
-@include posix-functions/inet_ntoa.texi
-@include posix-functions/inet_ntop.texi
-@include posix-functions/inet_pton.texi
-@include posix-functions/initstate.texi
-@include posix-functions/insque.texi
-@include posix-functions/ioctl.texi
-@include posix-functions/isalnum.texi
-@include posix-functions/isalnum_l.texi
-@include posix-functions/isalpha.texi
-@include posix-functions/isalpha_l.texi
-@include posix-functions/isascii.texi
-@include posix-functions/isastream.texi
-@include posix-functions/isatty.texi
-@include posix-functions/isblank.texi
-@include posix-functions/isblank_l.texi
-@include posix-functions/iscntrl.texi
-@include posix-functions/iscntrl_l.texi
-@include posix-functions/isdigit.texi
-@include posix-functions/isdigit_l.texi
-@include posix-functions/isfinite.texi
-@include posix-functions/isgraph.texi
-@include posix-functions/isgraph_l.texi
-@include posix-functions/isgreater.texi
-@include posix-functions/isgreaterequal.texi
-@include posix-functions/isinf.texi
-@include posix-functions/isless.texi
-@include posix-functions/islessequal.texi
-@include posix-functions/islessgreater.texi
-@include posix-functions/islower.texi
-@include posix-functions/islower_l.texi
-@include posix-functions/isnan.texi
-@include posix-functions/isnormal.texi
-@include posix-functions/isprint.texi
-@include posix-functions/isprint_l.texi
-@include posix-functions/ispunct.texi
-@include posix-functions/ispunct_l.texi
-@include posix-functions/isspace.texi
-@include posix-functions/isspace_l.texi
-@include posix-functions/isunordered.texi
-@include posix-functions/isupper.texi
-@include posix-functions/isupper_l.texi
-@include posix-functions/iswalnum.texi
-@include posix-functions/iswalnum_l.texi
-@include posix-functions/iswalpha.texi
-@include posix-functions/iswalpha_l.texi
-@include posix-functions/iswblank.texi
-@include posix-functions/iswblank_l.texi
-@include posix-functions/iswcntrl.texi
-@include posix-functions/iswcntrl_l.texi
-@include posix-functions/iswctype.texi
-@include posix-functions/iswctype_l.texi
-@include posix-functions/iswdigit.texi
-@include posix-functions/iswdigit_l.texi
-@include posix-functions/iswgraph.texi
-@include posix-functions/iswgraph_l.texi
-@include posix-functions/iswlower.texi
-@include posix-functions/iswlower_l.texi
-@include posix-functions/iswprint.texi
-@include posix-functions/iswprint_l.texi
-@include posix-functions/iswpunct.texi
-@include posix-functions/iswpunct_l.texi
-@include posix-functions/iswspace.texi
-@include posix-functions/iswspace_l.texi
-@include posix-functions/iswupper.texi
-@include posix-functions/iswupper_l.texi
-@include posix-functions/iswxdigit.texi
-@include posix-functions/iswxdigit_l.texi
-@include posix-functions/isxdigit.texi
-@include posix-functions/isxdigit_l.texi
-@include posix-functions/j0.texi
-@include posix-functions/j1.texi
-@include posix-functions/jn.texi
-@include posix-functions/jrand48.texi
-@include posix-functions/kill.texi
-@include posix-functions/killpg.texi
-@include posix-functions/l64a.texi
-@include posix-functions/labs.texi
-@include posix-functions/lchown.texi
-@include posix-functions/lcong48.texi
-@include posix-functions/ldexp.texi
-@include posix-functions/ldexpf.texi
-@include posix-functions/ldexpl.texi
-@include posix-functions/ldiv.texi
-@include posix-functions/lfind.texi
-@include posix-functions/lgamma.texi
-@include posix-functions/lgammaf.texi
-@include posix-functions/lgammal.texi
-@include posix-functions/link.texi
-@include posix-functions/linkat.texi
-@include posix-functions/lio_listio.texi
-@include posix-functions/listen.texi
-@include posix-functions/llabs.texi
-@include posix-functions/lldiv.texi
-@include posix-functions/llogb.texi
-@include posix-functions/llogbf.texi
-@include posix-functions/llogbl.texi
-@include posix-functions/llrint.texi
-@include posix-functions/llrintf.texi
-@include posix-functions/llrintl.texi
-@include posix-functions/llround.texi
-@include posix-functions/llroundf.texi
-@include posix-functions/llroundl.texi
-@include posix-functions/localeconv.texi
-@include posix-functions/localtime.texi
-@include posix-functions/localtime_r.texi
-@include posix-functions/lockf.texi
-@include posix-functions/log.texi
-@include posix-functions/log10.texi
-@include posix-functions/log10f.texi
-@include posix-functions/log10l.texi
-@include posix-functions/log1p.texi
-@include posix-functions/log1pf.texi
-@include posix-functions/log1pl.texi
-@include posix-functions/log2.texi
-@include posix-functions/log2f.texi
-@include posix-functions/log2l.texi
-@include posix-functions/logb.texi
-@include posix-functions/logbf.texi
-@include posix-functions/logbl.texi
-@include posix-functions/logf.texi
-@include posix-functions/logl.texi
-@include posix-functions/longjmp.texi
-@include posix-functions/lrand48.texi
-@include posix-functions/lrint.texi
-@include posix-functions/lrintf.texi
-@include posix-functions/lrintl.texi
-@include posix-functions/lround.texi
-@include posix-functions/lroundf.texi
-@include posix-functions/lroundl.texi
-@include posix-functions/lsearch.texi
-@include posix-functions/lseek.texi
-@include posix-functions/lstat.texi
-@include posix-functions/malloc.texi
-@include posix-functions/mblen.texi
-@include posix-functions/mbrlen.texi
-@include posix-functions/mbrtoc8.texi
-@include posix-functions/mbrtoc16.texi
-@include posix-functions/mbrtoc32.texi
-@include posix-functions/mbrtowc.texi
-@include posix-functions/mbsinit.texi
-@include posix-functions/mbsnrtowcs.texi
-@include posix-functions/mbsrtowcs.texi
-@include posix-functions/mbstowcs.texi
-@include posix-functions/mbtowc.texi
-@include posix-functions/memccpy.texi
-@include posix-functions/memchr.texi
-@include posix-functions/memcmp.texi
-@include posix-functions/memcpy.texi
-@include posix-functions/memmove.texi
-@include posix-functions/memset.texi
-@include posix-functions/memset_explicit.texi
-@include posix-functions/mkdir.texi
-@include posix-functions/mkdirat.texi
-@include posix-functions/mkdtemp.texi
-@include posix-functions/mkfifo.texi
-@include posix-functions/mkfifoat.texi
-@include posix-functions/mknod.texi
-@include posix-functions/mknodat.texi
-@include posix-functions/mkstemp.texi
-@include posix-functions/mktime.texi
-@include posix-functions/mlock.texi
-@include posix-functions/mlockall.texi
-@include posix-functions/mmap.texi
-@include posix-functions/modf.texi
-@include posix-functions/modff.texi
-@include posix-functions/modfl.texi
-@include posix-functions/mprotect.texi
-@include posix-functions/mq_close.texi
-@include posix-functions/mq_getattr.texi
-@include posix-functions/mq_notify.texi
-@include posix-functions/mq_open.texi
-@include posix-functions/mq_receive.texi
-@include posix-functions/mq_send.texi
-@include posix-functions/mq_setattr.texi
-@include posix-functions/mq_timedreceive.texi
-@include posix-functions/mq_timedsend.texi
-@include posix-functions/mq_unlink.texi
-@include posix-functions/mrand48.texi
-@include posix-functions/msgctl.texi
-@include posix-functions/msgget.texi
-@include posix-functions/msgrcv.texi
-@include posix-functions/msgsnd.texi
-@include posix-functions/msync.texi
-@include posix-functions/mtx_destroy.texi
-@include posix-functions/mtx_init.texi
-@include posix-functions/mtx_lock.texi
-@include posix-functions/mtx_timedlock.texi
-@include posix-functions/mtx_trylock.texi
-@include posix-functions/mtx_unlock.texi
-@include posix-functions/munlock.texi
-@include posix-functions/munlockall.texi
-@include posix-functions/munmap.texi
-@include posix-functions/nan.texi
-@include posix-functions/nanf.texi
-@include posix-functions/nanl.texi
-@include posix-functions/nanosleep.texi
-@include posix-functions/nearbyint.texi
-@include posix-functions/nearbyintf.texi
-@include posix-functions/nearbyintl.texi
-@include posix-functions/newlocale.texi
-@include posix-functions/nextafter.texi
-@include posix-functions/nextafterf.texi
-@include posix-functions/nextafterl.texi
-@include posix-functions/nextdown.texi
-@include posix-functions/nextdownf.texi
-@include posix-functions/nextdownl.texi
-@include posix-functions/nexttoward.texi
-@include posix-functions/nexttowardf.texi
-@include posix-functions/nexttowardl.texi
-@include posix-functions/nextup.texi
-@include posix-functions/nextupf.texi
-@include posix-functions/nextupl.texi
-@include posix-functions/nftw.texi
-@include posix-functions/nice.texi
-@include posix-functions/nl_langinfo.texi
-@include posix-functions/nl_langinfo_l.texi
-@include posix-functions/nrand48.texi
-@include posix-functions/ntohl.texi
-@include posix-functions/ntohs.texi
-@include posix-functions/open.texi
-@include posix-functions/openat.texi
-@include posix-functions/opendir.texi
-@include posix-functions/openlog.texi
-@include posix-functions/open_memstream.texi
-@include posix-functions/open_wmemstream.texi
-@include posix-functions/optarg.texi
-@include posix-functions/opterr.texi
-@include posix-functions/optind.texi
-@include posix-functions/optopt.texi
-@include posix-functions/pathconf.texi
-@include posix-functions/pause.texi
-@include posix-functions/pclose.texi
-@include posix-functions/perror.texi
-@include posix-functions/pipe.texi
-@include posix-functions/poll.texi
-@include posix-functions/popen.texi
-@include posix-functions/posix_fadvise.texi
-@include posix-functions/posix_fallocate.texi
-@include posix-functions/posix_madvise.texi
-@include posix-functions/posix_mem_offset.texi
-@include posix-functions/posix_memalign.texi
-@include posix-functions/posix_openpt.texi
-@include posix-functions/posix_spawn.texi
-@include posix-functions/posix_spawn_file_actions_addclose.texi
-@include posix-functions/posix_spawn_file_actions_adddup2.texi
-@include posix-functions/posix_spawn_file_actions_addopen.texi
-@include posix-functions/posix_spawn_file_actions_destroy.texi
-@include posix-functions/posix_spawn_file_actions_init.texi
-@include posix-functions/posix_spawnattr_destroy.texi
-@include posix-functions/posix_spawnattr_getflags.texi
-@include posix-functions/posix_spawnattr_getpgroup.texi
-@include posix-functions/posix_spawnattr_getschedparam.texi
-@include posix-functions/posix_spawnattr_getschedpolicy.texi
-@include posix-functions/posix_spawnattr_getsigdefault.texi
-@include posix-functions/posix_spawnattr_getsigmask.texi
-@include posix-functions/posix_spawnattr_init.texi
-@include posix-functions/posix_spawnattr_setflags.texi
-@include posix-functions/posix_spawnattr_setpgroup.texi
-@include posix-functions/posix_spawnattr_setschedparam.texi
-@include posix-functions/posix_spawnattr_setschedpolicy.texi
-@include posix-functions/posix_spawnattr_setsigdefault.texi
-@include posix-functions/posix_spawnattr_setsigmask.texi
-@include posix-functions/posix_spawnp.texi
-@include posix-functions/posix_trace_attr_destroy.texi
-@include posix-functions/posix_trace_attr_getclockres.texi
-@include posix-functions/posix_trace_attr_getcreatetime.texi
-@include posix-functions/posix_trace_attr_getgenversion.texi
-@include posix-functions/posix_trace_attr_getinherited.texi
-@include posix-functions/posix_trace_attr_getlogfullpolicy.texi
-@include posix-functions/posix_trace_attr_getlogsize.texi
-@include posix-functions/posix_trace_attr_getmaxdatasize.texi
-@include posix-functions/posix_trace_attr_getmaxsystemeventsize.texi
-@include posix-functions/posix_trace_attr_getmaxusereventsize.texi
-@include posix-functions/posix_trace_attr_getname.texi
-@include posix-functions/posix_trace_attr_getstreamfullpolicy.texi
-@include posix-functions/posix_trace_attr_getstreamsize.texi
-@include posix-functions/posix_trace_attr_init.texi
-@include posix-functions/posix_trace_attr_setinherited.texi
-@include posix-functions/posix_trace_attr_setlogfullpolicy.texi
-@include posix-functions/posix_trace_attr_setlogsize.texi
-@include posix-functions/posix_trace_attr_setmaxdatasize.texi
-@include posix-functions/posix_trace_attr_setname.texi
-@include posix-functions/posix_trace_attr_setstreamfullpolicy.texi
-@include posix-functions/posix_trace_attr_setstreamsize.texi
-@include posix-functions/posix_trace_clear.texi
-@include posix-functions/posix_trace_close.texi
-@include posix-functions/posix_trace_create.texi
-@include posix-functions/posix_trace_create_withlog.texi
-@include posix-functions/posix_trace_event.texi
-@include posix-functions/posix_trace_eventid_equal.texi
-@include posix-functions/posix_trace_eventid_get_name.texi
-@include posix-functions/posix_trace_eventid_open.texi
-@include posix-functions/posix_trace_eventset_add.texi
-@include posix-functions/posix_trace_eventset_del.texi
-@include posix-functions/posix_trace_eventset_empty.texi
-@include posix-functions/posix_trace_eventset_fill.texi
-@include posix-functions/posix_trace_eventset_ismember.texi
-@include posix-functions/posix_trace_eventtypelist_getnext_id.texi
-@include posix-functions/posix_trace_eventtypelist_rewind.texi
-@include posix-functions/posix_trace_flush.texi
-@include posix-functions/posix_trace_get_attr.texi
-@include posix-functions/posix_trace_get_filter.texi
-@include posix-functions/posix_trace_get_status.texi
-@include posix-functions/posix_trace_getnext_event.texi
-@include posix-functions/posix_trace_open.texi
-@include posix-functions/posix_trace_rewind.texi
-@include posix-functions/posix_trace_set_filter.texi
-@include posix-functions/posix_trace_shutdown.texi
-@include posix-functions/posix_trace_start.texi
-@include posix-functions/posix_trace_stop.texi
-@include posix-functions/posix_trace_timedgetnext_event.texi
-@include posix-functions/posix_trace_trid_eventid_open.texi
-@include posix-functions/posix_trace_trygetnext_event.texi
-@include posix-functions/posix_typed_mem_get_info.texi
-@include posix-functions/posix_typed_mem_open.texi
-@include posix-functions/pow.texi
-@include posix-functions/powf.texi
-@include posix-functions/powl.texi
-@include posix-functions/pread.texi
-@include posix-functions/printf.texi
-@include posix-functions/pselect.texi
-@include posix-functions/psiginfo.texi
-@include posix-functions/psignal.texi
-@include posix-functions/pthread_atfork.texi
-@include posix-functions/pthread_attr_destroy.texi
-@include posix-functions/pthread_attr_getdetachstate.texi
-@include posix-functions/pthread_attr_getguardsize.texi
-@include posix-functions/pthread_attr_getinheritsched.texi
-@include posix-functions/pthread_attr_getschedparam.texi
-@include posix-functions/pthread_attr_getschedpolicy.texi
-@include posix-functions/pthread_attr_getscope.texi
-@include posix-functions/pthread_attr_getstack.texi
-@include posix-functions/pthread_attr_getstacksize.texi
-@include posix-functions/pthread_attr_init.texi
-@include posix-functions/pthread_attr_setdetachstate.texi
-@include posix-functions/pthread_attr_setguardsize.texi
-@include posix-functions/pthread_attr_setinheritsched.texi
-@include posix-functions/pthread_attr_setschedparam.texi
-@include posix-functions/pthread_attr_setschedpolicy.texi
-@include posix-functions/pthread_attr_setscope.texi
-@include posix-functions/pthread_attr_setstack.texi
-@include posix-functions/pthread_attr_setstacksize.texi
-@include posix-functions/pthread_barrier_destroy.texi
-@include posix-functions/pthread_barrier_init.texi
-@include posix-functions/pthread_barrier_wait.texi
-@include posix-functions/pthread_barrierattr_destroy.texi
-@include posix-functions/pthread_barrierattr_getpshared.texi
-@include posix-functions/pthread_barrierattr_init.texi
-@include posix-functions/pthread_barrierattr_setpshared.texi
-@include posix-functions/pthread_cancel.texi
-@include posix-functions/pthread_cleanup_pop.texi
-@include posix-functions/pthread_cleanup_push.texi
-@include posix-functions/pthread_cond_broadcast.texi
-@include posix-functions/pthread_cond_destroy.texi
-@include posix-functions/pthread_cond_init.texi
-@include posix-functions/pthread_cond_signal.texi
-@include posix-functions/pthread_cond_timedwait.texi
-@include posix-functions/pthread_cond_wait.texi
-@include posix-functions/pthread_condattr_destroy.texi
-@include posix-functions/pthread_condattr_getclock.texi
-@include posix-functions/pthread_condattr_getpshared.texi
-@include posix-functions/pthread_condattr_init.texi
-@include posix-functions/pthread_condattr_setclock.texi
-@include posix-functions/pthread_condattr_setpshared.texi
-@include posix-functions/pthread_create.texi
-@include posix-functions/pthread_detach.texi
-@include posix-functions/pthread_equal.texi
-@include posix-functions/pthread_exit.texi
-@include posix-functions/pthread_getconcurrency.texi
-@include posix-functions/pthread_getcpuclockid.texi
-@include posix-functions/pthread_getschedparam.texi
-@include posix-functions/pthread_getspecific.texi
-@include posix-functions/pthread_join.texi
-@include posix-functions/pthread_key_create.texi
-@include posix-functions/pthread_key_delete.texi
-@include posix-functions/pthread_kill.texi
-@include posix-functions/pthread_mutex_consistent.texi
-@include posix-functions/pthread_mutex_destroy.texi
-@include posix-functions/pthread_mutex_getprioceiling.texi
-@include posix-functions/pthread_mutex_init.texi
-@include posix-functions/pthread_mutex_lock.texi
-@include posix-functions/pthread_mutex_setprioceiling.texi
-@include posix-functions/pthread_mutex_timedlock.texi
-@include posix-functions/pthread_mutex_trylock.texi
-@include posix-functions/pthread_mutex_unlock.texi
-@include posix-functions/pthread_mutexattr_destroy.texi
-@include posix-functions/pthread_mutexattr_getprioceiling.texi
-@include posix-functions/pthread_mutexattr_getprotocol.texi
-@include posix-functions/pthread_mutexattr_getpshared.texi
-@include posix-functions/pthread_mutexattr_getrobust.texi
-@include posix-functions/pthread_mutexattr_gettype.texi
-@include posix-functions/pthread_mutexattr_init.texi
-@include posix-functions/pthread_mutexattr_setprioceiling.texi
-@include posix-functions/pthread_mutexattr_setprotocol.texi
-@include posix-functions/pthread_mutexattr_setpshared.texi
-@include posix-functions/pthread_mutexattr_setrobust.texi
-@include posix-functions/pthread_mutexattr_settype.texi
-@include posix-functions/pthread_once.texi
-@include posix-functions/pthread_rwlock_destroy.texi
-@include posix-functions/pthread_rwlock_init.texi
-@include posix-functions/pthread_rwlock_rdlock.texi
-@include posix-functions/pthread_rwlock_timedrdlock.texi
-@include posix-functions/pthread_rwlock_timedwrlock.texi
-@include posix-functions/pthread_rwlock_tryrdlock.texi
-@include posix-functions/pthread_rwlock_trywrlock.texi
-@include posix-functions/pthread_rwlock_unlock.texi
-@include posix-functions/pthread_rwlock_wrlock.texi
-@include posix-functions/pthread_rwlockattr_destroy.texi
-@include posix-functions/pthread_rwlockattr_getpshared.texi
-@include posix-functions/pthread_rwlockattr_init.texi
-@include posix-functions/pthread_rwlockattr_setpshared.texi
-@include posix-functions/pthread_self.texi
-@include posix-functions/pthread_setcancelstate.texi
-@include posix-functions/pthread_setcanceltype.texi
-@include posix-functions/pthread_setconcurrency.texi
-@include posix-functions/pthread_setschedparam.texi
-@include posix-functions/pthread_setschedprio.texi
-@include posix-functions/pthread_setspecific.texi
-@include posix-functions/pthread_sigmask.texi
-@include posix-functions/pthread_spin_destroy.texi
-@include posix-functions/pthread_spin_init.texi
-@include posix-functions/pthread_spin_lock.texi
-@include posix-functions/pthread_spin_trylock.texi
-@include posix-functions/pthread_spin_unlock.texi
-@include posix-functions/pthread_testcancel.texi
-@include posix-functions/ptsname.texi
-@include posix-functions/putc.texi
-@include posix-functions/putc_unlocked.texi
-@include posix-functions/putchar.texi
-@include posix-functions/putchar_unlocked.texi
-@include posix-functions/putenv.texi
-@include posix-functions/putmsg.texi
-@include posix-functions/putpmsg.texi
-@include posix-functions/puts.texi
-@include posix-functions/pututxline.texi
-@include posix-functions/putwc.texi
-@include posix-functions/putwchar.texi
-@include posix-functions/pwrite.texi
-@include posix-functions/qsort.texi
-@include posix-functions/quick_exit.texi
-@include posix-functions/raise.texi
-@include posix-functions/rand.texi
-@include posix-functions/rand_r.texi
-@include posix-functions/random.texi
-@include posix-functions/read.texi
-@include posix-functions/readdir.texi
-@include posix-functions/readdir_r.texi
-@include posix-functions/readlink.texi
-@include posix-functions/readlinkat.texi
-@include posix-functions/readv.texi
-@include posix-functions/realloc.texi
-@include posix-functions/realpath.texi
-@include posix-functions/recv.texi
-@include posix-functions/recvfrom.texi
-@include posix-functions/recvmsg.texi
-@include posix-functions/regcomp.texi
-@include posix-functions/regerror.texi
-@include posix-functions/regexec.texi
-@include posix-functions/regfree.texi
-@include posix-functions/remainder.texi
-@include posix-functions/remainderf.texi
-@include posix-functions/remainderl.texi
-@include posix-functions/remove.texi
-@include posix-functions/remque.texi
-@include posix-functions/remquo.texi
-@include posix-functions/remquof.texi
-@include posix-functions/remquol.texi
-@include posix-functions/rename.texi
-@include posix-functions/renameat.texi
-@include posix-functions/rewind.texi
-@include posix-functions/rewinddir.texi
-@include posix-functions/rint.texi
-@include posix-functions/rintf.texi
-@include posix-functions/rintl.texi
-@include posix-functions/rmdir.texi
-@include posix-functions/round.texi
-@include posix-functions/roundeven.texi
-@include posix-functions/roundevenf.texi
-@include posix-functions/roundevenl.texi
-@include posix-functions/roundf.texi
-@include posix-functions/roundl.texi
-@include posix-functions/scalbln.texi
-@include posix-functions/scalblnf.texi
-@include posix-functions/scalblnl.texi
-@include posix-functions/scalbn.texi
-@include posix-functions/scalbnf.texi
-@include posix-functions/scalbnl.texi
-@include posix-functions/scandir.texi
-@include posix-functions/scanf.texi
-@include posix-functions/sched_get_priority_max.texi
-@include posix-functions/sched_get_priority_min.texi
-@include posix-functions/sched_getparam.texi
-@include posix-functions/sched_getscheduler.texi
-@include posix-functions/sched_rr_get_interval.texi
-@include posix-functions/sched_setparam.texi
-@include posix-functions/sched_setscheduler.texi
-@include posix-functions/sched_yield.texi
-@include posix-functions/seed48.texi
-@include posix-functions/seekdir.texi
-@include posix-functions/select.texi
-@include posix-functions/sem_close.texi
-@include posix-functions/sem_destroy.texi
-@include posix-functions/sem_getvalue.texi
-@include posix-functions/sem_init.texi
-@include posix-functions/sem_open.texi
-@include posix-functions/sem_post.texi
-@include posix-functions/sem_timedwait.texi
-@include posix-functions/sem_trywait.texi
-@include posix-functions/sem_unlink.texi
-@include posix-functions/sem_wait.texi
-@include posix-functions/semctl.texi
-@include posix-functions/semget.texi
-@include posix-functions/semop.texi
-@include posix-functions/send.texi
-@include posix-functions/sendmsg.texi
-@include posix-functions/sendto.texi
-@include posix-functions/setbuf.texi
-@include posix-functions/setegid.texi
-@include posix-functions/setenv.texi
-@include posix-functions/seteuid.texi
-@include posix-functions/setgid.texi
-@include posix-functions/setgrent.texi
-@include posix-functions/sethostent.texi
-@include posix-functions/setitimer.texi
-@include posix-functions/setjmp.texi
-@include posix-functions/setkey.texi
-@include posix-functions/setlocale.texi
-@include posix-functions/setlogmask.texi
-@include posix-functions/setnetent.texi
-@include posix-functions/setpayload.texi
-@include posix-functions/setpayloadf.texi
-@include posix-functions/setpayloadl.texi
-@include posix-functions/setpayloadsig.texi
-@include posix-functions/setpayloadsigf.texi
-@include posix-functions/setpayloadsigl.texi
-@include posix-functions/setpgid.texi
-@include posix-functions/setpgrp.texi
-@include posix-functions/setpriority.texi
-@include posix-functions/setprotoent.texi
-@include posix-functions/setpwent.texi
-@include posix-functions/setregid.texi
-@include posix-functions/setreuid.texi
-@include posix-functions/setrlimit.texi
-@include posix-functions/setservent.texi
-@include posix-functions/setsid.texi
-@include posix-functions/setsockopt.texi
-@include posix-functions/setstate.texi
-@include posix-functions/setuid.texi
-@include posix-functions/setutxent.texi
-@include posix-functions/setvbuf.texi
-@include posix-functions/shm_open.texi
-@include posix-functions/shm_unlink.texi
-@include posix-functions/shmat.texi
-@include posix-functions/shmctl.texi
-@include posix-functions/shmdt.texi
-@include posix-functions/shmget.texi
-@include posix-functions/shutdown.texi
-@include posix-functions/sigaction.texi
-@include posix-functions/sigaddset.texi
-@include posix-functions/sigaltstack.texi
-@include posix-functions/sigdelset.texi
-@include posix-functions/sigemptyset.texi
-@include posix-functions/sigfillset.texi
-@include posix-functions/sighold.texi
-@include posix-functions/sigignore.texi
-@include posix-functions/siginterrupt.texi
-@include posix-functions/sigismember.texi
-@include posix-functions/siglongjmp.texi
-@include posix-functions/signal.texi
-@include posix-functions/signbit.texi
-@include posix-functions/signgam.texi
-@include posix-functions/sigpause.texi
-@include posix-functions/sigpending.texi
-@include posix-functions/sigprocmask.texi
-@include posix-functions/sigqueue.texi
-@include posix-functions/sigrelse.texi
-@include posix-functions/sigset.texi
-@include posix-functions/sigsetjmp.texi
-@include posix-functions/sigsuspend.texi
-@include posix-functions/sigtimedwait.texi
-@include posix-functions/sigwait.texi
-@include posix-functions/sigwaitinfo.texi
-@include posix-functions/sin.texi
-@include posix-functions/sinf.texi
-@include posix-functions/sinh.texi
-@include posix-functions/sinhf.texi
-@include posix-functions/sinhl.texi
-@include posix-functions/sinl.texi
-@include posix-functions/sleep.texi
-@include posix-functions/snprintf.texi
-@include posix-functions/sockatmark.texi
-@include posix-functions/socket.texi
-@include posix-functions/socketpair.texi
-@include posix-functions/sprintf.texi
-@include posix-functions/sqrt.texi
-@include posix-functions/sqrtf.texi
-@include posix-functions/sqrtl.texi
-@include posix-functions/srand.texi
-@include posix-functions/srand48.texi
-@include posix-functions/srandom.texi
-@include posix-functions/sscanf.texi
-@include posix-functions/stat.texi
-@include posix-functions/statvfs.texi
-@include posix-functions/stderr.texi
-@include posix-functions/stdin.texi
-@include posix-functions/stdout.texi
-@include posix-functions/stpcpy.texi
-@include posix-functions/stpncpy.texi
-@include posix-functions/strcasecmp.texi
-@include posix-functions/strcasecmp_l.texi
-@include posix-functions/strcat.texi
-@include posix-functions/strchr.texi
-@include posix-functions/strcmp.texi
-@include posix-functions/strcoll.texi
-@include posix-functions/strcoll_l.texi
-@include posix-functions/strcpy.texi
-@include posix-functions/strcspn.texi
-@include posix-functions/strdup.texi
-@include posix-functions/strerror.texi
-@include posix-functions/strerror_l.texi
-@include posix-functions/strerror_r.texi
-@include posix-functions/strfmon.texi
-@include posix-functions/strfmon_l.texi
-@include posix-functions/strfromd.texi
-@include posix-functions/strfromf.texi
-@include posix-functions/strfroml.texi
-@include posix-functions/strftime.texi
-@include posix-functions/strftime_l.texi
-@include posix-functions/strlen.texi
-@include posix-functions/strncasecmp.texi
-@include posix-functions/strncasecmp_l.texi
-@include posix-functions/strncat.texi
-@include posix-functions/strncmp.texi
-@include posix-functions/strncpy.texi
-@include posix-functions/strndup.texi
-@include posix-functions/strnlen.texi
-@include posix-functions/strpbrk.texi
-@include posix-functions/strptime.texi
-@include posix-functions/strrchr.texi
-@include posix-functions/strsignal.texi
-@include posix-functions/strspn.texi
-@include posix-functions/strstr.texi
-@include posix-functions/strtod.texi
-@include posix-functions/strtof.texi
-@include posix-functions/strtoimax.texi
-@include posix-functions/strtok.texi
-@include posix-functions/strtok_r.texi
-@include posix-functions/strtol.texi
-@include posix-functions/strtold.texi
-@include posix-functions/strtoll.texi
-@include posix-functions/strtoul.texi
-@include posix-functions/strtoull.texi
-@include posix-functions/strtoumax.texi
-@include posix-functions/strxfrm.texi
-@include posix-functions/strxfrm_l.texi
-@include posix-functions/swab.texi
-@include posix-functions/swprintf.texi
-@include posix-functions/swscanf.texi
-@include posix-functions/symlink.texi
-@include posix-functions/symlinkat.texi
-@include posix-functions/sync.texi
-@include posix-functions/sysconf.texi
-@include posix-functions/syslog.texi
-@include posix-functions/system.texi
-@include posix-functions/tan.texi
-@include posix-functions/tanf.texi
-@include posix-functions/tanh.texi
-@include posix-functions/tanhf.texi
-@include posix-functions/tanhl.texi
-@include posix-functions/tanl.texi
-@include posix-functions/tcdrain.texi
-@include posix-functions/tcflow.texi
-@include posix-functions/tcflush.texi
-@include posix-functions/tcgetattr.texi
-@include posix-functions/tcgetpgrp.texi
-@include posix-functions/tcgetsid.texi
-@include posix-functions/tcsendbreak.texi
-@include posix-functions/tcsetattr.texi
-@include posix-functions/tcsetpgrp.texi
-@include posix-functions/tdelete.texi
-@include posix-functions/telldir.texi
-@include posix-functions/tempnam.texi
-@include posix-functions/tfind.texi
-@include posix-functions/tgamma.texi
-@include posix-functions/tgammaf.texi
-@include posix-functions/tgammal.texi
-@include posix-functions/thrd_create.texi
-@include posix-functions/thrd_current.texi
-@include posix-functions/thrd_detach.texi
-@include posix-functions/thrd_equal.texi
-@include posix-functions/thrd_exit.texi
-@include posix-functions/thrd_join.texi
-@include posix-functions/thrd_sleep.texi
-@include posix-functions/thrd_yield.texi
-@include posix-functions/time.texi
-@include posix-functions/timegm.texi
-@include posix-functions/timer_create.texi
-@include posix-functions/timer_delete.texi
-@include posix-functions/timer_getoverrun.texi
-@include posix-functions/timer_gettime.texi
-@include posix-functions/timer_settime.texi
-@include posix-functions/times.texi
-@include posix-functions/timespec_getres.texi
-@include posix-functions/timezone.texi
-@include posix-functions/tmpfile.texi
-@include posix-functions/tmpnam.texi
-@include posix-functions/toascii.texi
-@include posix-functions/tolower.texi
-@include posix-functions/tolower_l.texi
-@include posix-functions/totalorder.texi
-@include posix-functions/totalorderf.texi
-@include posix-functions/totalorderl.texi
-@include posix-functions/totalordermag.texi
-@include posix-functions/totalordermagf.texi
-@include posix-functions/totalordermagl.texi
-@include posix-functions/toupper.texi
-@include posix-functions/toupper_l.texi
-@include posix-functions/towctrans.texi
-@include posix-functions/towctrans_l.texi
-@include posix-functions/towlower.texi
-@include posix-functions/towlower_l.texi
-@include posix-functions/towupper.texi
-@include posix-functions/towupper_l.texi
-@include posix-functions/trunc.texi
-@include posix-functions/truncate.texi
-@include posix-functions/truncf.texi
-@include posix-functions/truncl.texi
-@include posix-functions/tsearch.texi
-@include posix-functions/tss_create.texi
-@include posix-functions/tss_delete.texi
-@include posix-functions/tss_get.texi
-@include posix-functions/tss_set.texi
-@include posix-functions/ttyname.texi
-@include posix-functions/ttyname_r.texi
-@include posix-functions/twalk.texi
-@include posix-functions/tzname.texi
-@include posix-functions/tzset.texi
-@include posix-functions/ufromfp.texi
-@include posix-functions/ufromfpf.texi
-@include posix-functions/ufromfpl.texi
-@include posix-functions/ufromfpx.texi
-@include posix-functions/ufromfpxf.texi
-@include posix-functions/ufromfpxl.texi
-@include posix-functions/ulimit.texi
-@include posix-functions/umask.texi
-@include posix-functions/uname.texi
-@include posix-functions/ungetc.texi
-@include posix-functions/ungetwc.texi
-@include posix-functions/unlink.texi
-@include posix-functions/unlinkat.texi
-@include posix-functions/unlockpt.texi
-@include posix-functions/unsetenv.texi
-@include posix-functions/uselocale.texi
-@include posix-functions/utime.texi
-@include posix-functions/utimensat.texi
-@include posix-functions/utimes.texi
-@include posix-functions/va_arg.texi
-@include posix-functions/va_copy.texi
-@include posix-functions/va_end.texi
-@include posix-functions/va_start.texi
-@include posix-functions/vdprintf.texi
-@include posix-functions/vfprintf.texi
-@include posix-functions/vfscanf.texi
-@include posix-functions/vfwprintf.texi
-@include posix-functions/vfwscanf.texi
-@include posix-functions/vprintf.texi
-@include posix-functions/vscanf.texi
-@include posix-functions/vsnprintf.texi
-@include posix-functions/vsprintf.texi
-@include posix-functions/vsscanf.texi
-@include posix-functions/vswprintf.texi
-@include posix-functions/vswscanf.texi
-@include posix-functions/vwprintf.texi
-@include posix-functions/vwscanf.texi
-@include posix-functions/wait.texi
-@include posix-functions/waitid.texi
-@include posix-functions/waitpid.texi
-@include posix-functions/wcpcpy.texi
-@include posix-functions/wcpncpy.texi
-@include posix-functions/wcrtomb.texi
-@include posix-functions/wcscasecmp.texi
-@include posix-functions/wcscasecmp_l.texi
-@include posix-functions/wcscat.texi
-@include posix-functions/wcschr.texi
-@include posix-functions/wcscmp.texi
-@include posix-functions/wcscoll.texi
-@include posix-functions/wcscoll_l.texi
-@include posix-functions/wcscpy.texi
-@include posix-functions/wcscspn.texi
-@include posix-functions/wcsdup.texi
-@include posix-functions/wcsftime.texi
-@include posix-functions/wcslen.texi
-@include posix-functions/wcsncasecmp.texi
-@include posix-functions/wcsncasecmp_l.texi
-@include posix-functions/wcsncat.texi
-@include posix-functions/wcsncmp.texi
-@include posix-functions/wcsncpy.texi
-@include posix-functions/wcsnlen.texi
-@include posix-functions/wcsnrtombs.texi
-@include posix-functions/wcspbrk.texi
-@include posix-functions/wcsrchr.texi
-@include posix-functions/wcsrtombs.texi
-@include posix-functions/wcsspn.texi
-@include posix-functions/wcsstr.texi
-@include posix-functions/wcstod.texi
-@include posix-functions/wcstof.texi
-@include posix-functions/wcstoimax.texi
-@include posix-functions/wcstok.texi
-@include posix-functions/wcstol.texi
-@include posix-functions/wcstold.texi
-@include posix-functions/wcstoll.texi
-@include posix-functions/wcstombs.texi
-@include posix-functions/wcstoul.texi
-@include posix-functions/wcstoull.texi
-@include posix-functions/wcstoumax.texi
-@include posix-functions/wcswidth.texi
-@include posix-functions/wcsxfrm.texi
-@include posix-functions/wcsxfrm_l.texi
-@include posix-functions/wctob.texi
-@include posix-functions/wctomb.texi
-@include posix-functions/wctrans.texi
-@include posix-functions/wctrans_l.texi
-@include posix-functions/wctype.texi
-@include posix-functions/wctype_l.texi
-@include posix-functions/wcwidth.texi
-@include posix-functions/wmemchr.texi
-@include posix-functions/wmemcmp.texi
-@include posix-functions/wmemcpy.texi
-@include posix-functions/wmemmove.texi
-@include posix-functions/wmemset.texi
-@include posix-functions/wordexp.texi
-@include posix-functions/wordfree.texi
-@include posix-functions/wprintf.texi
-@include posix-functions/write.texi
-@include posix-functions/writev.texi
-@include posix-functions/wscanf.texi
-@include posix-functions/y0.texi
-@include posix-functions/y1.texi
-@include posix-functions/yn.texi
-
-@node Legacy Function Substitutes
-@chapter Past POSIX Function Substitutes
-
-This chapter describes which functions and function-like macros specified by
-older versions of POSIX are substituted by Gnulib, which
-portability pitfalls are fixed by Gnulib, and which (known) portability
-problems are not worked around by Gnulib.
-
-@nosuchmodulenote function
-
-@menu
-* bcmp::
-* bcopy::
-* bsd_signal::
-* bzero::
-* ecvt::
-* fcvt::
-* ftime::
-* gcvt::
-* getcontext::
-* gethostbyaddr::
-* gethostbyname::
-* getwd::
-* h_errno::
-@ifhtml
-* _index::
-@end ifhtml
-@ifnothtml
-* index::
-@end ifnothtml
-* makecontext::
-* mktemp::
 * pthread_attr_getstackaddr::
 * pthread_attr_setstackaddr::
+* pthread_getconcurrency::
+* pthread_setconcurrency::
+* putmsg::
+* putpmsg::
 * rindex::
 * scalb::
 * setcontext::
+* setitimer::
+* setpgrp::
+* sighold::
+* sigignore::
+* siginterrupt::
+* sigpause::
+* sigrelse::
+* sigset::
 * swapcontext::
+* tempnam::
+* toascii::
 * ualarm::
+* ulimit::
 * usleep::
+* utime::
 * vfork::
 * wcswcs::
 @end menu
 
+@include pastposix-functions/_longjmp.texi
+@include pastposix-functions/_setjmp.texi
+@include pastposix-functions/_tolower.texi
+@include pastposix-functions/_toupper.texi
 @include pastposix-functions/bcmp.texi
 @include pastposix-functions/bcopy.texi
 @include pastposix-functions/bsd_signal.texi
 @include pastposix-functions/bzero.texi
 @include pastposix-functions/ecvt.texi
+@include pastposix-functions/fattach.texi
 @include pastposix-functions/fcvt.texi
+@include pastposix-functions/fdetach.texi
 @include pastposix-functions/ftime.texi
+@include pastposix-functions/ftw.texi
 @include pastposix-functions/gcvt.texi
 @include pastposix-functions/getcontext.texi
 @include pastposix-functions/gethostbyaddr.texi
 @include pastposix-functions/gethostbyname.texi
+@include pastposix-functions/getitimer.texi
+@include pastposix-functions/getmsg.texi
+@include pastposix-functions/getpmsg.texi
+@include pastposix-functions/gets.texi
+@include pastposix-functions/gettimeofday.texi
 @include pastposix-functions/getwd.texi
 @include pastposix-functions/h_errno.texi
 @include pastposix-functions/index.texi
+@include pastposix-functions/ioctl.texi
+@include pastposix-functions/isascii.texi
+@include pastposix-functions/isastream.texi
 @include pastposix-functions/makecontext.texi
 @include pastposix-functions/mktemp.texi
+@include pastposix-functions/posix_trace_attr_destroy.texi
+@include pastposix-functions/posix_trace_attr_getclockres.texi
+@include pastposix-functions/posix_trace_attr_getcreatetime.texi
+@include pastposix-functions/posix_trace_attr_getgenversion.texi
+@include pastposix-functions/posix_trace_attr_getinherited.texi
+@include pastposix-functions/posix_trace_attr_getlogfullpolicy.texi
+@include pastposix-functions/posix_trace_attr_getlogsize.texi
+@include pastposix-functions/posix_trace_attr_getmaxdatasize.texi
+@include pastposix-functions/posix_trace_attr_getmaxsystemeventsize.texi
+@include pastposix-functions/posix_trace_attr_getmaxusereventsize.texi
+@include pastposix-functions/posix_trace_attr_getname.texi
+@include pastposix-functions/posix_trace_attr_getstreamfullpolicy.texi
+@include pastposix-functions/posix_trace_attr_getstreamsize.texi
+@include pastposix-functions/posix_trace_attr_init.texi
+@include pastposix-functions/posix_trace_attr_setinherited.texi
+@include pastposix-functions/posix_trace_attr_setlogfullpolicy.texi
+@include pastposix-functions/posix_trace_attr_setlogsize.texi
+@include pastposix-functions/posix_trace_attr_setmaxdatasize.texi
+@include pastposix-functions/posix_trace_attr_setname.texi
+@include pastposix-functions/posix_trace_attr_setstreamfullpolicy.texi
+@include pastposix-functions/posix_trace_attr_setstreamsize.texi
+@include pastposix-functions/posix_trace_clear.texi
+@include pastposix-functions/posix_trace_close.texi
+@include pastposix-functions/posix_trace_create.texi
+@include pastposix-functions/posix_trace_create_withlog.texi
+@include pastposix-functions/posix_trace_event.texi
+@include pastposix-functions/posix_trace_eventid_equal.texi
+@include pastposix-functions/posix_trace_eventid_get_name.texi
+@include pastposix-functions/posix_trace_eventid_open.texi
+@include pastposix-functions/posix_trace_eventset_add.texi
+@include pastposix-functions/posix_trace_eventset_del.texi
+@include pastposix-functions/posix_trace_eventset_empty.texi
+@include pastposix-functions/posix_trace_eventset_fill.texi
+@include pastposix-functions/posix_trace_eventset_ismember.texi
+@include pastposix-functions/posix_trace_eventtypelist_getnext_id.texi
+@include pastposix-functions/posix_trace_eventtypelist_rewind.texi
+@include pastposix-functions/posix_trace_flush.texi
+@include pastposix-functions/posix_trace_get_attr.texi
+@include pastposix-functions/posix_trace_get_filter.texi
+@include pastposix-functions/posix_trace_get_status.texi
+@include pastposix-functions/posix_trace_getnext_event.texi
+@include pastposix-functions/posix_trace_open.texi
+@include pastposix-functions/posix_trace_rewind.texi
+@include pastposix-functions/posix_trace_set_filter.texi
+@include pastposix-functions/posix_trace_shutdown.texi
+@include pastposix-functions/posix_trace_start.texi
+@include pastposix-functions/posix_trace_stop.texi
+@include pastposix-functions/posix_trace_timedgetnext_event.texi
+@include pastposix-functions/posix_trace_trid_eventid_open.texi
+@include pastposix-functions/posix_trace_trygetnext_event.texi
 @include pastposix-functions/pthread_attr_getstackaddr.texi
 @include pastposix-functions/pthread_attr_setstackaddr.texi
+@include pastposix-functions/pthread_getconcurrency.texi
+@include pastposix-functions/pthread_setconcurrency.texi
+@include pastposix-functions/putmsg.texi
+@include pastposix-functions/putpmsg.texi
 @include pastposix-functions/rindex.texi
 @include pastposix-functions/scalb.texi
 @include pastposix-functions/setcontext.texi
+@include pastposix-functions/setitimer.texi
+@include pastposix-functions/setpgrp.texi
+@include pastposix-functions/sighold.texi
+@include pastposix-functions/sigignore.texi
+@include pastposix-functions/siginterrupt.texi
+@include pastposix-functions/sigpause.texi
+@include pastposix-functions/sigrelse.texi
+@include pastposix-functions/sigset.texi
 @include pastposix-functions/swapcontext.texi
+@include pastposix-functions/tempnam.texi
+@include pastposix-functions/toascii.texi
 @include pastposix-functions/ualarm.texi
+@include pastposix-functions/ulimit.texi
 @include pastposix-functions/usleep.texi
+@include pastposix-functions/utime.texi
 @include pastposix-functions/vfork.texi
 @include pastposix-functions/wcswcs.texi
 
@@ -3906,7 +5046,6 @@ not worked around by Gnulib.
 * argz.h::
 * byteswap.h::
 * crypt.h::
-* endian.h::
 * envz.h::
 * err.h::
 * error.h::
@@ -3918,7 +5057,6 @@ not worked around by Gnulib.
 * gshadow.h::
 * ieee754.h::
 * ifaddrs.h::
-* libintl.h::
 * link.h::
 * malloc.h::
 * mcheck.h::
@@ -3945,7 +5083,6 @@ not worked around by Gnulib.
 @include glibc-headers/argz.texi
 @include glibc-headers/byteswap.texi
 @include glibc-headers/crypt.texi
-@include glibc-headers/endian.texi
 @include glibc-headers/envz.texi
 @include glibc-headers/err.texi
 @include glibc-headers/error.texi
@@ -3957,7 +5094,6 @@ not worked around by Gnulib.
 @include glibc-headers/gshadow.texi
 @include glibc-headers/ieee754.texi
 @include glibc-headers/ifaddrs.texi
-@include glibc-headers/libintl.texi
 @include glibc-headers/link.texi
 @include glibc-headers/malloc.texi
 @include glibc-headers/mcheck.texi
@@ -3993,6 +5129,7 @@ This list of functions is sorted according to the header that declares them.
 * Glibc argp.h::
 * Glibc argz.h::
 * Glibc arpa/inet.h::
+* Glibc arpa/nameser.h::
 * Glibc byteswap.h::
 * Glibc complex.h::
 * Glibc ctype.h::
@@ -4014,7 +5151,6 @@ This list of functions is sorted according to the header that declares them.
 * Glibc grp.h::
 * Glibc gshadow.h::
 * Glibc ifaddrs.h::
-* Glibc libintl.h::
 * Glibc link.h::
 * Glibc malloc.h::
 * Glibc math.h::
@@ -4024,7 +5160,6 @@ This list of functions is sorted according to the header that declares them.
 * Glibc netinet/ether.h::
 * Glibc netinet/in.h::
 * Glibc obstack.h::
-* Glibc poll.h::
 * Glibc printf.h::
 * Glibc pthread.h::
 * Glibc pty.h::
@@ -4051,7 +5186,6 @@ This list of functions is sorted according to the header that declares them.
 * Glibc sched.h::
 * Glibc search.h::
 * Glibc selinux/selinux.h::
-* Glibc semaphore.h::
 * Glibc shadow.h::
 * Glibc signal.h::
 * Glibc spawn.h::
@@ -4073,6 +5207,7 @@ This list of functions is sorted according to the header that declares them.
 * Glibc sys/mman.h::
 * Glibc sys/mount.h::
 * Glibc sys/personality.h::
+* Glibc sys/pidfd.h::
 * Glibc sys/prctl.h::
 * Glibc sys/profil.h::
 * Glibc sys/ptrace.h::
@@ -4229,6 +5364,27 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/inet_nsap_addr.texi
 @include glibc-functions/inet_nsap_ntoa.texi
 
+@node Glibc arpa/nameser.h
+@section Glibc Extensions to @code{<arpa/nameser.h>}
+
+@menu
+* ns_name_compress::
+* ns_name_ntop::
+* ns_name_pack::
+* ns_name_pton::
+* ns_name_skip::
+* ns_name_uncompress::
+* ns_name_unpack::
+@end menu
+
+@include glibc-functions/ns_name_compress.texi
+@include glibc-functions/ns_name_ntop.texi
+@include glibc-functions/ns_name_pack.texi
+@include glibc-functions/ns_name_pton.texi
+@include glibc-functions/ns_name_skip.texi
+@include glibc-functions/ns_name_uncompress.texi
+@include glibc-functions/ns_name_unpack.texi
+
 @c @node Glibc assert.h
 @c @section Glibc Extensions to @code{<assert.h>}
 
@@ -4290,18 +5446,18 @@ This list of functions is sorted according to the header that declares them.
 @section Glibc Extensions to @code{<dlfcn.h>}
 
 @menu
-* dladdr::
 * dladdr1::
 * dlinfo::
 * dlmopen::
 * dlvsym::
+* _dl_find_object::
 @end menu
 
-@include glibc-functions/dladdr.texi
 @include glibc-functions/dladdr1.texi
 @include glibc-functions/dlinfo.texi
 @include glibc-functions/dlmopen.texi
 @include glibc-functions/dlvsym.texi
+@include glibc-functions/_dl_find_object.texi
 
 @c @node Glibc endian.h
 @c @section Glibc @code{<endian.h>}
@@ -4584,30 +5740,8 @@ This list of functions is sorted according to the header that declares them.
 @c @node Glibc libgen.h
 @c @section Glibc Extensions to @code{<libgen.h>}
 
-@node Glibc libintl.h
-@section Glibc @code{<libintl.h>}
-
-@menu
-* bind_textdomain_codeset::
-* bindtextdomain::
-* dcgettext::
-* dcngettext::
-* dgettext::
-* dngettext::
-* gettext::
-* ngettext::
-* textdomain::
-@end menu
-
-@include glibc-functions/bind_textdomain_codeset.texi
-@include glibc-functions/bindtextdomain.texi
-@include glibc-functions/dcgettext.texi
-@include glibc-functions/dcngettext.texi
-@include glibc-functions/dgettext.texi
-@include glibc-functions/dngettext.texi
-@include glibc-functions/gettext.texi
-@include glibc-functions/ngettext.texi
-@include glibc-functions/textdomain.texi
+@c @node Glibc libintl.h
+@c @section Glibc @code{<libintl.h>}
 
 @c @node Glibc limits.h
 @c @section Glibc Extensions to @code{<limits.h>}
@@ -4656,9 +5790,6 @@ This list of functions is sorted according to the header that declares them.
 * drem::
 * dremf::
 * dreml::
-* exp10::
-* exp10f::
-* exp10l::
 * finite::
 * finitef::
 * finitel::
@@ -4701,9 +5832,6 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/drem.texi
 @include glibc-functions/dremf.texi
 @include glibc-functions/dreml.texi
-@include glibc-functions/exp10.texi
-@include glibc-functions/exp10f.texi
-@include glibc-functions/exp10l.texi
 @include glibc-functions/finite.texi
 @include glibc-functions/finitef.texi
 @include glibc-functions/finitel.texi
@@ -4882,8 +6010,6 @@ This list of functions is sorted according to the header that declares them.
 * bindresvport::
 * getipv4sourcefilter::
 * getsourcefilter::
-* in6addr_any::
-* in6addr_loopback::
 * inet6_option_alloc::
 * inet6_option_append::
 * inet6_option_find::
@@ -4910,8 +6036,6 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/bindresvport.texi
 @include glibc-functions/getipv4sourcefilter.texi
 @include glibc-functions/getsourcefilter.texi
-@include glibc-functions/in6addr_any.texi
-@include glibc-functions/in6addr_loopback.texi
 @include glibc-functions/inet6_option_alloc.texi
 @include glibc-functions/inet6_option_append.texi
 @include glibc-functions/inet6_option_find.texi
@@ -4957,14 +6081,8 @@ This list of functions is sorted according to the header that declares them.
 @c @node Glibc paths.h
 @c @section Glibc @code{<paths.h>}
 
-@node Glibc poll.h
-@section Glibc Extensions to @code{<poll.h>}
-
-@menu
-* ppoll::
-@end menu
-
-@include glibc-functions/ppoll.texi
+@c @node Glibc poll.h
+@c @section Glibc Extensions to @code{<poll.h>}
 
 @node Glibc printf.h
 @section Glibc @code{<printf.h>}
@@ -4996,15 +6114,11 @@ This list of functions is sorted according to the header that declares them.
 * pthread_attr_getsigmask_np::
 * pthread_attr_setsigmask_np::
 * pthread_clockjoin_np::
-* pthread_cond_clockwait::
 * pthread_getaffinity_np::
 * pthread_getattr_default_np::
 * pthread_getattr_np::
 * pthread_getname_np::
 * pthread_kill_other_threads_np::
-* pthread_mutex_clocklock::
-* pthread_rwlock_clockrdlock::
-* pthread_rwlock_clockwrlock::
 * pthread_rwlockattr_getkind_np::
 * pthread_rwlockattr_setkind_np::
 * pthread_setaffinity_np::
@@ -5020,15 +6134,11 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/pthread_attr_getsigmask_np.texi
 @include glibc-functions/pthread_attr_setsigmask_np.texi
 @include glibc-functions/pthread_clockjoin_np.texi
-@include glibc-functions/pthread_cond_clockwait.texi
 @include glibc-functions/pthread_getaffinity_np.texi
 @include glibc-functions/pthread_getattr_default_np.texi
 @include glibc-functions/pthread_getattr_np.texi
 @include glibc-functions/pthread_getname_np.texi
 @include glibc-functions/pthread_kill_other_threads_np.texi
-@include glibc-functions/pthread_mutex_clocklock.texi
-@include glibc-functions/pthread_rwlock_clockrdlock.texi
-@include glibc-functions/pthread_rwlock_clockwrlock.texi
 @include glibc-functions/pthread_rwlockattr_getkind_np.texi
 @include glibc-functions/pthread_rwlockattr_setkind_np.texi
 @include glibc-functions/pthread_setaffinity_np.texi
@@ -5788,14 +6898,8 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/getfilecon.texi
 @include glibc-functions/lgetfilecon.texi
 
-@node Glibc semaphore.h
-@section Glibc Extensions to @code{<semaphore.h>}
-
-@menu
-* sem_clockwait::
-@end menu
-
-@include glibc-functions/sem_clockwait.texi
+@c @node Glibc semaphore.h
+@c @section Glibc Extensions to @code{<semaphore.h>}
 
 @c @node Glibc setjmp.h
 @c @section Glibc Extensions to @code{<setjmp.h>}
@@ -5872,14 +6976,24 @@ This list of functions is sorted according to the header that declares them.
 @section Glibc Extensions to @code{<spawn.h>}
 
 @menu
+* pidfd_spawn::
+* pidfd_spawnp::
 * posix_spawn_file_actions_addchdir_np::
 * posix_spawn_file_actions_addclosefrom_np::
 * posix_spawn_file_actions_addfchdir_np::
+* posix_spawn_file_actions_addtcsetpgrp_np::
+* posix_spawnattr_getcgroup_np::
+* posix_spawnattr_setcgroup_np::
 @end menu
 
+@include glibc-functions/pidfd_spawn.texi
+@include glibc-functions/pidfd_spawnp.texi
 @include glibc-functions/posix_spawn_file_actions_addchdir_np.texi
 @include glibc-functions/posix_spawn_file_actions_addclosefrom_np.texi
 @include glibc-functions/posix_spawn_file_actions_addfchdir_np.texi
+@include glibc-functions/posix_spawn_file_actions_addtcsetpgrp_np.texi
+@include glibc-functions/posix_spawnattr_getcgroup_np.texi
+@include glibc-functions/posix_spawnattr_setcgroup_np.texi
 
 @c @node Glibc stdarg.h
 @c @section Glibc Extensions to @code{<stdarg.h>}
@@ -5897,7 +7011,6 @@ This list of functions is sorted according to the header that declares them.
 @section Glibc Extensions to @code{<stdio.h>}
 
 @menu
-* asprintf::
 * cuserid::
 * clearerr_unlocked::
 * fcloseall::
@@ -5920,10 +7033,8 @@ This list of functions is sorted according to the header that declares them.
 * sys_errlist::
 * sys_nerr::
 * tmpnam_r::
-* vasprintf::
 @end menu
 
-@include glibc-functions/asprintf.texi
 @include glibc-functions/cuserid.texi
 @include glibc-functions/clearerr_unlocked.texi
 @include glibc-functions/fcloseall.texi
@@ -5946,12 +7057,14 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/sys_errlist.texi
 @include glibc-functions/sys_nerr.texi
 @include glibc-functions/tmpnam_r.texi
-@include glibc-functions/vasprintf.texi
 
 @node Glibc stdlib.h
 @section Glibc Extensions to @code{<stdlib.h>}
 
 @menu
+* arc4random::
+* arc4random_buf::
+* arc4random_uniform::
 * canonicalize_file_name::
 * cfree::
 * clearenv::
@@ -5965,22 +7078,18 @@ This list of functions is sorted according to the header that declares them.
 * jrand48_r::
 * lcong48_r::
 * lrand48_r::
-* mkostemp::
 * mkostemps::
 * mkstemps::
 * mrand48_r::
 * nrand48_r::
 * on_exit::
-* ptsname_r::
 * qecvt::
 * qecvt_r::
 * qfcvt::
 * qfcvt_r::
 * qgcvt::
-* qsort_r::
 * random_r::
 * rpmatch::
-* secure_getenv::
 * seed48_r::
 * setstate_r::
 * srand48_r::
@@ -5997,6 +7106,9 @@ This list of functions is sorted according to the header that declares them.
 * valloc::
 @end menu
 
+@include glibc-functions/arc4random.texi
+@include glibc-functions/arc4random_buf.texi
+@include glibc-functions/arc4random_uniform.texi
 @include glibc-functions/canonicalize_file_name.texi
 @include glibc-functions/cfree.texi
 @include glibc-functions/clearenv.texi
@@ -6010,22 +7122,18 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/jrand48_r.texi
 @include glibc-functions/lcong48_r.texi
 @include glibc-functions/lrand48_r.texi
-@include glibc-functions/mkostemp.texi
 @include glibc-functions/mkostemps.texi
 @include glibc-functions/mkstemps.texi
 @include glibc-functions/mrand48_r.texi
 @include glibc-functions/nrand48_r.texi
 @include glibc-functions/on_exit.texi
-@include glibc-functions/ptsname_r.texi
 @include glibc-functions/qecvt.texi
 @include glibc-functions/qecvt_r.texi
 @include glibc-functions/qfcvt.texi
 @include glibc-functions/qfcvt_r.texi
 @include glibc-functions/qgcvt.texi
-@include glibc-functions/qsort_r.texi
 @include glibc-functions/random_r.texi
 @include glibc-functions/rpmatch.texi
-@include glibc-functions/secure_getenv.texi
 @include glibc-functions/seed48_r.texi
 @include glibc-functions/setstate_r.texi
 @include glibc-functions/srand48_r.texi
@@ -6046,10 +7154,7 @@ This list of functions is sorted according to the header that declares them.
 
 @menu
 * explicit_bzero::
-* ffsl::
-* ffsll::
 * memfrob::
-* memmem::
 * mempcpy::
 * memrchr::
 * rawmemchr::
@@ -6065,10 +7170,7 @@ This list of functions is sorted according to the header that declares them.
 @end menu
 
 @include glibc-functions/explicit_bzero.texi
-@include glibc-functions/ffsl.texi
-@include glibc-functions/ffsll.texi
 @include glibc-functions/memfrob.texi
-@include glibc-functions/memmem.texi
 @include glibc-functions/mempcpy.texi
 @include glibc-functions/memrchr.texi
 @include glibc-functions/rawmemchr.texi
@@ -6116,6 +7218,7 @@ This list of functions is sorted according to the header that declares them.
 * epoll_create1::
 * epoll_ctl::
 * epoll_pwait::
+* epoll_pwait2::
 * epoll_wait::
 @end menu
 
@@ -6123,6 +7226,7 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/epoll_create1.texi
 @include glibc-functions/epoll_ctl.texi
 @include glibc-functions/epoll_pwait.texi
+@include glibc-functions/epoll_pwait2.texi
 @include glibc-functions/epoll_wait.texi
 
 @node Glibc sys/eventfd.h
@@ -6242,6 +7346,8 @@ This list of functions is sorted according to the header that declares them.
 * pkey_get::
 * pkey_mprotect::
 * pkey_set::
+* process_madvise::
+* process_mrelease::
 * remap_file_pages::
 @end menu
 
@@ -6255,18 +7361,34 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/pkey_get.texi
 @include glibc-functions/pkey_mprotect.texi
 @include glibc-functions/pkey_set.texi
+@include glibc-functions/process_madvise.texi
+@include glibc-functions/process_mrelease.texi
 @include glibc-functions/remap_file_pages.texi
 
 @node Glibc sys/mount.h
 @section Glibc @code{<sys/mount.h>}
 
 @menu
+* fsconfig::
+* fsmount::
+* fsopen::
+* fspick::
 * mount::
+* mount_setattr::
+* move_mount::
+* open_tree::
 * umount::
 * umount2::
 @end menu
 
+@include glibc-functions/fsconfig.texi
+@include glibc-functions/fsmount.texi
+@include glibc-functions/fsopen.texi
+@include glibc-functions/fspick.texi
 @include glibc-functions/mount.texi
+@include glibc-functions/mount_setattr.texi
+@include glibc-functions/move_mount.texi
+@include glibc-functions/open_tree.texi
 @include glibc-functions/umount.texi
 @include glibc-functions/umount2.texi
 
@@ -6281,6 +7403,21 @@ This list of functions is sorted according to the header that declares them.
 @end menu
 
 @include glibc-functions/personality.texi
+
+@node Glibc sys/pidfd.h
+@section Glibc @code{<sys/pidfd.h>}
+
+@menu
+* pidfd_getfd::
+* pidfd_getpid::
+* pidfd_open::
+* pidfd_send_signal::
+@end menu
+
+@include glibc-functions/pidfd_getfd.texi
+@include glibc-functions/pidfd_getpid.texi
+@include glibc-functions/pidfd_open.texi
+@include glibc-functions/pidfd_send_signal.texi
 
 @node Glibc sys/prctl.h
 @section Glibc @code{<sys/prctl.h>}
@@ -6322,11 +7459,9 @@ This list of functions is sorted according to the header that declares them.
 @section Glibc @code{<sys/random.h>}
 
 @menu
-* getentropy::
 * getrandom::
 @end menu
 
-@include glibc-functions/getentropy.texi
 @include glibc-functions/getrandom.texi
 
 @node Glibc sys/reboot.h
@@ -6393,13 +7528,11 @@ This list of functions is sorted according to the header that declares them.
 @section Glibc Extensions to @code{<sys/socket.h>}
 
 @menu
-* accept4::
 * isfdtype::
 * recvmmsg::
 * sendmmsg::
 @end menu
 
-@include glibc-functions/accept4.texi
 @include glibc-functions/isfdtype.texi
 @include glibc-functions/recvmmsg.texi
 @include glibc-functions/sendmmsg.texi
@@ -6665,7 +7798,6 @@ This list of functions is sorted according to the header that declares them.
 * stime::
 * strptime_l::
 * timelocal::
-* timespec_get::
 @end menu
 
 @include glibc-functions/clock_adjtime.texi
@@ -6674,7 +7806,6 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/stime.texi
 @include glibc-functions/strptime_l.texi
 @include glibc-functions/timelocal.texi
-@include glibc-functions/timespec_get.texi
 
 @c @node Glibc trace.h
 @c @section Glibc Extensions to @code{<trace.h>}
@@ -6707,14 +7838,13 @@ This list of functions is sorted according to the header that declares them.
 @section Glibc Extensions to @code{<unistd.h>}
 
 @menu
-* _Fork::
 * acct::
 * brk::
 * chroot::
 * closefrom::
+* close_range::
 * copy_file_range::
 * daemon::
-* dup3::
 * eaccess::
 * endusershell::
 * euidaccess::
@@ -6725,12 +7855,9 @@ This list of functions is sorted according to the header that declares them.
 * getdtablesize::
 * getpagesize::
 * getpass::
-* getresgid::
-* getresuid::
 * gettid::
 * getusershell::
 * group_member::
-* pipe2::
 * profil::
 * revoke::
 * sbrk::
@@ -6738,8 +7865,6 @@ This list of functions is sorted according to the header that declares them.
 * setdomainname::
 * sethostid::
 * sethostname::
-* setresgid::
-* setresuid::
 * setusershell::
 * syncfs::
 * syscall::
@@ -6747,14 +7872,13 @@ This list of functions is sorted according to the header that declares them.
 * vhangup::
 @end menu
 
-@include glibc-functions/_Fork.texi
 @include glibc-functions/acct.texi
 @include glibc-functions/brk.texi
 @include glibc-functions/chroot.texi
 @include glibc-functions/closefrom.texi
+@include glibc-functions/close_range.texi
 @include glibc-functions/copy_file_range.texi
 @include glibc-functions/daemon.texi
-@include glibc-functions/dup3.texi
 @include glibc-functions/eaccess.texi
 @include glibc-functions/endusershell.texi
 @include glibc-functions/euidaccess.texi
@@ -6765,12 +7889,9 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/getdtablesize.texi
 @include glibc-functions/getpagesize.texi
 @include glibc-functions/getpass.texi
-@include glibc-functions/getresgid.texi
-@include glibc-functions/getresuid.texi
 @include glibc-functions/gettid.texi
 @include glibc-functions/getusershell.texi
 @include glibc-functions/group_member.texi
-@include glibc-functions/pipe2.texi
 @include glibc-functions/profil.texi
 @include glibc-functions/revoke.texi
 @include glibc-functions/sbrk.texi
@@ -6778,8 +7899,6 @@ This list of functions is sorted according to the header that declares them.
 @include glibc-functions/setdomainname.texi
 @include glibc-functions/sethostid.texi
 @include glibc-functions/sethostname.texi
-@include glibc-functions/setresgid.texi
-@include glibc-functions/setresuid.texi
 @include glibc-functions/setusershell.texi
 @include glibc-functions/syncfs.texi
 @include glibc-functions/syscall.texi
@@ -6958,6 +8077,10 @@ to POSIX that it can be treated like any other Unix-like platform.
 * Closed standard fds::
 * Handling strings with NUL characters::
 * Container data types::
+* Modernized printf::
+* Advanced stdio functions::
+* libunistring::
+* Stack traces::
 * Recognizing Option Arguments::
 * Quoting::
 * progname and getprogname::
@@ -6998,6 +8121,14 @@ to POSIX that it can be treated like any other Unix-like platform.
 @include string-desc.texi
 
 @include containers.texi
+
+@include zprintf.texi
+
+@include stdioext.texi
+
+@include libunistring.texi
+
+@include stack-trace.texi
 
 @include argmatch.texi
 
@@ -7062,6 +8193,7 @@ for use with GNU Automake (in particular).
 * manywarnings::
 * Running self-tests under valgrind::
 * VCS To ChangeLog::
+* gitlog-to-changelog::
 @end menu
 
 @include havelib.texi
@@ -7079,6 +8211,8 @@ for use with GNU Automake (in particular).
 @include valgrind-tests.texi
 
 @include vcs-to-changelog.texi
+
+@include gitlog-to-changelog.texi
 
 
 @node Build Infrastructure Files
@@ -7257,7 +8391,7 @@ This is the template configuration file.  After copying it into the
 top-level directory of your package, you need to customize it.
 
 @item build-aux/po/Makefile.in.in
-@itemx build-aux/po/remove-potcdate.sin
+@itemx build-aux/po/remove-potcdate.sed
 These are auxiliary files used by @code{bootstrap}.  You don't have to
 copy them yourself; @code{bootstrap} will do that.
 @end table
@@ -7333,6 +8467,7 @@ For background documentation, see
 @section Tools for uploading release tarballs
 
 @table @code
+@mindex gnupload
 @item build-aux/gnupload
 This program is a user-friendly way to upload a release tarball to one of
 the GNU servers (@code{ftp.gnu.org} or @code{alpha.gnu.org}).  It
@@ -7357,8 +8492,30 @@ This is a helper program that mimics the @code{ncftpput} program used by
 @include fdl-1.3.texi
 
 
+@node Gnulib history
+@appendix Gnulib history
+
+@include gnulib-history.texi
+
+
+@node Module Index
+@unnumbered Module Index
+
+@printindex m
+
+@node Undocumented Module Index
+@unnumbered Undocumented Module Index
+
+@include undocumented-modules.texi
+
+These are the modules that are not explicitly documented in this manual.
+Please look at the respective module description.
+(Ideally, this list should be as small as possible.)
+
+@printindex um
+
 @node Index
-@unnumbered Index
+@unnumbered General Index
 
 @printindex cp
 

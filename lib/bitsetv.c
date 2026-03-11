@@ -1,6 +1,6 @@
 /* Bitset vectors.
 
-   Copyright (C) 2001-2002, 2004-2006, 2009-2015, 2018-2023 Free Software
+   Copyright (C) 2001-2002, 2004-2006, 2009-2015, 2018-2025 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ bitsetv_alloc (bitset_bindex n_vecs, bitset_bindex n_bits,
     }
 
   /* Null terminate table.  */
-  bsetv[i] = 0;
+  bsetv[i] = NULL;
   return bsetv;
 }
 

@@ -1,5 +1,5 @@
 /* Test the Unicode character type functions.
-   Copyright (C) 2007-2009 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -70,5 +70,5 @@ main ()
     ASSERT (found);
   }
 
-  return 0;
+  return test_exit_status;
 }

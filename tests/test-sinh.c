@@ -1,5 +1,5 @@
 /* Test of sinh() function.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,5 +36,5 @@ main ()
   y = sinh (x);
   ASSERT (y >= 0.6366535821 && y <= 0.6366535822);
 
-  return 0;
+  return test_exit_status;
 }

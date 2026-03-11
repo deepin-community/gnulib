@@ -1,5 +1,5 @@
 /* Test timespec_getres.
-   Copyright 2021-2023 Free Software Foundation, Inc.
+   Copyright 2021-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,5 +36,5 @@ main (void)
           ? 0 < ts.tv_nsec && ts.tv_nsec < 1000000000
           : ts.tv_sec == 1 && ts.tv_nsec == 0);
 
-  return 0;
+  return test_exit_status;
 }

@@ -11,6 +11,7 @@ Depends-on:
 alignasof
 attribute
 c99
+calloc-posix
 closedir
 cycle-check
 d-ino
@@ -18,20 +19,24 @@ d-type
 fchdir
 fcntl
 fcntl-h
+fcntl-safer
 flexmember
+free-posix
 fstat
 hash
 i-ring
 lstat
+malloc-posix
 memmove
 open
 openat-h
 opendir
 opendirat
 readdir
-stdbool
-stddef
-stdint
+realloc-posix
+bool
+stddef-h
+stdint-h
 
 configure.ac:
 gl_FUNC_FTS

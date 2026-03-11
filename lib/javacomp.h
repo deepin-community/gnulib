@@ -1,5 +1,5 @@
 /* Compile a Java program.
-   Copyright (C) 2001-2002, 2006, 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2001-2002, 2006, 2009-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2001.
 
    This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,11 @@
 
 #ifndef _JAVACOMP_H
 #define _JAVACOMP_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* Compile a Java source file to bytecode.
    java_sources is an array of source file names.
@@ -84,5 +89,10 @@ extern bool compile_java_class (const char * const *java_sources,
                                 bool optimize, bool debug,
                                 bool use_minimal_classpath,
                                 bool verbose);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _JAVACOMP_H */

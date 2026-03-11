@@ -1,5 +1,5 @@
-/* Formatted output to a stream.
-   Copyright (C) 2007, 2009-2023 Free Software Foundation, Inc.
+/* Formatted output to standard output.
+   Copyright (C) 2007, 2009-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -23,9 +23,6 @@
 
 #include <stdarg.h>
 
-/* Print formatted output to standard output.
-   Return string length of formatted string.  On error, return a negative
-   value.  */
 int
 vprintf (const char *format, va_list args)
 {

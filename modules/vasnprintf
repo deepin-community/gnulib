@@ -10,7 +10,6 @@ lib/printf-parse.c
 lib/vasnprintf.h
 lib/vasnprintf.c
 lib/asnprintf.c
-m4/wchar_t.m4
 m4/wint_t.m4
 m4/intmax_t.m4
 m4/stdint_h.m4
@@ -21,18 +20,19 @@ m4/math_h.m4
 m4/exponentd.m4
 
 Depends-on:
-stdio
+stdio-h
 alloca-opt
 attribute
-float
+float-h
 free-posix
 limits-h
-stdint
+stdint-h
 xsize
-errno
+errno-h
 memchr
 assert-h
-wchar
+wchar-h
+mbszero
 
 configure.ac:
 AC_REQUIRE([AC_C_RESTRICT])

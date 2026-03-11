@@ -16,12 +16,13 @@ Documentation:
 @end itemize
 
 Gnulib module: malloc-h
+@mindex malloc-h
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This header file is missing on some platforms:
-macOS 11.1, OpenBSD 6.7.
+macOS 14, OpenBSD 7.5.
 @end itemize
 
 Portability problems not fixed by Gnulib:

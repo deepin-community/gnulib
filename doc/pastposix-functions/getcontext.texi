@@ -2,7 +2,8 @@
 @section @code{getcontext}
 @findex getcontext
 
-POSIX specification: @url{https://pubs.opengroup.org/onlinepubs/009695399/functions/getcontext.html}
+Removed in POSIX.1-2008.
+POSIX.1-2004 specification: @url{https://pubs.opengroup.org/onlinepubs/009695399/functions/getcontext.html}
 
 Gnulib module: ---
 
@@ -14,5 +15,8 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-OpenBSD 6.7, Cygwin 1.7.x, mingw, MSVC 14, Android 9.0.
+OpenBSD 7.5, Cygwin 1.7.x, mingw, MSVC 14, Android 9.0.
 @end itemize
+
+Note: A third-party implementation is available at
+@url{https://github.com/kaniini/libucontext/}.

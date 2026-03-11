@@ -7,11 +7,13 @@ m4/error.m4
 
 Depends-on:
 error-h
-stddef
-stdio
-getprogname
+stddef-h
+stdio-h
+getprogname     [test $COMPILE_ERROR_C = 1]
+gettext-h       [test $COMPILE_ERROR_C = 1]
+gnulib-i18n     [test $COMPILE_ERROR_C = 1]
 strerror        [test $COMPILE_ERROR_C = 1]
-unistd          [test $COMPILE_ERROR_C = 1]
+unistd-h        [test $COMPILE_ERROR_C = 1]
 msvc-nothrow    [test $COMPILE_ERROR_C = 1]
 
 configure.ac:
@@ -31,7 +33,7 @@ lib_SOURCES += error.c
 endif
 
 Include:
-"error.h"
+<error.h>
 
 License:
 LGPLv2+

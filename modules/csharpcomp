@@ -6,16 +6,22 @@ lib/csharpcomp.h
 lib/csharpcomp.c
 
 Depends-on:
-stdbool
-xmalloca
+bool
+error
+xconcat-filename
+cygpath
 execute
 spawn-pipe
 wait-process
 getline
+scandir
+alphasort
 sh-quote
 safe-read
-error
+xmalloca
+xvasprintf
 gettext-h
+gnulib-i18n
 memcmp
 csharpcomp-script
 

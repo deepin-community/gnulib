@@ -9,15 +9,15 @@ tests/test-select-out.sh
 tests/test-select-stdin.c
 
 Depends-on:
-stdbool
-sys_socket
-netinet_in
-arpa_inet
-unistd
-sys_ioctl
+bool
+sys_socket-h
+netinet_in-h
+arpa_inet-h
+unistd-h
+sys_ioctl-h
 extensions
 inet_pton
-errno
+errno-h
 perror
 pipe-posix
 socket

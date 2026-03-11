@@ -1,10 +1,12 @@
 @node fabsf
-@section @code{fabsf}
+@subsection @code{fabsf}
 @findex fabsf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/fabsf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/fabsf.html}
 
-Gnulib module: fabsf
+Gnulib module: fabsf or fabsf-ieee
+@mindex fabsf
+@mindex fabsf-ieee
 
 Portability problems fixed by Gnulib:
 @itemize

@@ -7,12 +7,12 @@ lib/unicase/invariant.h
 lib/unicase/u-is-invariant.h
 
 Depends-on:
-unitypes
+unitypes-h
 uninorm/base
 uninorm/u16-normalize
 uninorm/nfd
 unistr/u16-cmp
-stdbool
+bool
 
 configure.ac:
 

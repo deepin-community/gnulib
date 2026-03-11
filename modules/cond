@@ -9,9 +9,9 @@ m4/cond.m4
 Depends-on:
 threadlib
 lock
-errno
+errno-h
 extern-inline
-stdbool
+bool
 time-h
 windows-cond    [test $gl_threads_api = windows]
 

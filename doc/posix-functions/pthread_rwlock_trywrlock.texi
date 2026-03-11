@@ -1,10 +1,11 @@
 @node pthread_rwlock_trywrlock
-@section @code{pthread_rwlock_trywrlock}
+@subsection @code{pthread_rwlock_trywrlock}
 @findex pthread_rwlock_trywrlock
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_rwlock_trywrlock.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_rwlock_trywrlock.html}
 
 Gnulib module: pthread-rwlock
+@mindex pthread-rwlock
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -17,4 +18,9 @@ Minix 3.1.8.
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+This function returns @code{EDEADLK} instead of @code{EBUSY}
+when the current thread already owns the lock for writing
+on some platforms:
+macOS 12.
 @end itemize

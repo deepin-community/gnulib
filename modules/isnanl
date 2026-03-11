@@ -9,8 +9,8 @@ m4/exponentl.m4
 m4/isnanl.m4
 
 Depends-on:
-math
-float
+math-h
+float-h
 fpieee
 memcmp
 
@@ -34,7 +34,7 @@ Link:
 $(ISNANL_LIBM)
 
 License:
-LGPL
+LGPLv2+
 
 Maintainer:
 all

@@ -14,10 +14,10 @@ ialloc
 idx
 malloc-gnu
 minmax
-realloc-gnu
+realloc-posix
 reallocarray
-stdckdint
-stdint
+stdckdint-h
+stdint-h
 xalloc-die
 
 configure.ac:

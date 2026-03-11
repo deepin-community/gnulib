@@ -9,6 +9,8 @@ Depends-on:
 error
 exitfail
 freopen
+gettext-h
+gnulib-i18n
 quote
 
 configure.ac:

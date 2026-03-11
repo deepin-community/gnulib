@@ -1,5 +1,5 @@
 /* Wrapper around <monetary.h>.
-   Copyright (C) 2017-2023 Free Software Foundation, Inc.
+   Copyright (C) 2017-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -88,7 +88,7 @@ extern "C" {
 #  endif
 _GL_FUNCDECL_RPL (strfmon_l, ssize_t,
                   (char *restrict s, size_t maxsize, locale_t locale,
-                   const char *restrict format, ...)
+                   const char *restrict format, ...),
                   _GL_ATTRIBUTE_FORMAT_STRFMON (4, 5)
                   _GL_ARG_NONNULL ((4)));
 _GL_CXXALIAS_RPL (strfmon_l, ssize_t,

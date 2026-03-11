@@ -1,5 +1,5 @@
 /* xgetdomainname.h -- Return the NIS domain name, without size limitations.
-   Copyright (C) 1992, 1996, 2000-2001, 2003, 2009-2023 Free Software
+   Copyright (C) 1992, 1996, 2000-2001, 2003, 2009-2025 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,11 @@
 
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /* Return the NIS domain name of the machine, in malloc'd storage.
    WARNING! The NIS domain name is unrelated to the fully qualified host name
             of the machine.  It is also unrelated to email addresses.
@@ -34,5 +39,10 @@
    Upon any other failure, set errno and return NULL.  */
 extern char *xgetdomainname (void)
   _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC_FREE;
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _XGETDOMAINNAME_H */

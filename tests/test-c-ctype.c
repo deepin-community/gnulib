@@ -1,5 +1,5 @@
 /* Test of character handling in C locale.
-   Copyright (C) 2005, 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include <ctype.h>
 #include <limits.h>
 #include <locale.h>
+#include <stdlib.h>
 
 #include "macros.h"
 
@@ -218,11 +219,16 @@ main ()
 
   test_all ();
 
-  setlocale (LC_ALL, "de_DE");
-  test_all ();
+  /* Run the tests in a German unibyte locale.  */
+  if ((setlocale (LC_ALL, "de_DE") != NULL
+       || setlocale (LC_ALL, "de_DE.ISO-8859-1") != NULL)
+      && MB_CUR_MAX == 1)
+    test_all ();
 
-  setlocale (LC_ALL, "ja_JP.EUC-JP");
-  test_all ();
+  /* Run the tests in a traditional Japanese locale.  */
+  if (setlocale (LC_ALL, "ja_JP.EUC-JP") != NULL
+      && MB_CUR_MAX == 2)
+    test_all ();
 
-  return 0;
+  return test_exit_status;
 }

@@ -1,13 +1,19 @@
 @node accept
-@section @code{accept}
+@subsection @code{accept}
 @findex accept
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/accept.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/accept.html}
 
 Gnulib module: accept
+@mindex accept
 
 Portability problems fixed by Gnulib:
 @itemize
+@item
+This function is declared in @code{<winsock2.h>}
+instead of @code{<sys/socket.h>}
+on some platforms:
+mingw, MSVC 14.
 @item
 On Windows platforms (excluding Cygwin), the descriptors returned by
 the @code{accept} function cannot be used in calls to @code{read},
@@ -32,5 +38,5 @@ third argument type is @samp{int *}.
 @item
 On some platforms, this function's third argument type is @samp{void *},
 not @samp{socklen_t *}:
-Solaris 10.
+Solaris 10, Solaris 11 OmniOS.
 @end itemize

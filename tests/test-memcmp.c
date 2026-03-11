@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2023 Free Software Foundation, Inc.
+ * Copyright (C) 2008-2025 Free Software Foundation, Inc.
  * Written by Simon Josefsson
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,11 +25,20 @@ SIGNATURE_CHECK (memcmp, int, (void const *, void const *, size_t));
 #include "zerosize-ptr.h"
 #include "macros.h"
 
+/* Test the library, not the compiler+library.  */
+static int
+lib_memcmp (void const *s1, void const *s2, size_t n)
+{
+  return memcmp (s1, s2, n);
+}
+int (*volatile volatile_memcmp) (void const *, void const *, size_t)
+  = lib_memcmp;
+#undef memcmp
+#define memcmp volatile_memcmp
+
 int
 main (void)
 {
-  int (* volatile memcmp_ptr) (const void *, const void *, size_t) = memcmp;
-
   /* Test equal / not equal distinction.  */
   void *page_boundary1 = zerosize_ptr ();
   void *page_boundary2 = zerosize_ptr ();
@@ -50,13 +59,10 @@ main (void)
   ASSERT (memcmp ("foobar", "foo", 4) > 0);
 
   /* Some old versions of memcmp were not 8-bit clean.  */
-  /* Use the function pointer here, because otherwise this test is sometimes
-     miscompiled by 'clang'.
-     See <https://bugs.llvm.org/show_bug.cgi?id=40063>.  */
-  ASSERT (memcmp_ptr ("\100", "\201", 1) < 0);
-  ASSERT (memcmp_ptr ("\201", "\100", 1) > 0);
-  ASSERT (memcmp_ptr ("\200", "\201", 1) < 0);
-  ASSERT (memcmp_ptr ("\201", "\200", 1) > 0);
+  ASSERT (memcmp ("\100", "\201", 1) < 0);
+  ASSERT (memcmp ("\201", "\100", 1) > 0);
+  ASSERT (memcmp ("\200", "\201", 1) < 0);
+  ASSERT (memcmp ("\201", "\200", 1) > 0);
 
   /* The Next x86 OpenStep bug shows up only when comparing 16 bytes
      or more and with at least one buffer not starting on a 4-byte boundary.
@@ -75,5 +81,11 @@ main (void)
       }
   }
 
-  return 0;
+  /* Test zero-length operations on NULL pointers, allowed by
+     <https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3322.pdf>.  */
+  ASSERT (memcmp (NULL, "x", 0) == 0);
+  ASSERT (memcmp ("x", NULL, 0) == 0);
+  ASSERT (memcmp (NULL, NULL, 0) == 0);
+
+  return test_exit_status;
 }

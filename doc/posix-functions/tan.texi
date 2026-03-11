@@ -1,10 +1,11 @@
 @node tan
-@section @code{tan}
+@subsection @code{tan}
 @findex tan
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/tan.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/tan.html}
 
 Gnulib module: tan
+@mindex tan
 
 Portability problems fixed by Gnulib:
 @itemize

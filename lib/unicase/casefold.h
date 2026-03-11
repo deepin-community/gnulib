@@ -1,5 +1,5 @@
 /* Casefolding of Unicode characters.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This file is free software.
@@ -25,6 +25,16 @@
 
 #include "unitypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /* Return the casefold mapping of a Unicode character.  */
 extern ucs4_t
        uc_tocasefold (ucs4_t uc);
+
+
+#ifdef __cplusplus
+}
+#endif

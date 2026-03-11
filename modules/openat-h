@@ -7,9 +7,9 @@ lib/openat.h
 Depends-on:
 extern-inline
 fcntl-h
-stdbool
-sys_stat
-unistd
+bool
+sys_stat-h
+unistd-h
 
 configure.ac:
 

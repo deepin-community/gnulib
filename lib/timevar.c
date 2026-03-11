@@ -1,6 +1,6 @@
 /* Timing variables for measuring compiler performance.
 
-   Copyright (C) 2000, 2002, 2004, 2006, 2009-2015, 2018-2023 Free Software
+   Copyright (C) 2000, 2002, 2004, 2006, 2009-2015, 2018-2025 Free Software
    Foundation, Inc.
 
    Contributed by Alex Samuel <samuel@codesourcery.com>
@@ -32,7 +32,7 @@
 
 #include "gethrxtime.h"
 #include "gettext.h"
-#define _(msgid) gettext (msgid)
+#define _(msgid) dgettext ("gnulib", msgid)
 #include "xalloc.h"
 
 /* See timevar.h for an explanation of timing variables.  */

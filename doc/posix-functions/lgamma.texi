@@ -1,10 +1,11 @@
 @node lgamma
-@section @code{lgamma}
+@subsection @code{lgamma}
 @findex lgamma
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/lgamma.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/lgamma.html}
 
 Gnulib module: lgamma
+@mindex lgamma
 
 Portability problems fixed by Gnulib:
 @itemize

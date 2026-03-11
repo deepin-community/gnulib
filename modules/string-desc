@@ -7,8 +7,9 @@ lib/string-desc.c
 lib/string-desc-contains.c
 
 Depends-on:
-stdbool
+bool
 idx
+c-ctype
 ialloc
 extern-inline
 memchr

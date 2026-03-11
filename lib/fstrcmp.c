@@ -1,5 +1,5 @@
 /* Functions to make fuzzy comparisons between strings
-   Copyright (C) 1988-1989, 1992-1993, 1995, 2001-2003, 2006, 2008-2023 Free
+   Copyright (C) 1988-1989, 1992-1993, 1995, 2001-2003, 2006, 2008-2025 Free
    Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#include "glthread/lock.h"
+#include "glthread/once.h"
 #include "glthread/tls.h"
 #include "minmax.h"
 #include "xalloc.h"

@@ -1,5 +1,5 @@
 /* Simple atomic operations for multithreading.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -56,7 +56,8 @@ atomic_compare_and_swap_ptr (uintptr_t volatile *vp,
 {
   /* InterlockedCompareExchangePointer
      <https://docs.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-interlockedcompareexchangepointer>  */
-  return InterlockedCompareExchangePointer ((void * volatile *) vp,
+  return (uintptr_t)
+         InterlockedCompareExchangePointer ((void * volatile *) vp,
                                             (void *) newval, (void *) cmp);
 }
 
@@ -67,11 +68,10 @@ atomic_compare_and_swap_ptr (uintptr_t volatile *vp,
    require to link with -latomic.  */
 
 # if (((__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 1)) \
-       && !(defined __sun && defined __sparc__) && !defined __ANDROID__) \
-      || __clang_major__ >= 3) \
-     && !defined __ibmxl__
-/* Use GCC built-ins (available in GCC >= 4.1, except on Solaris/SPARC and
-   Android, and clang >= 3.0).
+       || __clang_major__ >= 3) \
+      && HAVE_ATOMIC_COMPARE_AND_SWAP_GCC41)
+/* Use GCC built-ins (available on many platforms with GCC >= 4.1 or
+   clang >= 3.0).
    Documentation:
    <https://gcc.gnu.org/onlinedocs/gcc-4.1.2/gcc/Atomic-Builtins.html>  */
 

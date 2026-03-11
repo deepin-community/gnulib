@@ -1,10 +1,11 @@
 @node readdir
-@section @code{readdir}
+@subsection @code{readdir}
 @findex readdir
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/readdir.html}
 
 Gnulib module: readdir
+@mindex readdir
 
 Portability problems fixed by Gnulib:
 @itemize

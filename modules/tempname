@@ -16,9 +16,9 @@ getrandom
 libc-config
 lstat
 mkdir
-stdbool
-stdint
-sys_stat
+bool
+stdint-h
+sys_stat-h
 time-h
 
 configure.ac:

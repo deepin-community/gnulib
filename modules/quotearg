@@ -13,15 +13,17 @@ c-strcaseeq
 c32isprint
 extensions
 gettext-h
+gnulib-i18n
+mbszero
 mbrtoc32
 mbsinit
 memcmp
 minmax
 quotearg-simple
 localcharset
-stdbool
-stdint
-uchar
+bool
+stdint-h
+uchar-h
 xalloc
 
 configure.ac:

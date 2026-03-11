@@ -1,0 +1,44 @@
+#!/bin/sh
+
+# Copyright (C) 2024  Simon Josefsson <simon@josefsson.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+set -e
+
+V=${V:-/dev/null} # V=/dev/stdout
+
+if test "$WORKDIR" = ""; then # WORKDIR=~/src
+    WORKDIR=$(mktemp -d)
+    trap "rm -rf $WORKDIR" 0 INT QUIT ABRT PIPE TERM
+    git -c init.defaultBranch=silence-warning-to-stderr -C $WORKDIR clone --quiet /usr/share/gnulib/gnulib.bundle
+fi
+
+cd $WORKDIR/gnulib
+
+for branch in stable-202501 origin/master; do
+    for h in $(git log --pretty='format:%H' $branch); do
+        echo "+++ $h $branch" $(git log -1 --pretty=format:%cd)
+        test "$branch-$h" = "stable-202501-2da5a78bb0b876a4d02db9152c586a243a34379a" \
+            && break # branch start
+        test "$branch-$h" = "origin/master-68fedd78b5510236a372f7386769a6011494aa0e" \
+            && break # random old (~2020) commit to speed up testing
+        git checkout $h > $V 2>&1
+        dh_gnulib_patch > $WORKDIR/tmp || (cat $WORKDIR/tmp; exit 1)
+        cat $WORKDIR/tmp > $V
+        git restore .
+    done
+done
+
+exit 0

@@ -1,10 +1,11 @@
 @node pthread_rwlockattr_destroy
-@section @code{pthread_rwlockattr_destroy}
+@subsection @code{pthread_rwlockattr_destroy}
 @findex pthread_rwlockattr_destroy
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_rwlockattr_destroy.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_rwlockattr_destroy.html}
 
 Gnulib module: pthread-rwlock
+@mindex pthread-rwlock
 
 Portability problems fixed by Gnulib:
 @itemize

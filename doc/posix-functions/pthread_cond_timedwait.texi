@@ -1,10 +1,11 @@
 @node pthread_cond_timedwait
-@section @code{pthread_cond_timedwait}
+@subsection @code{pthread_cond_timedwait}
 @findex pthread_cond_timedwait
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_cond_timedwait.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_timedwait.html}
 
 Gnulib module: pthread-cond
+@mindex pthread-cond
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -17,4 +18,9 @@ Minix 3.1.8.
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+This function sometimes waits indefinitely
+instead of up to the specified time point,
+on some platforms (glibc/Linux, musl libc) in some hypervisors:
+VirtualBox 6.1.50_Ubuntu with paravirtualization set to "Default" or "KVM".
 @end itemize

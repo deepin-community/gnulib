@@ -4,28 +4,33 @@ Read entire utmp file into memory.
 Files:
 lib/readutmp.h
 lib/readutmp.c
+lib/boot-time-aux.h
 m4/readutmp.m4
+m4/systemd.m4
 
 Depends-on:
 extensions
-xalloc
-stdbool
-stdint
-fopen-gnu
+idx
+stat-time
+gettimeofday
+bool
+stdint-h
+strnlen
+time-h
 unlocked-io-internal
+xalloc
 
 configure.ac:
 gl_READUTMP
-gl_CONDITIONAL([GL_COND_OBJ_READUTMP],
-               [test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes])
 
 Makefile.am:
-if GL_COND_OBJ_READUTMP
 lib_SOURCES += readutmp.c
-endif
 
 Include:
 "readutmp.h"
+
+Link:
+$(READUTMP_LIB)
 
 License:
 GPL

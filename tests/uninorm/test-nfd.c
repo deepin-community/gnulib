@@ -1,5 +1,5 @@
 /* Test of canonical decomposition of Unicode strings.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@
 #include <config.h>
 
 #include "uninorm.h"
+
+#include "macros.h"
 
 #if !(((defined _WIN32 || defined __CYGWIN__) && (HAVE_LIBUNISTRING || WOE32DLL)) || defined __ANDROID__)
 /* Check that UNINORM_NFD is defined and links.  */
@@ -40,5 +42,5 @@ main ()
   test_u16_nfd ();
   test_u8_nfd ();
 
-  return 0;
+  return test_exit_status;
 }

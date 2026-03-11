@@ -1,10 +1,11 @@
 @node sigpending
-@section @code{sigpending}
+@subsection @code{sigpending}
 @findex sigpending
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigpending.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/sigpending.html}
 
 Gnulib module: sigprocmask
+@mindex sigprocmask
 
 Portability problems fixed by Gnulib:
 @itemize

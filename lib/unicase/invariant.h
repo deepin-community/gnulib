@@ -1,5 +1,5 @@
 /* Internal functions for Unicode character case mappings.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This file is free software.
@@ -28,6 +28,11 @@
 #include "unitypes.h"
 #include "uninorm.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /* Return true if mapping NFD(S) to via MAPPING is a no-op.  */
 extern int
        u8_is_invariant (const uint8_t *s, size_t n,
@@ -50,3 +55,8 @@ extern int
                                                 uint32_t *resultbuf, size_t *lengthp),
                          const char *iso639_language,
                          bool *resultp);
+
+
+#ifdef __cplusplus
+}
+#endif

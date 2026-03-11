@@ -1,18 +1,20 @@
 Source: gnulib
 Section: devel
 Priority: optional
-Maintainer: Debian QA Group <packages@qa.debian.org>
+Maintainer: Simon Josefsson <simon@josefsson.org>
+Uploaders:
+ Boyuan Yang <byang@debian.org>,
 Build-Depends:
- bison <!nocheck>,
  debhelper-compat (= 13),
+ bison <!nocheck>,
  gettext (>= 0.20~) <!nocheck>,
  gperf <!nocheck>,
  perl,
 Build-Depends-Indep:
  texinfo,
-Standards-Version: 4.6.2
+Standards-Version: 4.7.2
 Homepage: https://www.gnu.org/software/gnulib/
-Vcs-Git: https://salsa.debian.org/debian/gnulib.git
+Vcs-Git: https://salsa.debian.org/debian/gnulib.git -b debian/sid
 Vcs-Browser: https://salsa.debian.org/debian/gnulib
 Rules-Requires-Root: no
 
@@ -48,6 +50,7 @@ Recommends:
  texinfo,
 Suggests:
  clisp,
+ git,
  perl,
  python3:any,
 Description: GNU Portability Library

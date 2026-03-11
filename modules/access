@@ -6,8 +6,9 @@ lib/access.c
 m4/access.m4
 
 Depends-on:
-unistd
+unistd-h
 fcntl
+stat
 
 configure.ac:
 gl_FUNC_ACCESS

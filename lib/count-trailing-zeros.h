@@ -1,5 +1,5 @@
 /* count-trailing-zeros.h -- counts the number of trailing 0 bits in a word.
-   Copyright 2013-2023 Free Software Foundation, Inc.
+   Copyright 2013-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -45,8 +45,10 @@ extern "C" {
 # define COUNT_TRAILING_ZEROS(BUILTIN, MSC_BUILTIN, TYPE)               \
   return x ? BUILTIN (x) : CHAR_BIT * sizeof x;
 #elif _MSC_VER
+extern unsigned char _BitScanForward (unsigned long *, unsigned long);
 # pragma intrinsic (_BitScanForward)
 # if defined _M_X64
+extern unsigned char _BitScanForward64 (unsigned long *, unsigned long long);
 #  pragma intrinsic (_BitScanForward64)
 # endif
 # define COUNT_TRAILING_ZEROS(BUILTIN, MSC_BUILTIN, TYPE)               \

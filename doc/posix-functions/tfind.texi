@@ -1,10 +1,11 @@
 @node tfind
-@section @code{tfind}
+@subsection @code{tfind}
 @findex tfind
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/tfind.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/tfind.html}
 
 Gnulib module: tsearch
+@mindex tsearch
 
 Portability problems fixed by Gnulib:
 @itemize

@@ -1,10 +1,11 @@
 @node isnan
-@section @code{isnan}
+@subsection @code{isnan}
 @findex isnan
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/isnan.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/isnan.html}
 
 Gnulib module: isnan
+@mindex isnan
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -16,12 +17,10 @@ MSVC 9.
 on pre-C99 systems.
 @item
 @code{isnan} is not a macro on some platforms:
-IRIX 6.5, Solaris 11.4.
+Solaris 11.4.
 @item
 This macro does not work on some platforms:
 MSVC 14.
-@item
-On IRIX 6.5 with @code{cc}, @code{isnan} does not recognize some NaNs.
 @end itemize
 
 Portability problems not fixed by Gnulib:

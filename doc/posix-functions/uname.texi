@@ -1,10 +1,11 @@
 @node uname
-@section @code{uname}
+@subsection @code{uname}
 @findex uname
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/uname.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/uname.html}
 
 Gnulib module: uname
+@mindex uname
 
 Portability problems fixed by Gnulib:
 @itemize

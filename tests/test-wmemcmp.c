@@ -1,5 +1,5 @@
 /* Test of wmemcmp() function.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,17 @@
 SIGNATURE_CHECK (wmemcmp, int, (const wchar_t *, const wchar_t *, size_t));
 
 #include "macros.h"
+
+/* Test the library, not the compiler+library.  */
+static int
+lib_wmemcmp (wchar_t const *ws1, wchar_t const *ws2, size_t n)
+{
+  return wmemcmp (ws1, ws2, n);
+}
+int (*volatile volatile_wmemcmp) (wchar_t const *, wchar_t const *, size_t)
+  = lib_wmemcmp;
+#undef wmemcmp
+#define wmemcmp volatile_wmemcmp
 
 int
 main (int argc, char *argv[])
@@ -91,5 +102,11 @@ main (int argc, char *argv[])
     ASSERT (wmemcmp (input2, input1, 1) > 0);
   }
 
-  return 0;
+  /* Test zero-length operations on NULL pointers, allowed by
+     <https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3322.pdf>.  */
+  ASSERT (wmemcmp (NULL, L"x", 0) == 0);
+  ASSERT (wmemcmp (L"x", NULL, 0) == 0);
+  ASSERT (wmemcmp (NULL, NULL, 0) == 0);
+
+  return test_exit_status;
 }

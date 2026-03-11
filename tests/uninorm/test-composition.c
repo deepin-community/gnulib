@@ -1,5 +1,5 @@
 /* Test of canonical composition of Unicode characters.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,5 +49,5 @@ main ()
   /* HANGUL SYLLABLE GEUL */
   ASSERT (uc_composition (0xADF8, 0x11AF) == 0xAE00);
 
-  return 0;
+  return test_exit_status;
 }

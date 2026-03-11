@@ -1,5 +1,5 @@
 /* execl() function: Execute a program, replacing the current process.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -72,7 +72,7 @@ execl (const char *program, const char *arg0, ...)
   }
 
   /* Invoke execv.  */
-  execv (program, argv);
+  execv (program, (char * const *) argv);
 
   /* If execv returned, it must have failed.  */
   int saved_errno = errno;

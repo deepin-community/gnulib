@@ -1,10 +1,11 @@
 @node pthread_setspecific
-@section @code{pthread_setspecific}
+@subsection @code{pthread_setspecific}
 @findex pthread_setspecific
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_setspecific.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_setspecific.html}
 
 Gnulib module: pthread-tss
+@mindex pthread-tss
 
 Portability problems fixed by Gnulib:
 @itemize
