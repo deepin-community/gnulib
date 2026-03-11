@@ -1,8 +1,8 @@
 @node shmget
-@section @code{shmget}
+@subsection @code{shmget}
 @findex shmget
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/shmget.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/shmget.html}
 
 Gnulib module: ---
 

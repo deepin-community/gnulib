@@ -13,10 +13,10 @@ Depends-on:
 fcntl-h
 ioctl
 msvc-nothrow
-stdbool
-stdio
-sys_socket
-unistd
+bool
+stdio-h
+sys_socket-h
+unistd-h
 
 configure.ac:
 gl_NONBLOCKING_IO

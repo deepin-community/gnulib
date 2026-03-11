@@ -1,8 +1,8 @@
 @node alarm
-@section @code{alarm}
+@subsection @code{alarm}
 @findex alarm
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/alarm.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/alarm.html}
 
 Gnulib module: ---
 
@@ -13,8 +13,8 @@ Portability problems fixed by Gnulib:
 Portability problems not fixed by Gnulib:
 @itemize
 @item
-This function has no impact if <code>SIGALRM</code> is inherited as
-ignored; programs should use <code>signal (SIGALRM, SIG_DFL)</code> if
+This function has no impact if @code{SIGALRM} is inherited as
+ignored; programs should use @code{signal (SIGALRM, SIG_DFL)} if
 it is important to ensure the alarm will fire.
 @item
 Use of this function in multi-threaded applications is not advised.

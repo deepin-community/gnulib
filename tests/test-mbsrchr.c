@@ -1,5 +1,5 @@
 /* Test of searching a string for the last occurrence of a character.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -58,5 +58,5 @@ main ()
     ASSERT (result == input + 5);
   }
 
-  return 0;
+  return test_exit_status;
 }

@@ -1,10 +1,11 @@
 @node execv
-@section @code{execv}
+@subsection @code{execv}
 @findex execv
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/execv.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/execv.html}
 
 Gnulib module: execv
+@mindex execv
 
 Portability problems fixed by Gnulib:
 @itemize

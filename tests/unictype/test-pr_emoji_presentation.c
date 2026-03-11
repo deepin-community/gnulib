@@ -1,6 +1,6 @@
 /* DO NOT EDIT! GENERATED AUTOMATICALLY! */
 /* Test the Unicode character type functions.
-   Copyright (C) 2007-2022 Free Software Foundation, Inc.
+   Copyright (C) 2007-2024 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published
@@ -92,11 +92,10 @@
     { 0x1F93C, 0x1F945 },
     { 0x1F947, 0x1F9FF },
     { 0x1FA70, 0x1FA7C },
-    { 0x1FA80, 0x1FA88 },
-    { 0x1FA90, 0x1FABD },
-    { 0x1FABF, 0x1FAC5 },
-    { 0x1FACE, 0x1FADB },
-    { 0x1FAE0, 0x1FAE8 },
+    { 0x1FA80, 0x1FA89 },
+    { 0x1FA8F, 0x1FAC6 },
+    { 0x1FACE, 0x1FADC },
+    { 0x1FADF, 0x1FAE9 },
     { 0x1FAF0, 0x1FAF8 }
 
 #define PREDICATE(c) uc_is_property_emoji_presentation (c)

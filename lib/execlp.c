@@ -1,5 +1,5 @@
 /* execlp() function: Execute a program, replacing the current process.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -72,7 +72,7 @@ execlp (const char *program, const char *arg0, ...)
   }
 
   /* Invoke execvp.  */
-  execvp (program, argv);
+  execvp (program, (char * const *) argv);
 
   /* If execvp returned, it must have failed.  */
   int saved_errno = errno;

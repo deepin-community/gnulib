@@ -1,8 +1,10 @@
-# obstack-printf-posix.m4 serial 8
-dnl Copyright (C) 2008-2023 Free Software Foundation, Inc.
+# obstack-printf-posix.m4
+# serial 11
+dnl Copyright (C) 2008-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_OBSTACK_PRINTF_POSIX],
 [
@@ -30,13 +32,14 @@ AC_DEFUN([gl_FUNC_OBSTACK_PRINTF_IS_POSIX],
   AC_REQUIRE([gl_PRINTF_DIRECTIVE_A])
   AC_REQUIRE([gl_PRINTF_DIRECTIVE_B])
   AC_REQUIRE([gl_PRINTF_DIRECTIVE_F])
-  AC_REQUIRE([gl_PRINTF_DIRECTIVE_N])
+  m4_ifdef([gl_PRINTF_SUPPORT_N_DIRECTIVE],[AC_REQUIRE([gl_PRINTF_DIRECTIVE_N])])
   AC_REQUIRE([gl_PRINTF_DIRECTIVE_LS])
   AC_REQUIRE([gl_PRINTF_DIRECTIVE_LC])
   AC_REQUIRE([gl_PRINTF_POSITIONS])
   AC_REQUIRE([gl_PRINTF_FLAG_GROUPING])
   AC_REQUIRE([gl_PRINTF_FLAG_LEFTADJUST])
   AC_REQUIRE([gl_PRINTF_FLAG_ZERO])
+  AC_REQUIRE([gl_PRINTF_FLAG_ALT_PRECISION_ZERO])
   AC_REQUIRE([gl_PRINTF_PRECISION])
   AC_REQUIRE([gl_PRINTF_ENOMEM])
   gl_cv_func_obstack_printf_posix=no
@@ -58,7 +61,7 @@ AC_DEFUN([gl_FUNC_OBSTACK_PRINTF_IS_POSIX],
                               *yes)
                                 case "$gl_cv_func_printf_directive_f" in
                                   *yes)
-                                    case "$gl_cv_func_printf_directive_n" in
+                                    case m4_ifdef([gl_PRINTF_SUPPORT_N_DIRECTIVE],["$gl_cv_func_printf_directive_n"],["yes"]) in
                                       *yes)
                                         case "$gl_cv_func_printf_directive_ls" in
                                           *yes)
@@ -72,13 +75,17 @@ AC_DEFUN([gl_FUNC_OBSTACK_PRINTF_IS_POSIX],
                                                           *yes)
                                                             case "$gl_cv_func_printf_flag_zero" in
                                                               *yes)
-                                                                case "$gl_cv_func_printf_precision" in
+                                                                case "$gl_cv_func_printf_flag_alt_precision_zero" in
                                                                   *yes)
-                                                                    case "$gl_cv_func_printf_enomem" in
+                                                                    case "$gl_cv_func_printf_precision" in
                                                                       *yes)
-                                                                        # obstack_printf exists and is
-                                                                        # already POSIX compliant.
-                                                                        gl_cv_func_obstack_printf_posix=yes
+                                                                        case "$gl_cv_func_printf_enomem" in
+                                                                          *yes)
+                                                                            # obstack_printf exists and is
+                                                                            # already POSIX compliant.
+                                                                            gl_cv_func_obstack_printf_posix=yes
+                                                                            ;;
+                                                                        esac
                                                                         ;;
                                                                     esac
                                                                     ;;

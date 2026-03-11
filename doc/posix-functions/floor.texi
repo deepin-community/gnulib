@@ -1,10 +1,12 @@
 @node floor
-@section @code{floor}
+@subsection @code{floor}
 @findex floor
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/floor.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/floor.html}
 
 Gnulib module: floor or floor-ieee
+@mindex floor
+@mindex floor-ieee
 
 Portability problems fixed by either Gnulib module @code{floor} or @code{floor-ieee}:
 @itemize

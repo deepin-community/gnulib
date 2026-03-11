@@ -7,13 +7,16 @@ lib/mbmemcasecoll.h
 lib/mbmemcasecoll.c
 
 Depends-on:
-stdbool
+bool
+wchar-h
+uchar-h
 malloca
-mbrtowc
-wcrtomb
+mbszero
+mbrtoc32
+c32rtomb
+c32tolower
 memcmp2
 memcoll
-wchar
 
 configure.ac:
 
@@ -24,7 +27,9 @@ Include:
 "mbmemcasecoll.h"
 
 Link:
+$(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
 $(MBRTOWC_LIB)
+$(LTLIBC32CONV) when linking with libtool, $(LIBC32CONV) otherwise
 
 License:
 GPL

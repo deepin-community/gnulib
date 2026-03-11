@@ -7,10 +7,10 @@ lib/at-func.c
 m4/readlinkat.m4
 
 Depends-on:
-unistd
+unistd-h
 extensions
 at-internal     [test $HAVE_READLINKAT = 0 || test $REPLACE_READLINKAT = 1]
-errno           [test $HAVE_READLINKAT = 0 || test $REPLACE_READLINKAT = 1]
+errno-h         [test $HAVE_READLINKAT = 0 || test $REPLACE_READLINKAT = 1]
 fchdir          [test $HAVE_READLINKAT = 0 || test $REPLACE_READLINKAT = 1]
 fcntl-h         [test $HAVE_READLINKAT = 0 || test $REPLACE_READLINKAT = 1]
 filename        [test $HAVE_READLINKAT = 0 || test $REPLACE_READLINKAT = 1]

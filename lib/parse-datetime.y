@@ -1,7 +1,7 @@
 %{
 /* Parse a string into an internal timestamp.
 
-   Copyright (C) 1999-2000, 2002-2023 Free Software Foundation, Inc.
+   Copyright (C) 1999-2000, 2002-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@
 #include "idx.h"
 #include "intprops.h"
 #include "timespec.h"
-#include "strftime.h"
 
 /* There's no need to extend the stack, so there's no need to involve
    alloca.  */
@@ -61,7 +60,7 @@
 
 #include "gettext.h"
 
-#define _(str) gettext (str)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 /* Bison's skeleton tests _STDLIB_H, while some stdlib.h headers
    use _STDLIB_H_ as witness.  Map the latter to the one bison uses.  */
@@ -143,6 +142,9 @@ typedef struct
 
 /* Meridian: am, pm, or 24-hour style.  */
 enum { MERam, MERpm, MER24 };
+
+/* Maximum length of a time zone abbreviation, plus 1.  */
+enum { TIME_ZONE_BUFSIZE = INT_STRLEN_BOUND (intmax_t) + sizeof ":MM:SS" };
 
 /* A reasonable upper bound for the buffer used in debug output.  */
 enum { DBGBUFSIZE = 100 };
@@ -230,6 +232,11 @@ typedef struct
 
   /* Table of local time zone abbreviations, terminated by a null entry.  */
   table local_time_zone_table[3];
+
+#if !HAVE_STRUCT_TM_TM_ZONE
+  /* The abbreviations in LOCAL_TIME_ZONE_TABLE.  */
+  char tz_abbr[2][TIME_ZONE_BUFSIZE];
+#endif
 } parser_control;
 
 static bool
@@ -244,7 +251,7 @@ debugging (parser_control const *pc)
 
 union YYSTYPE;
 static int yylex (union YYSTYPE *, parser_control *);
-static int yyerror (parser_control const *, char const *);
+static void yyerror (parser_control const *, char const *);
 static bool time_zone_hhmm (parser_control *, textint, intmax_t);
 
 /* Extract into *PC any date and time info from a string of digits
@@ -385,8 +392,6 @@ str_days (parser_control *pc, char *buffer, int n)
 }
 
 /* Convert a time zone to its string representation.  */
-
-enum { TIME_ZONE_BUFSIZE = INT_STRLEN_BOUND (intmax_t) + sizeof ":MM:SS" } ;
 
 static char const *
 time_zone_str (int time_zone, char time_zone_buf[TIME_ZONE_BUFSIZE])
@@ -1311,7 +1316,7 @@ lookup_zone (parser_control const *pc, char const *name)
   return NULL;
 }
 
-#if ! HAVE_TM_GMTOFF
+#if ! HAVE_STRUCT_TM_TM_GMTOFF
 /* Yield the difference between *A and *B,
    measured in seconds, ignoring leap seconds.
    The body of this function is taken directly from the GNU C Library;
@@ -1336,7 +1341,7 @@ tm_diff (const struct tm *a, const struct tm *b)
                 + (a->tm_min - b->tm_min))
           + (a->tm_sec - b->tm_sec));
 }
-#endif /* ! HAVE_TM_GMTOFF */
+#endif
 
 static table const *
 lookup_word (parser_control const *pc, char *word)
@@ -1539,11 +1544,10 @@ yylex (union YYSTYPE *lvalp, parser_control *pc)
 }
 
 /* Do nothing if the parser reports an error.  */
-static int
+static void
 yyerror (_GL_UNUSED parser_control const *pc,
          _GL_UNUSED char const *s)
 {
-  return 0;
 }
 
 /* If *TM0 is the old and *TM1 is the new value of a struct tm after
@@ -1566,6 +1570,33 @@ mktime_ok (struct tm const *tm0, struct tm const *tm1)
             | (tm0->tm_year ^ tm1->tm_year));
 }
 
+/* Populate PC's local time zone table with information from TM.  */
+
+static void
+populate_local_time_zone_table (parser_control *pc, struct tm const *tm)
+{
+  bool first_entry_exists = !!pc->local_time_zone_table[0].name;
+
+  /* The table entry to be filled in.  There are only two, so this is
+     the first entry if it is missing, the second entry otherwise.  */
+  table *e = &pc->local_time_zone_table[first_entry_exists];
+
+  e->type = tLOCAL_ZONE;
+  e->value = tm->tm_isdst;
+
+  char const *zone = NULL;
+#if HAVE_STRUCT_TM_TM_ZONE
+  if (tm->tm_zone[0])
+    zone = tm->tm_zone;
+#else
+  char *tz_abbr = pc->tz_abbr[first_entry_exists];
+  if (strftime (tz_abbr, TIME_ZONE_BUFSIZE, "%Z", tm))
+    zone = tz_abbr;
+#endif
+  e->name = zone;
+  e[1].name = NULL;
+}
+
 /* Debugging: format a 'struct tm' into a buffer, taking the parser's
    timezone information into account (if pc != NULL).  */
 static char const *
@@ -1581,21 +1612,18 @@ debug_strfdatetime (struct tm const *tm, parser_control const *pc,
         issues with the parsing - better to avoid formats that could
         be mis-interpreted (e.g., just YYYY-MM-DD).
 
-     2. Can strftime be used instead?
-        depends if it is portable and can print invalid dates on all systems.
+     2. Print timezone information ?
 
-     3. Print timezone information ?
+     3. Print DST information ?
 
-     4. Print DST information ?
-
-     5. Print nanosecond information ?
+     4. Print nanosecond information ?
 
      NOTE:
      Printed date/time values might not be valid, e.g., '2016-02-31'
      or '2016-19-2016' .  These are the values as parsed from the user
      string, before validation.
   */
-  int m = nstrftime (buf, n, "(Y-M-D) %Y-%m-%d %H:%M:%S", tm, 0, 0);
+  int m = strftime (buf, n, "(Y-M-D) %Y-%m-%d %H:%M:%S", tm);
 
   /* If parser_control information was provided (for timezone),
      and there's enough space in the buffer, add timezone info.  */
@@ -1834,64 +1862,37 @@ parse_datetime_body (struct timespec *result, char const *p,
   pc.debug_year_seen = false;
   pc.debug_ordinal_day_seen = false;
 
-#if HAVE_STRUCT_TM_TM_ZONE
-  pc.local_time_zone_table[0].name = tmp.tm_zone;
-  pc.local_time_zone_table[0].type = tLOCAL_ZONE;
-  pc.local_time_zone_table[0].value = tmp.tm_isdst;
-  pc.local_time_zone_table[1].name = NULL;
+  pc.local_time_zone_table[0].name = NULL;
+  populate_local_time_zone_table (&pc, &tmp);
 
   /* Probe the names used in the next three calendar quarters, looking
      for a tm_isdst different from the one we already have.  */
-  {
-    int quarter;
-    for (quarter = 1; quarter <= 3; quarter++)
-      {
-        time_t probe;
-        if (ckd_add (&probe, Start, quarter * (90 * 24 * 60 * 60)))
-          break;
-        struct tm probe_tm;
-        if (localtime_rz (tz, &probe, &probe_tm) && probe_tm.tm_zone
-            && probe_tm.tm_isdst != pc.local_time_zone_table[0].value)
-          {
-              {
-                pc.local_time_zone_table[1].name = probe_tm.tm_zone;
-                pc.local_time_zone_table[1].type = tLOCAL_ZONE;
-                pc.local_time_zone_table[1].value = probe_tm.tm_isdst;
-                pc.local_time_zone_table[2].name = NULL;
-              }
-            break;
-          }
-      }
-  }
-#else
-#if HAVE_TZNAME
-  {
-# if !HAVE_DECL_TZNAME
-    extern char *tzname[];
-# endif
-    int i;
-    for (i = 0; i < 2; i++)
-      {
-        pc.local_time_zone_table[i].name = tzname[i];
-        pc.local_time_zone_table[i].type = tLOCAL_ZONE;
-        pc.local_time_zone_table[i].value = i;
-      }
-    pc.local_time_zone_table[i].name = NULL;
-  }
-#else
-  pc.local_time_zone_table[0].name = NULL;
-#endif
-#endif
-
-  if (pc.local_time_zone_table[0].name && pc.local_time_zone_table[1].name
-      && ! strcmp (pc.local_time_zone_table[0].name,
-                   pc.local_time_zone_table[1].name))
+  for (int quarter = 1; quarter <= 3; quarter++)
     {
-      /* This locale uses the same abbreviation for standard and
-         daylight times.  So if we see that abbreviation, we don't
-         know whether it's daylight time.  */
-      pc.local_time_zone_table[0].value = -1;
-      pc.local_time_zone_table[1].name = NULL;
+      time_t probe;
+      if (ckd_add (&probe, Start, quarter * (90 * 24 * 60 * 60)))
+        break;
+      struct tm probe_tm;
+      if (localtime_rz (tz, &probe, &probe_tm)
+          && (! pc.local_time_zone_table[0].name
+              || probe_tm.tm_isdst != pc.local_time_zone_table[0].value))
+        {
+          populate_local_time_zone_table (&pc, &probe_tm);
+          if (pc.local_time_zone_table[1].name)
+            {
+              if (! strcmp (pc.local_time_zone_table[0].name,
+                            pc.local_time_zone_table[1].name))
+                {
+                  /* This locale uses the same abbreviation for standard and
+                     daylight times.  So if we see that abbreviation, we don't
+                     know whether it's daylight time.  */
+                  pc.local_time_zone_table[0].value = -1;
+                  pc.local_time_zone_table[1].name = NULL;
+                }
+
+              break;
+            }
+        }
     }
 
   if (yyparse (&pc) != 0)
@@ -2225,7 +2226,7 @@ parse_datetime_body (struct timespec *result, char const *p,
       if (pc.zones_seen)
         {
           bool overflow = false;
-#ifdef HAVE_TM_GMTOFF
+#ifdef HAVE_STRUCT_TM_TM_GMTOFF
           long int utcoff = tm.tm_gmtoff;
 #else
           time_t t = Start;
@@ -2341,7 +2342,7 @@ parse_datetime_body (struct timespec *result, char const *p,
                                         dbg_tm, sizeof dbg_tm));
       if (localtime_rz (tz, &result->tv_sec, &lmt))
         {
-#ifdef HAVE_TM_GMTOFF
+#ifdef HAVE_STRUCT_TM_TM_GMTOFF
           bool got_utcoff = true;
           long int utcoff = lmt.tm_gmtoff;
 #else

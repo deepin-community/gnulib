@@ -1,8 +1,8 @@
 /* DO NOT EDIT! GENERATED AUTOMATICALLY! */
 /* Properties of Unicode characters.  */
-/* Generated automatically by gen-uni-tables.c for Unicode 15.0.0.  */
+/* Generated automatically by gen-uni-tables.c for Unicode 16.0.0.  */
 
-/* Copyright (C) 2000-2022 Free Software Foundation, Inc.
+/* Copyright (C) 2000-2024 Free Software Foundation, Inc.
 
    This file is free software.
    It is dual-licensed under "the GNU LGPLv3+ or the GNU GPLv2+".
@@ -340,7 +340,7 @@ u_property_emoji_presentation =
     0xFFFFF000U, 0xF7FFFFFFU, 0xFFFFFFBFU, 0xFFFFFFFFU,
     0xFFFFFFFFU, 0xFFFFFFFFU, 0xFFFFFFFFU, 0xFFFFFFFFU,
     0x00000000U, 0x00000000U, 0x00000000U, 0x1FFF0000U,
-    0xFFFF01FFU, 0xBFFFFFFFU, 0x0FFFC03FU, 0x01FF01FFU,
+    0xFFFF83FFU, 0xFFFFFFFFU, 0x9FFFC07FU, 0x01FF03FFU,
     0x00000000U, 0x00000000U, 0x00000000U, 0x00000000U,
     0x00000000U, 0x00000000U, 0x00000000U, 0x00000000U
   }

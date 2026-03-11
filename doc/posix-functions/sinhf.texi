@@ -1,10 +1,11 @@
 @node sinhf
-@section @code{sinhf}
+@subsection @code{sinhf}
 @findex sinhf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/sinhf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/sinhf.html}
 
 Gnulib module: sinhf
+@mindex sinhf
 
 Portability problems fixed by Gnulib:
 @itemize

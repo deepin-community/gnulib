@@ -4,14 +4,14 @@ tests/signature.h
 tests/macros.h
 
 Depends-on:
-stdbool
-sys_socket
-netinet_in
-arpa_inet
-sys_ioctl
+bool
+sys_socket-h
+netinet_in-h
+arpa_inet-h
+sys_ioctl-h
 extensions
 inet_pton
-errno
+errno-h
 perror
 sockets
 socket

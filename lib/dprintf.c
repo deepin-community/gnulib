@@ -1,5 +1,5 @@
 /* Formatted output to a file descriptor.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -24,43 +24,24 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdarg.h>
-#include <stdlib.h>
 
-#include "full-write.h"
-#include "vasnprintf.h"
+#include "intprops.h"
 
 int
 dprintf (int fd, const char *format, ...)
 {
-  char buf[2000];
-  char *output;
-  size_t len;
-  size_t lenbuf = sizeof (buf);
   va_list args;
+  off64_t ret;
 
   va_start (args, format);
-  output = vasnprintf (buf, &lenbuf, format, args);
-  len = lenbuf;
+  ret = vdzprintf (fd, format, args);
   va_end (args);
 
-  if (!output)
-    return -1;
-
-  if (full_write (fd, output, len) < len)
-    {
-      if (output != buf)
-        free (output);
-      return -1;
-    }
-
-  if (output != buf)
-    free (output);
-
-  if (len > INT_MAX)
+  if (TYPE_MAXIMUM (off64_t) > INT_MAX && ret > INT_MAX)
     {
       errno = EOVERFLOW;
       return -1;
     }
 
-  return len;
+  return ret;
 }

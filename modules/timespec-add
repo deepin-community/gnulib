@@ -7,7 +7,8 @@ lib/timespec-add.c
 Depends-on:
 c99
 intprops
-stdckdint
+bool
+stdckdint-h
 timespec
 
 configure.ac:

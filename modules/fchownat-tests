@@ -7,14 +7,16 @@ tests/signature.h
 tests/macros.h
 
 Depends-on:
-errno
+errno-h
 ignore-value
 mgetgroups
 nanosleep
 openat-h
 stat-time
-stdckdint
+stdckdint-h
 symlink
+xconcat-filename
+xgetcwd-lgpl
 
 configure.ac:
 AC_CHECK_FUNCS_ONCE([getgid getegid])

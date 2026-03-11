@@ -1,0 +1,51 @@
+Subject: Debianize gnulib-tool --version; show snapshot and debian version
+Forwarded: not-needed
+Date: Sat, 5 Sep 2009 06:48:56 +0100
+Author: Ian Beckwith <ianb@erislabs.net>
+Author: Simon Josefsson <simon@josefsson.org>
+Last-Update: 2024-05-10
+
+diff --git a/gnulib-tool.sh b/gnulib-tool.sh
+index 5f0c6f530e..b28b53a5fa 100755
+--- a/gnulib-tool.sh
++++ b/gnulib-tool.sh
+@@ -363,8 +363,8 @@ q
+     version=' '`cd "$gnulib_dir" && ./build-aux/git-version-gen /dev/null | sed -e 's/-dirty/-modified/'`
+   else
+     # gnulib copy without versioning information.
+-    date=`sed -e 's/ .*//;q' "$gnulib_dir"/ChangeLog`
+-    version=
++    date=`dpkg-query --show --showformat '${source:Version}' gnulib`" Debian"
++    version=" "`git bundle list-heads /usr/share/gnulib/gnulib.bundle refs/heads/master | cut -f1 -d" "`
+   fi
+   year=`"$gnulib_dir"/build-aux/mdate-sh "$self_abspathname" | sed -e 's,^.* ,,'`
+   echo "\
+diff --git a/pygnulib/GLInfo.py b/pygnulib/GLInfo.py
+index 845ca6d733..27c631ad90 100644
+--- a/pygnulib/GLInfo.py
++++ b/pygnulib/GLInfo.py
+@@ -120,10 +120,10 @@ class GLInfo:
+                     result = result.rstrip(os.linesep)
+                     return result
+         # gnulib copy without versioning information.
+-        with codecs.open(os.path.join(DIRS['root'], 'ChangeLog'), 'rb', 'UTF-8') as file:
+-            line = file.readline()
+-            first_changelog_line = line.rstrip()
+-        result = re.compile(r' .*').sub(r'', first_changelog_line)
++        args = ['dpkg-query', '--show', '--showformat', '${source:Version}', 'gnulib']
++        pkgv = sp.check_output(args)
++        pkgv = str(pkgv, 'UTF-8')
++        result = pkgv + " Debian"
+         return result
+ 
+     def copyright_range(self) -> str:
+@@ -349,4 +349,8 @@ Report bugs to <bug-gnulib@gnu.org>.'''
+                     result = ''
+                 return result
+         # gnulib copy without versioning information.
+-        return ''
++        args = ['git', 'bundle', 'list-heads', '/usr/share/gnulib/gnulib.bundle', 'refs/heads/master' ]
++        gitv = sp.check_output(args)
++        gitv = str(gitv, 'UTF-8')
++        result = gitv.split(' ', 1)[0]
++        return result

@@ -6,13 +6,14 @@ lib/wcrtomb.c
 m4/wcrtomb.m4
 m4/mbrtowc.m4
 m4/mbstate_t.m4
+m4/locale-en.m4
 m4/locale-fr.m4
 m4/locale-ja.m4
 m4/locale-zh.m4
 m4/codeset.m4
 
 Depends-on:
-wchar
+wchar-h
 extensions
 mbsinit         [test $HAVE_WCRTOMB = 0 || test $REPLACE_WCRTOMB = 1]
 

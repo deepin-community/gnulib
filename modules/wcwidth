@@ -4,11 +4,10 @@ Determine the number of screen columns needed for a character.
 Files:
 lib/wcwidth.c
 m4/wcwidth.m4
-m4/wchar_t.m4
 m4/wint_t.m4
 
 Depends-on:
-wchar
+wchar-h
 extensions
 wctype-h        [test $HAVE_WCWIDTH = 0 || test $REPLACE_WCWIDTH = 1]
 localcharset    [test $HAVE_WCWIDTH = 0 || test $REPLACE_WCWIDTH = 1]

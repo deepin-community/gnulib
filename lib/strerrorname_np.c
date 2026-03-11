@@ -1,5 +1,5 @@
 /* Name of system error code.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -34,7 +34,7 @@ strerrorname_np (int errnum)
     case ERANGE:          return "ERANGE";
 
     /* Error codes specified by POSIX.
-       <https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html>  */
+       <https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/errno.h.html>  */
     #if defined E2BIG
     case E2BIG:           return "E2BIG";
     #endif
@@ -244,6 +244,9 @@ strerrorname_np (int errnum)
     #endif
     #if defined EROFS
     case EROFS:           return "EROFS";
+    #endif
+    #if defined ESOCKTNOSUPPORT
+    case ESOCKTNOSUPPORT: return "ESOCKTNOSUPPORT";
     #endif
     #if defined ESPIPE
     case ESPIPE:          return "ESPIPE";
@@ -1123,7 +1126,7 @@ strerrorname_np (int errnum)
     #if defined ENOSHARE
     case ENOSHARE:        return "ENOSHARE";
     #endif
-    /* HP-UX, OSF/1 */
+    /* Linux, HP-UX, OSF/1 */
     #if defined ENOSYM
     case ENOSYM:          return "ENOSYM";
     #endif
@@ -1247,7 +1250,7 @@ strerrorname_np (int errnum)
     #if defined EREMOTEIO
     case EREMOTEIO:       return "EREMOTEIO";
     #endif
-    /* HP-UX */
+    /* Linux, HP-UX */
     #if defined EREMOTERELEASE
     case EREMOTERELEASE:  return "EREMOTERELEASE";
     #endif
@@ -1278,10 +1281,6 @@ strerrorname_np (int errnum)
     /* Haiku */
     #if defined ESIGPARM
     case ESIGPARM:        return "ESIGPARM";
-    #endif
-    /* Linux, Mac OS X, FreeBSD, NetBSD, OpenBSD, AIX, HP-UX, IRIX, OSF/1, Solaris, Minix, Cygwin */
-    #if defined ESOCKTNOSUPPORT
-    case ESOCKTNOSUPPORT: return "ESOCKTNOSUPPORT";
     #endif
     /* AIX, OSF/1 */
     #if defined ESOFT

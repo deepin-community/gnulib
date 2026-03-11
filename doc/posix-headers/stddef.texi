@@ -1,9 +1,10 @@
 @node stddef.h
 @section @file{stddef.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stddef.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/stddef.h.html}
 
-Gnulib module: stddef
+Gnulib module: stddef-h
+@mindex stddef-h
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -18,9 +19,6 @@ NetBSD 8.0, Solaris 11.0, and others.
 @item
 @code{max_align_t} does not have the expected alignment on some platforms:
 NetBSD 8.0/x86, AIX 7.2 with xlc in 64-bit mode.
-
-@item
-Some old platforms fail to provide @code{wchar_t}.
 
 @item
 Some platforms provide a @code{NULL} macro that cannot be used in arbitrary
@@ -44,6 +42,12 @@ Portability problems not fixed by Gnulib:
 Some platforms fail to provide @code{nullptr_t},
 which Gnulib cannot usefully emulate:
 GCC 12, Clang 15, and other pre-2023 C compilers.
+
+@item
+Some platforms define @code{nullptr_t} even when @code{<stddef.h>} is
+not included:
+@c https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114869
+GCC 14.0.1 20240411 (Red Hat 14.0.1-0).
 
 @item
 Some platforms provide an @code{offsetof} macro that cannot be used in

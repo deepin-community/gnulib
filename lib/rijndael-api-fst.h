@@ -1,5 +1,5 @@
 /* rijndael-api-fst.h --- Rijndael cipher implementation.
- * Copyright (C) 2005, 2009-2023 Free Software Foundation, Inc.
+ * Copyright (C) 2005, 2009-2025 Free Software Foundation, Inc.
  *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -61,6 +61,11 @@
 #include "rijndael-alg-fst.h"
 
 #include <stdio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* Default number of bits in a cipher block */
 #define RIJNDAEL_BITSPERBLOCK 128
@@ -201,5 +206,10 @@ rijndaelPadDecrypt (rijndaelCipherInstance *cipher,
                     const rijndaelKeyInstance *key,
                     const char *input, size_t inputOctets,
                     char *restrict outBuffer);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __RIJNDAEL_API_FST_H */

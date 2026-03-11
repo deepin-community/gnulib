@@ -1,7 +1,7 @@
 @node Invoking gnulib-tool
 @chapter Invoking gnulib-tool
 
-@c Copyright (C) 2005--2023 Free Software Foundation, Inc.
+@c Copyright (C) 2005--2025 Free Software Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document
 @c under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -156,6 +156,7 @@ Don't forget to
   - add "lib/Makefile" to AC_CONFIG_FILES in ./configure.ac,
   - mention "lib" in SUBDIRS in Makefile.am,
   - mention "-I m4" in ACLOCAL_AMFLAGS in Makefile.am,
+    or add an AC_CONFIG_MACRO_DIRS([m4]) invocation in ./configure.ac,
   - invoke gl_EARLY in ./configure.ac, right after AC_PROG_CC,
   - invoke gl_INIT in ./configure.ac.
 ~/src/libfoo$
@@ -221,6 +222,13 @@ your top-level @file{Makefile.am} file, as in:
 
 @example
 ACLOCAL_AMFLAGS = -I m4
+@end example
+
+Alternatively, add an @code{AC_CONFIG_MACRO_DIRS} invocation in your
+@file{configure.ac} file, as in:
+
+@example
+AC_CONFIG_MACRO_DIRS([m4])
 @end example
 
 You are now ready to call the M4 macros in @code{gnulib-comp.m4} from
@@ -366,9 +374,44 @@ manually copy the @file{gnulib-cache.m4} into the new M4 macro directory.
 
 In the @file{gnulib-cache.m4} file, the macros have the following meaning:
 @table @code
+@item gl_LOCAL_DIR
+The argument is a colon separated list of local directories where
+@code{gnulib-tool} will search before looking at gnulib's directory.
+Corresponds to the @samp{--local-dir} command line argument.
+
 @item gl_MODULES
 The argument is a space separated list of the requested modules, not including
 dependencies.
+
+@item gl_WITH_OBSOLETE
+The presence of this macro corresponds to the @samp{--with-obsolete} command
+line argument.  It takes no arguments.
+
+@item gl_WITH_CXX_TESTS
+The presence of this macro corresponds to the @samp{--with-c++-tests} command
+line argument and to the absence of the @samp{--without-c++-tests} command line
+argument.  It takes no arguments.
+
+@item gl_WITH_LONGRUNNING_TESTS
+The presence of this macro corresponds to the @samp{--with-longrunning-tests}
+command line argument and to the absence of the
+@samp{--without-longrunning-tests} command line argument.  It takes no
+arguments.
+
+@item gl_WITH_PRIVILEGED_TESTS
+The presence of this macro corresponds to the @samp{--with-longrunning-tests}
+command line argument and to the absence of the
+@samp{--without-longrunning-tests} command line argument.  It takes no
+arguments.
+
+@item gl_WITH_UNPORTABLE_TESTS
+The presence of this macro corresponds to the @samp{--with-unportable-tests}
+command line argument and to the absence of the
+@samp{--without-unportable-tests} command line argument.  It takes no arguments.
+
+@item gl_WITH_ALL_TESTS
+The presence of this macro corresponds to the @samp{--with-all-tests} command
+line argument.  It takes no arguments.
 
 @item gl_AVOID
 The argument is a space separated list of modules that should not be used,
@@ -385,9 +428,21 @@ The argument is the relative file name of the directory containing the gnulib
 M4 macros (*.m4 files).  Corresponds to the @samp{--m4-base} command line
 argument.
 
+@item gl_PO_BASE
+The argument is the relative file name of the directory containing *.po files.
+Corresponds to the @samp{--po-base} command line argument.
+
+@item gl_DOC_BASE
+The argument is the relative file name of the directory containing documentation
+files.  Corresponds to the @samp{--doc-base} command line argument.
+
 @item gl_TESTS_BASE
 The argument is the relative file name of the directory containing the gnulib
 unit test files.  Corresponds to the @samp{--tests-base} command line argument.
+
+@item gl_WITH_TESTS
+The presence of this macro corresponds to the @samp{--with-tests} command line
+argument.  It takes no arguments.
 
 @item gl_LIB
 The argument is the name of the library to be created.  Corresponds to the
@@ -399,6 +454,28 @@ command line argument.  The presence of this macro with an argument (whose
 value must be 2 or 3) corresponds to the @samp{--lgpl=@var{arg}} command line
 argument.
 
+@item gl_GPL
+The presence of this macro with an argument (whose value must be 2 or 3)
+corresponds to the @samp{--gpl=@var{arg}} command line argument.
+
+@item gl_MAKEFILE_NAME
+The argument is the name of the makefile in the source-base and tests-base
+directories.  Corresponds to the @samp{--makefile-name} command line argument.
+
+@item gl_TESTS_MAKEFILE_NAME
+The argument is the name of the makefile in the tests-base directory.
+Corresponds to the @samp{--tests-makefile-name} command line argument.
+
+@item gl_AUTOMAKE_SUBDIR
+The presence of this macro corresponds to the @samp{--automake-subdir} command
+line argument.  It takes no arguments.
+
+@item gl_CONDITIONAL_DEPENDENCIES
+The presence of this macro corresponds to the @samp{--conditional-dependencies}
+command line argument and to the absence of the
+@samp{--no-conditional-dependencies} command line argument.  It takes no
+arguments.
+
 @item gl_LIBTOOL
 The presence of this macro corresponds to the @samp{--libtool} command line
 argument and to the absence of the @samp{--no-libtool} command line argument.
@@ -407,6 +484,20 @@ It takes no arguments.
 @item gl_MACRO_PREFIX
 The argument is the prefix to use for macros in the @file{gnulib-comp.m4}
 file.  Corresponds to the @samp{--macro-prefix} command line argument.
+
+@item gl_PO_DOMAIN
+The argument is the prefix of the i18n domain, typically matching the package
+name.  Corresponds to the @samp{--po-domain} command line argument.
+
+@item gl_WITNESS_C_MACRO
+The argument is the C macro that is defined when the sources in this directory
+are compiled or used.  Corresponds to the @samp{--witness-c-macro} command line
+argument.
+
+@item gl_VC_FILES
+The argument to this macro is @code{true} or @code{false}.  The former
+corresponds to the @samp{--vc-files} command line argument and the latter
+corresponds to the @samp{--no-vc-files} command line argument.
 @end table
 
 @end itemize
@@ -434,6 +525,12 @@ your project.
 @node Source changes
 @section Changing your sources for use with Gnulib
 
+When you use Gnulib, you need to make some small changes to your source code
+base.
+
+@node -I options
+@subsection -I options
+
 Gnulib contains some header file overrides.  This means that when building
 on systems with deficient header files in @file{/usr/include/}, it may create
 files named @file{string.h}, @file{stdlib.h}, @file{stdint.h} or similar in
@@ -441,6 +538,9 @@ the build directory.  In the other source directories of your package you
 will usually pass @samp{-I} options to the compiler, so that these Gnulib
 substitutes are visible and take precedence over the files in
 @file{/usr/include/}.
+
+@node Include <config.h>
+@subsection Include <config.h>
 
 These Gnulib substitute header files rely on @file{<config.h>} being
 already included.  Furthermore @file{<config.h>} must be the first include
@@ -454,6 +554,96 @@ This is annoying, but inevitable: On many systems, @file{<config.h>} is
 used to set system dependent flags (such as @code{_GNU_SOURCE} on GNU systems),
 and these flags have no effect after any system header file has been included.
 
+@node Style of #include statements
+@subsection Style of #include statements
+
+When including including specific header files, you need to use the
+@samp{#include <...>} syntax, not the @samp{#include "..."} syntax.
+This is true for the following POSIX or ISO C standardized header files:
+@c To find the list of files, use 'grep -l @INCLUDE_NEXT lib/*.in.h'.
+@itemize @asis{}
+@item @code{arpa/inet.h}
+@item @code{assert.h}
+@item @code{ctype.h}
+@item @code{dirent.h}
+@item @code{endian.h}
+@item @code{errno.h}
+@item @code{fcntl.h}
+@item @code{fenv.h}
+@item @code{float.h}
+@item @code{fnmatch.h}
+@item @code{glob.h}
+@item @code{iconv.h}
+@item @code{inttypes.h}
+@item @code{langinfo.h}
+@item @code{limits.h}
+@item @code{locale.h}
+@item @code{math.h}
+@item @code{monetary.h}
+@item @code{net/if.h}
+@item @code{netdb.h}
+@item @code{netinet/in.h}
+@item @code{poll.h}
+@item @code{pthread.h}
+@item @code{sched.h}
+@item @code{search.h}
+@item @code{signal.h}
+@item @code{spawn.h}
+@item @code{stdalign.h}
+@item @code{stdarg.h}
+@item @code{stddef.h}
+@item @code{stdint.h}
+@item @code{stdio.h}
+@item @code{stdlib.h}
+@item @code{string.h}
+@item @code{strings.h}
+@item @code{sys/msg.h}
+@item @code{sys/resource.h}
+@item @code{sys/select.h}
+@item @code{sys/sem.h}
+@item @code{sys/shm.h}
+@item @code{sys/socket.h}
+@item @code{sys/stat.h}
+@item @code{sys/time.h}
+@item @code{sys/times.h}
+@item @code{sys/types.h}
+@item @code{sys/uio.h}
+@item @code{sys/un.h}
+@item @code{sys/utsname.h}
+@item @code{sys/wait.h}
+@item @code{termios.h}
+@item @code{threads.h}
+@item @code{time.h}
+@item @code{uchar.h}
+@item @code{unistd.h}
+@item @code{utime.h}
+@item @code{wchar.h}
+@item @code{wctype.h}
+@end itemize
+@noindent
+as well as for the following header files that exist in the GNU C library
+but are not standardized:
+@itemize @asis{}
+@item @code{alloca.h}
+@item @code{byteswap.h}
+@item @code{error.h}
+@item @code{getopt.h}
+@item @code{malloc.h}
+@item @code{mntent.h}
+@item @code{omp.h}
+@item @code{pty.h}
+@item @code{selinux/selinux.h}
+@item @code{sys/file.h}
+@item @code{sys/ioctl.h}
+@item @code{sys/random.h}
+@item @code{sysexits.h}
+@item @code{utmp.h}
+@end itemize
+@noindent
+The reason for this requirement is that for these header files, the Gnulib
+override uses @code{#include_next} to include the system-provided header
+of the same name, and @code{#include_next} may not work right with the
+@samp{#include "..."} syntax.
 
 @node Link-time requirements
 @section Changing your link commands for use with Gnulib
@@ -505,6 +695,7 @@ that makes this task easier.
 
 @enumerate
 @item
+@mindex posixcheck
 Add the Gnulib module @samp{posixcheck} to the Gnulib imports of your package,
 as described earlier in this chapter.
 
@@ -794,6 +985,7 @@ older Gnulib snapshot, it is the release that was the most recent release
 at the time the Gnulib snapshot was taken.
 
 @item
+@mindex gettext
 After running @code{gettextize}, invoke @code{gnulib-tool} and import
 the @code{gettext} module.  Also, copy the latest version of gnulib's
 @file{build-aux/po/Makefile.in.in} to your @file{po/} directory (this
@@ -823,6 +1015,7 @@ older than version 0.17).  Run @code{autopoint} (not
 of gettext will install the older infrastructure that you requested).
 
 @item
+@mindex gettext-h
 Invoke @code{gnulib-tool}, and import the @code{gettext-h} module.
 @end enumerate
 
@@ -854,7 +1047,53 @@ Gnulib provides some functions that emit translatable messages using GNU
 translations of these messages, which you should incorporate into your
 own programs.
 
-There are two basic ways to achieve this.  The first, and older, method
+The recommended way to achieve this is that
+your package depends on the package @samp{gnulib-l10n}.
+This package contains the Gnulib localizations as @code{.mo} files.
+
+In order to use this method, you must
+-- in each program that might use Gnulib code --
+add an extra line to the part of the program
+that initializes locale-dependent behavior.
+Where you would normally write something like:
+
+@example
+@group
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+@end group
+@end example
+
+@noindent
+you should add an additional @code{bindtextdomain} call to inform gettext of
+where the MO files for the extra message domain may be found:
+
+@example
+@group
+  bindtextdomain ("gnulib", GNULIB_LOCALEDIR);
+@end group
+@end example
+
+Since you do not change the @code{textdomain} call,
+the default message domain for your program remains the same
+and your own use of @code{gettext} functions will not be affected.
+
+If your package has a @code{DEPENDENCIES} file,
+for the ease of installers and distributors,
+you should add the @samp{gnulib-l10n} dependency in this file.
+
+If your package does not support localization,
+you can simplify its build process by using
+@code{gnulib-tool}'s @option{--avoid=gnulib-i18n} option.
+The package need not call @code{bindtextdomain} or @code{textdomain},
+and all Gnulib-generated messages will be in American English.
+
+Two older methods to use Gnulib localizations are deprecated:
+
+@itemize
+@item
+The first, and older, method
 is to list all the source files you use from Gnulib in your own
 @file{po/POTFILES.in} file.  This will cause all the relevant
 translatable strings to be included in your POT file.  When you send
@@ -870,12 +1109,12 @@ It is also slow and causes substantial extra work, because a human
 translator must be in the loop for each language and you will need to
 incorporate their work on request.
 
-For these reasons, a new method was designed and is now recommended.  If
+@item
+The second method is that
 you pass the @code{--po-base=@var{directory}} and @code{--po-domain=@var{domain}}
-options to @code{gnulib-tool}, then @code{gnulib-tool} will create a
-separate directory with its own @file{POTFILES.in}, and fetch current
-translations directly from the Translation Project (using
-@command{rsync} or @command{wget}, whichever is available).
+options to @code{gnulib-tool}, then @code{gnulib-tool} creates a
+separate directory with its own @file{POTFILES.in}, and fetches current
+translations directly from the Translation Project (using @command{wget}).
 The POT file in this directory will be called
 @file{@var{domain}-gnulib.pot}, depending on the @var{domain} you gave to the
 @code{--po-domain} option (typically the same as the package name).
@@ -887,37 +1126,10 @@ When you use these options, the functions in Gnulib are built
 in such a way that they will always use this domain regardless of the
 default domain set by @code{textdomain}.
 
-In order to use this method, you must---in each program that might use
-Gnulib code---add an extra line to the part of the program that
-initializes locale-dependent behavior.  Where you would normally write
-something like:
-
-@example
-@group
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
-@end group
-@end example
-
-@noindent
-you should add an additional @code{bindtextdomain} call to inform
-gettext of where the MO files for the extra message domain may be found:
-
-@example
-@group
-  bindtextdomain (PACKAGE "-gnulib", LOCALEDIR);
-@end group
-@end example
-
-(This example assumes that the @var{domain} that you specified
-to @code{gnulib-tool} is the same as the value of the @code{PACKAGE}
-preprocessor macro.)
-
-Since you do not change the @code{textdomain} call, the default message
-domain for your program remains the same and your own use of @code{gettext}
-functions will not be affected.
-
+This method is deprecated because it adds complexity to your package
+and, additionally, mixes the ``autopull'' and ``autogen'' phases of
+package source preparation.
+@end itemize
 
 @node VCS Issues
 @section Integration with Version Control Systems

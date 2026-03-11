@@ -1,5 +1,5 @@
 /* Test of exp2*() function family.
-   Copyright (C) 2012-2023 Free Software Foundation, Inc.
+   Copyright (C) 2012-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ test_function (void)
     ASSERT (y == L_(1.0));
   }
   /* <https://sourceware.org/bugzilla/show_bug.cgi?id=13824> */
-#if !(defined __linux__ && (defined __sparc__ || defined __powerpc__))
+#if !(__GLIBC__ == 2 && __GLIBC_MINOR__ < 16 && (defined __sparc__ || defined __powerpc__))
   {
     int e;
     DOUBLE x;

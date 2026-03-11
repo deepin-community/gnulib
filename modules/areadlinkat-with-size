@@ -8,10 +8,10 @@ lib/at-func.c
 
 Depends-on:
 areadlink-with-size
-stdint
+stdint-h
 readlinkat
 at-internal
-errno
+errno-h
 extensions
 fchdir
 fcntl-h
@@ -21,7 +21,7 @@ limits-h
 openat-die
 openat-h
 save-cwd
-unistd
+unistd-h
 
 configure.ac:
 gl_MODULE_INDICATOR([areadlinkat-with-size])

@@ -1,5 +1,5 @@
 /* String descriptors.
-   Copyright (C) 2023 Free Software Foundation, Inc.
+   Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -25,10 +25,12 @@
 /* Specification and inline definitions.  */
 #include "string-desc.h"
 
+#include <limits.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "c-ctype.h"
 #include "ialloc.h"
 #include "full-write.h"
 
@@ -83,6 +85,28 @@ string_desc_cmp (string_desc_t a, string_desc_t b)
     }
 }
 
+int
+string_desc_c_casecmp (string_desc_t a, string_desc_t b)
+{
+  /* Don't use memcasecmp here, since it uses the current locale, not the
+     "C" locale.  */
+  idx_t an = string_desc_length (a);
+  idx_t bn = string_desc_length (b);
+  const char *ap = string_desc_data (a);
+  const char *bp = string_desc_data (b);
+  idx_t n = (an < bn ? an : bn);
+  idx_t i;
+  for (i = 0; i < n; i++)
+    {
+      int ac = c_tolower ((unsigned char) ap[i]);
+      int bc = c_tolower ((unsigned char) bp[i]);
+      if (ac != bc)
+        return (UCHAR_MAX <= INT_MAX ? ac - bc : _GL_CMP (ac, bc));
+    }
+  /* Here i = n = min (an, bn).  */
+  return _GL_CMP (an, bn);
+}
+
 ptrdiff_t
 string_desc_index (string_desc_t s, char c)
 {
@@ -117,6 +141,20 @@ string_desc_new_empty (void)
 
   return result;
 
+}
+
+string_desc_t
+string_desc_new_addr (idx_t n, char *addr)
+{
+  string_desc_t result;
+
+  result._nbytes = n;
+  if (n == 0)
+    result._data = NULL;
+  else
+    result._data = addr;
+
+  return result;
 }
 
 string_desc_t
@@ -189,20 +227,6 @@ string_desc_new (string_desc_t *resultp, idx_t n)
 
   *resultp = result;
   return 0;
-}
-
-string_desc_t
-string_desc_new_addr (idx_t n, char *addr)
-{
-  string_desc_t result;
-
-  result._nbytes = n;
-  if (n == 0)
-    result._data = NULL;
-  else
-    result._data = addr;
-
-  return result;
 }
 
 int

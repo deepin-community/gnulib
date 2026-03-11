@@ -1,10 +1,11 @@
 @node chdir
-@section @code{chdir}
+@subsection @code{chdir}
 @findex chdir
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/chdir.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/chdir.html}
 
 Gnulib module: chdir
+@mindex chdir
 
 Portability problems fixed by Gnulib:
 @itemize

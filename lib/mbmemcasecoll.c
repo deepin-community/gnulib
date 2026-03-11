@@ -1,5 +1,5 @@
 /* Locale-specific case-ignoring memory comparison.
-   Copyright (C) 2001, 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2009-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2001.
 
    This file is free software: you can redistribute it and/or modify
@@ -27,23 +27,21 @@
 /* Get tolower().  */
 #include <ctype.h>
 
-/* Get mbstate_t, mbrtowc(), wcrtomb().  */
+/* Get mbstate_t.  */
 #include <wchar.h>
 
-/* Get towlower().  */
-#include <wctype.h>
+/* Get char32_t, mbrtoc32(), c32rtomb(), c32tolower().  */
+#include <uchar.h>
 
 #include "malloca.h"
 #include "memcmp2.h"
 #include "memcoll.h"
 
-#define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))
-
-/* Apply towlower() to the multibyte character sequence in INBUF, storing the
+/* Apply c32tolower() to the multibyte character sequence in INBUF, storing the
    result as a multibyte character sequence in OUTBUF.  */
 static size_t
-apply_towlower (const char *inbuf, size_t inbufsize,
-                char *outbuf, size_t outbufsize)
+apply_c32tolower (const char *inbuf, size_t inbufsize,
+                  char *outbuf, size_t outbufsize)
 {
   char *outbuf_orig = outbuf;
   size_t remaining;
@@ -51,57 +49,74 @@ apply_towlower (const char *inbuf, size_t inbufsize,
   remaining = inbufsize;
   while (remaining > 0)
     {
-      wchar_t wc1;
-      size_t n1;
       mbstate_t state;
 
-      memset (&state, '\0', sizeof (mbstate_t));
-      n1 = mbrtowc (&wc1, inbuf, remaining, &state);
-      if (n1 == (size_t)(-2))
-        break;
-      if (n1 != (size_t)(-1))
+      mbszero (&state);
+      for (;;)
         {
-          wint_t wc2;
+          char32_t wc1;
+          size_t n1;
 
-          if (n1 == 0) /* NUL character? */
-            n1 = 1;
+          n1 = mbrtoc32 (&wc1, inbuf, remaining, &state);
 
-          wc2 = towlower (wc1);
-          if (wc2 != wc1)
+          if (n1 == (size_t)(-1))
             {
-              size_t n2;
-
-              memset (&state, '\0', sizeof (mbstate_t));
-              n2 = wcrtomb (outbuf, wc2, &state);
-              if (n2 != (size_t)(-1))
-                {
-                  /* Store the translated multibyte character.  */
-                  inbuf += n1;
-                  remaining -= n1;
-                  outbuf += n2;
-                  continue;
-                }
+              /* Invalid multibyte character on input.
+                 Copy one byte without modification.  */
+              *outbuf++ = *inbuf++;
+              remaining -= 1;
+              break;
             }
+          else if (n1 == (size_t)(-2))
+            {
+              /* Incomplete multibyte sequence on input.
+                 Pass it through unmodified.  */
+              while (remaining > 0)
+                {
+                  *outbuf++ = *inbuf++;
+                  remaining -= 1;
+                }
+              break;
+            }
+          else
+            {
+              wint_t wc2;
 
-          /* Nothing to translate. */
-          memcpy (outbuf, inbuf, n1);
-          inbuf += n1;
-          remaining -= n1;
-          outbuf += n1;
-          continue;
+              if (n1 == 0) /* NUL character? */
+                n1 = 1;
+              #if !GNULIB_MBRTOC32_REGULAR
+              else if (n1 == (size_t)(-3))
+                n1 = 0;
+              #endif
+
+              wc2 = c32tolower (wc1);
+              if (wc2 != wc1)
+                {
+                  mbstate_t state2;
+                  size_t n2;
+
+                  mbszero (&state2);
+                  n2 = c32rtomb (outbuf, wc2, &state2);
+                  if (n2 != (size_t)(-1))
+                    {
+                      /* Store the translated multibyte character.  */
+                      outbuf += n2;
+                      goto done_storing;
+                    }
+                }
+
+              /* Nothing to translate. */
+              memcpy (outbuf, inbuf, n1);
+              outbuf += n1;
+             done_storing:
+              inbuf += n1;
+              remaining -= n1;
+            }
+          #if !GNULIB_MBRTOC32_REGULAR
+          if (mbsinit (&state))
+          #endif
+            break;
         }
-
-      /* Invalid multibyte character on input.
-         Copy one byte without modification.  */
-      *outbuf++ = *inbuf++;
-      remaining -= 1;
-    }
-  /* Incomplete multibyte sequence on input.
-     Pass it through unmodified.  */
-  while (remaining > 0)
-    {
-      *outbuf++ = *inbuf++;
-      remaining -= 1;
     }
 
   /* Verify the output buffer was large enough.  */
@@ -119,7 +134,7 @@ apply_tolower (const char *inbuf, char *outbuf, size_t bufsize)
 {
   for (; bufsize > 0; bufsize--)
     {
-      *outbuf = TOLOWER ((unsigned char) *inbuf);
+      *outbuf = tolower ((unsigned char) *inbuf);
       inbuf++;
       outbuf++;
     }
@@ -162,8 +177,8 @@ mbmemcasecoll (const char *s1, size_t s1len, const char *s2, size_t s2len,
   /* Case-fold the two argument strings.  */
   if (MB_CUR_MAX > 1)
     {
-      t1len = apply_towlower (s1, s1len, t1, t1len);
-      t2len = apply_towlower (s2, s2len, t2, t2len);
+      t1len = apply_c32tolower (s1, s1len, t1, t1len);
+      t2len = apply_c32tolower (s2, s2len, t2, t2len);
     }
   else
     {

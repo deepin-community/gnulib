@@ -1,8 +1,10 @@
-# isinf.m4 serial 13
-dnl Copyright (C) 2007-2023 Free Software Foundation, Inc.
+# isinf.m4
+# serial 15
+dnl Copyright (C) 2007-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_ISINF],
 [
@@ -17,7 +19,8 @@ AC_DEFUN([gl_ISINF],
       #endif
     ]])
   if test "$ac_cv_have_decl_isinf" = yes; then
-    gl_CHECK_MATH_LIB([ISINF_LIBM], [x = isinf (x) + isinf ((float) x);])
+    gl_CHECK_MATH_LIB([ISINF_LIBM], [double],
+      [x = isinf (x) + isinf ((float) x);])
     if test "$ISINF_LIBM" != missing; then
       dnl Test whether isinf() on 'long double' works.
       gl_ISINFL_WORKS
@@ -160,7 +163,7 @@ int main ()
       [gl_cv_func_isinfl_works=yes],
       [gl_cv_func_isinfl_works=no],
       [case "$host_os" in
-         mingw*) # Guess yes on mingw, no on MSVC.
+         mingw* | windows*) # Guess yes on mingw, no on MSVC.
            AC_EGREP_CPP([Known], [
 #ifdef __MINGW32__
  Known

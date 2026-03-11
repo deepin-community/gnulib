@@ -28,10 +28,11 @@ mempcpy                       [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
 opendir                       [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
 readdir                       [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
 glibc-internal/scratch_buffer [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
-stdbool                       [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
-stdint                        [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
+bool                          [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
+stdckdint-h                   [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
+stdint-h                      [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
 strdup                        [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
-unistd                        [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
+unistd-h                      [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
 malloc-posix                  [test $HAVE_GLOB = 0 || test $REPLACE_GLOB = 1]
 
 configure.ac:
@@ -59,6 +60,7 @@ Include:
 <glob.h>
 
 Link:
+$(LTLIBUNISTRING) when linking with libtool, $(LIBUNISTRING) otherwise
 $(MBRTOWC_LIB)
 
 License:

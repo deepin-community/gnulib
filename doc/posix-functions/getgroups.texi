@@ -1,10 +1,11 @@
 @node getgroups
-@section @code{getgroups}
+@subsection @code{getgroups}
 @findex getgroups
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getgroups.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getgroups.html}
 
 Gnulib module: getgroups
+@mindex getgroups
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -14,7 +15,7 @@ mingw, MSVC 14.
 @item
 On some platforms, this function fails to reject a negative count,
 even though that is less than the size that would be returned:
-macOS 11.1, FreeBSD 13.0.
+macOS 14, FreeBSD 13.0.
 @item
 On NeXTstep 3.2, @code{getgroups (0, NULL)} always fails.  See macro
 @samp{AC_FUNC_GETGROUPS}.
@@ -36,4 +37,5 @@ effective group id twice, if it is also a member of the current
 supplemental group ids.
 @end itemize
 
+@mindex mgetgroups
 The Gnulib module @code{mgetgroups} provides a similar API.

@@ -1,8 +1,8 @@
 @node strxfrm
-@section @code{strxfrm}
+@subsection @code{strxfrm}
 @findex strxfrm
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/strxfrm.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/strxfrm.html}
 
 Gnulib module: ---
 

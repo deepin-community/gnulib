@@ -4,8 +4,9 @@ tests/test-tls.c
 Depends-on:
 thread
 lock
-stdint
+stdint-h
 yield
+random
 
 configure.ac:
 AC_CHECK_DECLS_ONCE([alarm])

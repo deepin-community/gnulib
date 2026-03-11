@@ -7,7 +7,7 @@ lib/striconveh.c
 lib/iconveh.h
 
 Depends-on:
-stdbool
+bool
 iconv
 iconv_open
 unistr/u8-prev
@@ -29,9 +29,7 @@ fi
 
 Makefile.am:
 lib_SOURCES += striconveh.h striconveh.c
-if GL_COND_LIBTOOL
 lib_LDFLAGS += $(LTLIBICONV)
-endif
 
 Include:
 "striconveh.h"

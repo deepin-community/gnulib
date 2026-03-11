@@ -1,8 +1,8 @@
 @node getdate
-@section @code{getdate}
+@subsection @code{getdate}
 @findex getdate
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getdate.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getdate.html}
 
 Gnulib module: ---
 
@@ -14,9 +14,10 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-FreeBSD 13.0, NetBSD 5.0, OpenBSD 6.7, Minix 3.1.8, Cygwin 2.9, mingw, MSVC 14, Android 9.0.
+FreeBSD 14.0, NetBSD 5.0, OpenBSD 7.5, Minix 3.1.8, Cygwin 2.9, mingw, MSVC 14, Android 9.0.
 @end itemize
 
+@mindex parse-datetime
 Gnulib provides a module @code{parse-datetime} that contains a function
 @code{parse_datetime}
 that has similar functionality as the @code{getdate} function.

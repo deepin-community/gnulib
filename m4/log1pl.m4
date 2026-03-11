@@ -1,8 +1,10 @@
-# log1pl.m4 serial 10
-dnl Copyright (C) 2012-2023 Free Software Foundation, Inc.
+# log1pl.m4
+# serial 13
+dnl Copyright (C) 2012-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_LOG1PL],
 [
@@ -16,17 +18,17 @@ AC_DEFUN([gl_FUNC_LOG1PL],
 
   dnl Test whether log1pl() exists. Assume that log1pl(), if it exists, is
   dnl defined in the same library as log1p().
-  save_LIBS="$LIBS"
+  saved_LIBS="$LIBS"
   LIBS="$LIBS $LOG1P_LIBM"
   AC_CHECK_FUNCS([log1pl])
-  LIBS="$save_LIBS"
+  LIBS="$saved_LIBS"
   if test $ac_cv_func_log1pl = yes; then
     LOG1PL_LIBM="$LOG1P_LIBM"
 
-    save_LIBS="$LIBS"
+    saved_LIBS="$LIBS"
     LIBS="$LIBS $LOG1PL_LIBM"
     gl_FUNC_LOG1PL_WORKS
-    LIBS="$save_LIBS"
+    LIBS="$saved_LIBS"
     case "$gl_cv_func_log1pl_works" in
       *yes) ;;
       *) REPLACE_LOG1PL=1 ;;
@@ -38,7 +40,7 @@ AC_DEFUN([gl_FUNC_LOG1PL],
         AC_CACHE_CHECK([whether log1pl works according to ISO C 99 with IEC 60559],
           [gl_cv_func_log1pl_ieee],
           [
-            save_LIBS="$LIBS"
+            saved_LIBS="$LIBS"
             LIBS="$LIBS $LOG1PL_LIBM"
             AC_RUN_IFELSE(
               [AC_LANG_SOURCE([[
@@ -67,12 +69,12 @@ int main (int argc, char *argv[])
                                      # Guess yes on musl systems.
                  *-musl* | midipix*) gl_cv_func_log1pl_ieee="guessing yes" ;;
                                      # Guess yes on native Windows.
-                 mingw*)             gl_cv_func_log1pl_ieee="guessing yes" ;;
+                 mingw* | windows*)  gl_cv_func_log1pl_ieee="guessing yes" ;;
                                      # If we don't know, obey --enable-cross-guesses.
                  *)                  gl_cv_func_log1pl_ieee="$gl_cross_guess_normal" ;;
                esac
               ])
-            LIBS="$save_LIBS"
+            LIBS="$saved_LIBS"
           ])
         case "$gl_cv_func_log1pl_ieee" in
           *yes) ;;
@@ -111,7 +113,8 @@ int main (int argc, char *argv[])
 ])
 
 dnl Test whether log1pl() works.
-dnl On musl 1.2.2/{arm64,s390x}, the result is accurate to only 16 digits.
+dnl On musl 1.2.2/{arm64,s390x} and NetBSD 10.0, the result is accurate to only
+dnl 16 digits.
 AC_DEFUN([gl_FUNC_LOG1PL_WORKS],
 [
   AC_REQUIRE([AC_PROG_CC])
@@ -165,7 +168,7 @@ int main (int argc, char *argv[])
 {
   long double (* volatile my_log1pl) (long double) = argc ? log1pl : dummy;
   int result = 0;
-  /* This test fails on musl 1.2.2/arm64, musl 1.2.2/s390x.  */
+  /* This test fails on musl 1.2.2/arm64, musl 1.2.2/s390x, NetBSD 10.0.  */
   {
     const long double TWO_LDBL_MANT_DIG = /* 2^LDBL_MANT_DIG */
       (long double) (1U << ((LDBL_MANT_DIG - 1) / 5))
@@ -191,8 +194,10 @@ int main (int argc, char *argv[])
            *-gnu* | gnu*)      gl_cv_func_log1pl_works="guessing yes" ;;
                                # Guess no on musl systems.
            *-musl* | midipix*) gl_cv_func_log1pl_works="guessing no" ;;
+                               # Guess no on NetBSD.
+           netbsd*)            gl_cv_func_log1pl_works="guessing no" ;;
                                # Guess yes on native Windows.
-           mingw*)             gl_cv_func_log1pl_works="guessing yes" ;;
+           mingw* | windows*)  gl_cv_func_log1pl_works="guessing yes" ;;
                                # If we don't know, obey --enable-cross-guesses.
            *)                  gl_cv_func_log1pl_works="$gl_cross_guess_normal" ;;
          esac

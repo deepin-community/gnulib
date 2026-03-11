@@ -3,7 +3,8 @@
 
 Defines the @code{EX_*} macros, including @code{EX_OK}.
 
-Gnulib module: sysexits
+Gnulib module: sysexits-h
+@mindex sysexits-h
 
 Portability problems fixed by Gnulib:
 @itemize

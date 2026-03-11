@@ -1,0 +1,45 @@
+diff --git a/gnulib-tool.sh b/gnulib-tool.sh
+index 6b12542adc..ec3402cc56 100755
+--- a/gnulib-tool.sh
++++ b/gnulib-tool.sh
+@@ -363,8 +363,8 @@ q
+     version=' '`cd "$gnulib_dir" && ./build-aux/git-version-gen /dev/null | sed -e 's/-dirty/-modified/'`
+   else
+     # gnulib copy without versioning information.
+-    date=`sed -e 's/ .*//;q' "$gnulib_dir"/ChangeLog`
+-    version=
++    date=`dpkg-query --show --showformat '${source:Version}' gnulib`" Debian"
++    version=" "`git bundle list-heads /usr/share/gnulib/gnulib.bundle refs/heads/master | cut -f1 -d" "`
+   fi
+   year=`"$gnulib_dir"/build-aux/mdate-sh "$self_abspathname" | sed -e 's,^.* ,,'`
+   echo "\
+diff --git a/pygnulib/GLInfo.py b/pygnulib/GLInfo.py
+index ff96e93999..ad88882f7c 100644
+--- a/pygnulib/GLInfo.py
++++ b/pygnulib/GLInfo.py
+@@ -120,11 +120,10 @@ class GLInfo(object):
+                     result = result.rstrip(os.linesep)
+                     return result
+         # gnulib copy without versioning information.
+-        first_changelog_line = None
+-        with codecs.open(os.path.join(DIRS['root'], 'ChangeLog'), 'rb', 'UTF-8') as file:
+-            line = file.readline()
+-            first_changelog_line = line.rstrip()
+-        result = re.compile(' .*').sub('', first_changelog_line)
++        args = ['dpkg-query', '--show', '--showformat', '${source:Version}', 'gnulib']
++        pkgv = sp.check_output(args)
++        pkgv = str(pkgv, 'UTF-8')
++        result = pkgv + " Debian"
+         return result
+ 
+     def copyright_range(self) -> str:
+@@ -350,4 +349,8 @@ Report bugs to <bug-gnulib@gnu.org>.'''
+                     result = ''
+                 return result
+         # gnulib copy without versioning information.
+-        return ''
++        args = ['git', 'bundle', 'list-heads', '/usr/share/gnulib/gnulib.bundle', 'refs/heads/master' ]
++        gitv = sp.check_output(args)
++        gitv = str(gitv, 'UTF-8')
++        result = gitv.split(' ', 1)[0]
++        return result

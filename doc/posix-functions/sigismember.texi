@@ -1,10 +1,11 @@
 @node sigismember
-@section @code{sigismember}
+@subsection @code{sigismember}
 @findex sigismember
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/sigismember.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/sigismember.html}
 
 Gnulib module: sigprocmask
+@mindex sigprocmask
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -14,7 +15,7 @@ mingw, MSVC 14, Android 4.4.
 @item
 This function cannot be called from plain inline or extern inline functions
 on some platforms:
-OS X 10.8.
+macOS 10.8.
 @end itemize
 
 Portability problems not fixed by Gnulib:

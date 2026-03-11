@@ -1,16 +1,17 @@
 @node mbsinit
-@section @code{mbsinit}
+@subsection @code{mbsinit}
 @findex mbsinit
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/mbsinit.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/mbsinit.html}
 
 Gnulib module: mbsinit
+@mindex mbsinit
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-Minix 3.1.8, HP-UX 11.00, IRIX 6.5, MSVC 14.
+Minix 3.1.8, HP-UX 11.00, mingw with UCRT, MSVC 14.
 @item
 This function always returns 1, even in multibyte locales, on some platforms:
 mingw.

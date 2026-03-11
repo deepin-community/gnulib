@@ -5,8 +5,9 @@ Files:
 lib/mbstoc32s.c
 
 Depends-on:
-uchar
-wchar
+uchar-h
+wchar-h
+mbszero
 mbsrtoc32s
 
 configure.ac:

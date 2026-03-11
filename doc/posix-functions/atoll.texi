@@ -1,10 +1,11 @@
 @node atoll
-@section @code{atoll}
+@subsection @code{atoll}
 @findex atoll
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/atoll.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/atoll.html}
 
 Gnulib module: atoll
+@mindex atoll
 
 Portability problems fixed by Gnulib:
 @itemize

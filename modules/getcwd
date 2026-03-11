@@ -1,16 +1,21 @@
 Description:
 Return the current working directory.
 
+Comment:
+This module should not be used as a dependency from a test module,
+otherwise when this module occurs as a tests-related module, it will
+have side effects on the compilation of the 'getcwd-lgpl' module, if
+that module occurs among the main modules in lib/.
+
 Files:
 lib/getcwd.c
 m4/getcwd-abort-bug.m4
 m4/getcwd-path-max.m4
 m4/getcwd.m4
-m4/getpagesize.m4
 m4/pathmax.m4
 
 Depends-on:
-unistd
+unistd-h
 extensions
 pathmax         [test $REPLACE_GETCWD = 1]
 msvc-inval      [test $REPLACE_GETCWD = 1]
@@ -26,7 +31,7 @@ opendir         [test $REPLACE_GETCWD = 1]
 readdir         [test $REPLACE_GETCWD = 1]
 rewinddir       [test $REPLACE_GETCWD = 1]
 closedir        [test $REPLACE_GETCWD = 1]
-stdbool         [test $REPLACE_GETCWD = 1]
+bool            [test $REPLACE_GETCWD = 1]
 malloc-posix    [test $REPLACE_GETCWD = 1]
 strdup-posix    [test $REPLACE_GETCWD = 1]
 

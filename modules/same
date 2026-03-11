@@ -15,7 +15,7 @@ fstat
 fstatat
 openat
 same-inode
-stdbool
+bool
 memcmp
 
 configure.ac:

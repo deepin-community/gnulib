@@ -1,12 +1,15 @@
-# wcscmp.m4 serial 4
-dnl Copyright (C) 2011-2023 Free Software Foundation, Inc.
+# wcscmp.m4
+# serial 6
+dnl Copyright (C) 2011-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_WCSCMP],
 [
   AC_REQUIRE([gl_WCHAR_H_DEFAULTS])
+  AC_REQUIRE([AC_CANONICAL_HOST]) dnl for cross-compiles
   AC_CHECK_FUNCS_ONCE([wcscmp])
   if test $ac_cv_func_wcscmp = no; then
     HAVE_WCSCMP=0
@@ -20,7 +23,7 @@ AC_DEFUN([gl_FUNC_WCSCMP],
             {
               int result = 0;
               { /* This test fails on glibc < 2.15, musl libc 1.2.3, macOS 12.5,
-                   FreeBSD 13.2, NetBSD 9.0, OpenBSD 7.2, Solaris 11.4.  */
+                   FreeBSD 13.2, NetBSD 10.0, OpenBSD 7.2, Solaris 11.4.  */
                 wchar_t a[2] = { (wchar_t) 0x76547654, 0 };
                 wchar_t b[2] = { (wchar_t) 0x9abc9abc, 0 };
                 int cmp = wcscmp (a, b);

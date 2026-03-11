@@ -12,8 +12,8 @@ tests/macros.h
 Depends-on:
 close
 msvc-inval
-stdbool
-stdint
+bool
+stdint-h
 
 configure.ac:
 

@@ -1,8 +1,8 @@
 @node statvfs
-@section @code{statvfs}
+@subsection @code{statvfs}
 @findex statvfs
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/statvfs.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/statvfs.html}
 
 Gnulib module: ---
 
@@ -27,5 +27,6 @@ are hard-mounted and not available.  This affects
 Linux < 2.6.36.
 @end itemize
 
+@mindex fsusage
 Gnulib provides a module @code{fsusage} that provides similar information
 as @code{statvfs}.

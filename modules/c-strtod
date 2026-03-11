@@ -10,8 +10,8 @@ m4/intl-thread-locale.m4
 Depends-on:
 c99
 extensions
-locale
-strdup-posix
+locale-h
+c-ctype
 strtod
 
 configure.ac:

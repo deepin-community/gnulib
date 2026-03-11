@@ -6,11 +6,11 @@ tests/macros.h
 
 Depends-on:
 ignore-value
-errno
+errno-h
 link
-stdbool
+bool
 symlink
-sys_stat
+sys_stat-h
 opendir
 readdir
 closedir

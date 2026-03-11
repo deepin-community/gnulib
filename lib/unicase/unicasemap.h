@@ -1,5 +1,5 @@
 /* Case mapping for UTF-8/UTF-16/UTF-32 strings (locale dependent).
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This file is free software.
@@ -28,6 +28,11 @@
 #include "unitypes.h"
 #include "unicase.h"
 #include "uninorm.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 extern uint8_t *
        u8_casemap (const uint8_t *s, size_t n,
@@ -58,3 +63,8 @@ extern uint32_t *
                     size_t offset_in_rule, /* offset in 'struct special_casing_rule' */
                     uninorm_t nf,
                     uint32_t *resultbuf, size_t *lengthp);
+
+
+#ifdef __cplusplus
+}
+#endif

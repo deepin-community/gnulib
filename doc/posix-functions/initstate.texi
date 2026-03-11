@@ -1,10 +1,11 @@
 @node initstate
-@section @code{initstate}
+@subsection @code{initstate}
 @findex initstate
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/initstate.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/initstate.html}
 
 Gnulib module: random
+@mindex random
 
 Portability problems fixed by Gnulib:
 @itemize

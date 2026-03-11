@@ -1,5 +1,5 @@
 /* Test of simple atomic operations for multithreading.
-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
+   Copyright (C) 2021-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -215,7 +215,7 @@ main ()
       }
   }
 
-  return 0;
+  return test_exit_status;
 }
 
 #else

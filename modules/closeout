@@ -8,11 +8,12 @@ lib/closeout.c
 Depends-on:
 close-stream
 gettext-h
+gnulib-i18n
 error
 quotearg
 exitfail
-stdbool
-unistd
+bool
+unistd-h
 
 configure.ac:
 

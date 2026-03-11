@@ -1,6 +1,6 @@
 /* Memory allocation aligned to system page boundaries.
 
-   Copyright (C) 2005, 2008, 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2008, 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,16 +16,21 @@
    along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _PAGEALIGN_ALLOC_H
-# define _PAGEALIGN_ALLOC_H
+#define _PAGEALIGN_ALLOC_H
 
 /* This file uses _GL_ATTRIBUTE_ALLOC_SIZE, _GL_ATTRIBUTE_DEALLOC,
    _GL_ATTRIBUTE_MALLOC, _GL_ATTRIBUTE_NONNULL,
    _GL_ATTRIBUTE_RETURNS_NONNULL.  */
-# if !_GL_CONFIG_H_INCLUDED
-#  error "Please include config.h first."
-# endif
+#if !_GL_CONFIG_H_INCLUDED
+# error "Please include config.h first."
+#endif
 
-# include <stddef.h>
+#include <stddef.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* Free a memory block.
    PTR must be a non-NULL pointer returned by pagealign_alloc or
@@ -48,5 +53,10 @@ extern void *pagealign_alloc (size_t size)
 extern void *pagealign_xalloc (size_t size)
   _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC (pagealign_free, 1)
   _GL_ATTRIBUTE_ALLOC_SIZE ((1)) _GL_ATTRIBUTE_RETURNS_NONNULL;
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _PAGEALIGN_ALLOC_H */

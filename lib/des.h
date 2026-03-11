@@ -1,5 +1,5 @@
 /* des.h --- DES cipher implementation.
- * Copyright (C) 2005, 2007, 2009-2023 Free Software Foundation, Inc.
+ * Copyright (C) 2005, 2007, 2009-2025 Free Software Foundation, Inc.
  *
  * This file is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,10 +19,15 @@
 /* Adapted for gnulib by Simon Josefsson, based on Libgcrypt. */
 
 #ifndef DES_H
-# define DES_H
+#define DES_H
 
 #include <stddef.h>
 #include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /*
  * Encryption/Decryption context of DES
@@ -114,5 +119,10 @@ gl_3des_ecb_crypt (gl_3des_ctx *ctx,
 
 #define gl_3des_ecb_encrypt(ctx, from, to) gl_3des_ecb_crypt(ctx,from,to,0)
 #define gl_3des_ecb_decrypt(ctx, from, to) gl_3des_ecb_crypt(ctx,from,to,1)
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DES_H */

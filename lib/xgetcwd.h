@@ -1,5 +1,5 @@
 /* prototype for xgetcwd
-   Copyright (C) 1995, 2001, 2003, 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 1995, 2001, 2003, 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,5 +21,15 @@
 
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 extern char *xgetcwd (void)
   _GL_ATTRIBUTE_MALLOC _GL_ATTRIBUTE_DEALLOC_FREE;
+
+
+#ifdef __cplusplus
+}
+#endif

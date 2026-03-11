@@ -12,10 +12,11 @@ error
 extensions
 getpagesize
 gettext-h
+gnulib-i18n
 open
-stdlib
+stdlib-h
 xalloc
-unistd
+unistd-h
 
 configure.ac:
 gl_PAGEALIGN_ALLOC

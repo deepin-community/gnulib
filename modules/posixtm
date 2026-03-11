@@ -10,8 +10,8 @@ Depends-on:
 c-ctype
 idx
 mktime
-stdbool
-stdckdint
+bool
+stdckdint-h
 time
 verify
 

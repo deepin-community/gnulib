@@ -1,9 +1,10 @@
 @node fcntl.h
 @section @file{fcntl.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/fcntl.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/fcntl.h.html}
 
 Gnulib module: fcntl-h
+@mindex fcntl-h
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -16,8 +17,12 @@ The type @code{mode_t} is not defined on some platforms:
 MSVC 14.
 
 @item
+The type @code{off64_t} is not defined on some platforms:
+macOS 14, FreeBSD 10.4, NetBSD 10.0, OpenBSD 7.5, MSVC 14, Cygwin, Haiku, Minix 3.3.
+
+@item
 @samp{O_CLOEXEC} is not defined on some platforms:
-Mac OS X 10.6, FreeBSD 8.4, NetBSD 5.1, OpenBSD 4.9, Minix 3.1.8, AIX 7.1, HP-UX 11.31, IRIX 6.5, Solaris 10, Cygwin 1.7.1, mingw, MSVC 14.
+Mac OS X 10.6, FreeBSD 8.4, NetBSD 5.1, OpenBSD 4.9, Minix 3.1.8, AIX 7.1, HP-UX 11.31, Solaris 10, Cygwin 1.7.1, mingw, MSVC 14.
 
 @item
 @samp{O_DIRECTORY}, @samp{O_DSYNC}, @samp{O_NOCTTY},
@@ -27,16 +32,36 @@ When not otherwise defined, Gnulib defines these macros to 0,
 which is generally safe.
 
 @item
-@samp{O_NONBLOCK} is not defined on some platforms.  If the
-@samp{nonblocking} module is in use, gnulib guarantees a working
+@samp{O_NONBLOCK} is not defined on some platforms.
+@mindex nonblocking
+If the @samp{nonblocking} module is in use, gnulib guarantees a working
 non-zero value; otherwise, the gnulib replacement is 0.
 
 @item
-@samp{O_EXEC} and @samp{O_SEARCH} are not defined on some platforms.
-Gnulib defines these macros to @samp{O_RDONLY}, which is typically 0.
-The @samp{O_PATH} macro of GNU/Linux is not a suitable substitute, as
-fchmod fails with @samp{errno==EBADF} when invoked on a file
-descriptor that was opened with @samp{O_PATH}.
+@samp{O_EXEC} is not defined on some platforms:
+glibc 2.40, macOS 12, FreeBSD 7.4, NetBSD 9.4, OpenBSD 7.5, HP-UX 11, Solaris 10, Cygwin 1.5.x, mingw, MSVC 14, Android.
+When not otherwise defined,
+Gnulib defines this macro to @samp{O_RDONLY}, which is typically 0.
+
+Note: @samp{O_EXEC} is not suitable for opening a file descriptor
+that you want to use with @code{fchmod} later, because
+musl libc defines @samp{O_EXEC} to @code{O_PATH} and
+@c https://lists.gnu.org/archive/html/bug-gnulib/2012-11/msg00029.html
+Linux @code{fchmod} fails with error @code{EBADF} when given such a file
+descriptor.
+
+@item
+@samp{O_SEARCH} is not defined on some platforms:
+glibc 2.40, macOS 12, FreeBSD 12.4, NetBSD 6.1, OpenBSD 7.5, AIX 6.1, HP-UX 11, Solaris 10, Cygwin 1.5.x, mingw, MSVC 14, Android.
+When not otherwise defined,
+Gnulib defines this macro to @samp{O_RDONLY}, which is typically 0.
+
+Note: @samp{O_SEARCH} is not suitable for opening a file descriptor
+that you want to use with @code{fchmod} later, because
+musl libc defines @samp{O_EXEC} to @code{O_PATH} and
+@c https://lists.gnu.org/archive/html/bug-gnulib/2012-11/msg00029.html
+Linux @code{fchmod} fails with error @code{EBADF} when given such a file
+descriptor.
 
 @item
 @samp{O_ACCMODE} is not defined on some platforms:
@@ -74,14 +99,13 @@ mingw, MSVC 14.
 
 @item
 @samp{F_DUPFD_CLOEXEC} is not defined on some platforms:
-Mac OS X 10.5, FreeBSD 6.0, NetBSD 5.0, OpenBSD 6.7, AIX 5.1, HP-UX 11,
-IRIX 6.5, Solaris 11 2010-11, Cygwin 1.7.1, mingw, MSVC 14.
+Mac OS X 10.5, FreeBSD 6.0, NetBSD 5.0, OpenBSD 7.5, AIX 5.1, HP-UX 11, Solaris 11 2010-11, Cygwin 1.7.1, mingw, MSVC 14.
 
 @item
 @samp{AT_FDCWD}, @samp{AT_EACCESS}, @samp{AT_SYMLINK_NOFOLLOW},
 @samp{AT_SYMLINK_FOLLOW}, and @samp{AT_REMOVEDIR}
 are not defined on many platforms:
-glibc 2.3.6, Mac OS X 10.5, FreeBSD 6.0, NetBSD 5.0, OpenBSD 6.7, AIX 5.1, HP-UX 11, IRIX 6.5, Cygwin 1.5.x, mingw, MSVC 14.
+glibc 2.3.6, Mac OS X 10.5, FreeBSD 6.0, NetBSD 5.0, OpenBSD 7.5, AIX 5.1, HP-UX 11, Cygwin 1.5.x, mingw, MSVC 14.
 
 @item
 @samp{AT_FDCWD} is defined with a value too large for an @code{int} on some
@@ -94,7 +118,7 @@ Portability problems not fixed by Gnulib:
 
 @item
 @samp{O_PATH} is not defined on some platforms:
-glibc 2.13, macOS 13, FreeBSD 13.0, NetBSD 9.2, OpenBSD 7.1, Minix 3.3.0, AIX 7.3, HP-UX 11.31, IRIX 6.5, Solaris 11.4, Cygwin 2.9, mingw, MSVC 14.
+glibc 2.13, macOS 13, FreeBSD 13.0, NetBSD 9.2, OpenBSD 7.1, Minix 3.3.0, AIX 7.3, HP-UX 11.31, Solaris 11.4, Cygwin 2.9, mingw, MSVC 14.
 
 @item
 @samp{F_SETFD}, @samp{F_GETFL}, @samp{F_SETFL}, @samp{F_GETLK},

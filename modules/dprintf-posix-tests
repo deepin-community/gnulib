@@ -1,6 +1,7 @@
 Files:
 tests/test-dprintf-posix.sh
 tests/test-dprintf-posix.c
+tests/test-dprintf-posix.h
 tests/test-printf-posix.output
 tests/test-dprintf-posix2.sh
 tests/test-dprintf-posix2.c
@@ -10,8 +11,8 @@ tests/signature.h
 tests/macros.h
 
 Depends-on:
-stdbool
-stdint
+bool
+stdint-h
 get-rusage-as
 
 configure.ac:

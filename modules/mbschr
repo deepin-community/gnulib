@@ -5,8 +5,8 @@ Files:
 lib/mbschr.c
 
 Depends-on:
-mbuiter
-string
+mbuiterf
+string-h
 
 configure.ac:
 gl_STRING_MODULE_INDICATOR([mbschr])

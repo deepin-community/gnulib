@@ -1,10 +1,11 @@
 @node pthread_attr_getdetachstate
-@section @code{pthread_attr_getdetachstate}
+@subsection @code{pthread_attr_getdetachstate}
 @findex pthread_attr_getdetachstate
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_attr_getdetachstate.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_attr_getdetachstate.html}
 
 Gnulib module: pthread-thread
+@mindex pthread-thread
 
 Portability problems fixed by Gnulib:
 @itemize

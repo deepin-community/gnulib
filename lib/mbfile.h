@@ -1,5 +1,5 @@
 /* Multibyte character I/O: macros for multi-byte encodings.
-   Copyright (C) 2001, 2005, 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2005, 2009-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -54,6 +54,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 
@@ -64,92 +65,107 @@ _GL_INLINE_HEADER_BEGIN
 # define MBFILE_INLINE _GL_INLINE
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/* Guarantee two characters of pushback.  */
+#define MBFILE_MAX_PUSHBACK 2
+
 struct mbfile_multi {
   FILE *fp;
   bool eof_seen;
-  bool have_pushback;
+  unsigned int pushback_count; /* <= MBFILE_MAX_PUSHBACK */
   mbstate_t state;
   unsigned int bufcount;
   char buf[MBCHAR_BUF_SIZE];
-  struct mbchar pushback;
+  struct mbchar pushback[MBFILE_MAX_PUSHBACK];
 };
 
 MBFILE_INLINE void
 mbfile_multi_getc (struct mbchar *mbc, struct mbfile_multi *mbf)
 {
+  unsigned int new_bufcount;
   size_t bytes;
+
+  /* Return character pushed back, if there is one.  */
+  if (mbf->pushback_count > 0)
+    {
+      mb_copy (mbc, &mbf->pushback[mbf->pushback_count - 1]);
+      mbf->pushback_count--;
+      return;
+    }
 
   /* If EOF has already been seen, don't use getc.  This matters if
      mbf->fp is connected to an interactive tty.  */
   if (mbf->eof_seen)
     goto eof;
 
-  /* Return character pushed back, if there is one.  */
-  if (mbf->have_pushback)
-    {
-      mb_copy (mbc, &mbf->pushback);
-      mbf->have_pushback = false;
-      return;
-    }
+  new_bufcount = mbf->bufcount;
 
-  /* Before using mbrtowc, we need at least one byte.  */
-  if (mbf->bufcount == 0)
+  /* If mbf->state is not in an initial state, some more 32-bit wide character
+     may be hiding in the state.  We need to call mbrtoc32 again.  */
+  #if GNULIB_MBRTOC32_REGULAR
+  assert (mbsinit (&mbf->state));
+  #else
+  if (mbsinit (&mbf->state))
+  #endif
     {
-      int c = getc (mbf->fp);
-      if (c == EOF)
+      /* Before using mbrtoc32, we need at least one byte.  */
+      if (new_bufcount == 0)
         {
-          mbf->eof_seen = true;
-          goto eof;
+          int c = getc (mbf->fp);
+          if (c == EOF)
+            {
+              mbf->eof_seen = true;
+              goto eof;
+            }
+          mbf->buf[0] = (unsigned char) c;
+          new_bufcount++;
         }
-      mbf->buf[0] = (unsigned char) c;
-      mbf->bufcount++;
+
+      /* Handle most ASCII characters quickly, without calling mbrtoc32().  */
+      if (new_bufcount == 1 && is_basic (mbf->buf[0]))
+        {
+          /* These characters are part of the POSIX portable character set.
+             For most of them, namely those in the ISO C basic character set,
+             ISO C 99 guarantees that their wide character code is identical to
+             their char code.  For the few other ones, this is the case as well,
+             in all locale encodings that are in use.  The 32-bit wide character
+             code is the same as well.  */
+          mbc->wc = mbc->buf[0] = mbf->buf[0];
+          mbc->wc_valid = true;
+          mbc->ptr = &mbc->buf[0];
+          mbc->bytes = 1;
+          mbf->bufcount = 0;
+          return;
+        }
     }
 
-  /* Handle most ASCII characters quickly, without calling mbrtowc().  */
-  if (mbf->bufcount == 1 && mbsinit (&mbf->state) && is_basic (mbf->buf[0]))
-    {
-      /* These characters are part of the basic character set.  ISO C 99
-         guarantees that their wide character code is identical to their
-         char code.  The 32-bit wide character code is the same as well.  */
-      mbc->wc = mbc->buf[0] = mbf->buf[0];
-      mbc->wc_valid = true;
-      mbc->ptr = &mbc->buf[0];
-      mbc->bytes = 1;
-      mbf->bufcount = 0;
-      return;
-    }
-
-  /* Use mbrtowc on an increasing number of bytes.  Read only as many bytes
+  /* Use mbrtoc32 on an increasing number of bytes.  Read only as many bytes
      from mbf->fp as needed.  This is needed to give reasonable interactive
      behaviour when mbf->fp is connected to an interactive tty.  */
   for (;;)
     {
-      /* We don't know whether the 'mbrtowc' function updates the state when
-         it returns -2, - this is the ISO C 99 and glibc-2.2 behaviour - or
-         not - amended ANSI C, glibc-2.1 and Solaris 2.7 behaviour.  We
-         don't have an autoconf test for this, yet.
-         The new behaviour would allow us to feed the bytes one by one into
-         mbrtowc.  But the old behaviour forces us to feed all bytes since
-         the end of the last character into mbrtowc.  Since we want to retry
-         with more bytes when mbrtowc returns -2, we must backup the state
-         before calling mbrtowc, because implementations with the new
-         behaviour will clobber it.  */
-      mbstate_t backup_state = mbf->state;
-
-      bytes = mbrtoc32 (&mbc->wc, &mbf->buf[0], mbf->bufcount, &mbf->state);
+      /* Feed the bytes one by one into mbrtoc32.  */
+      bytes = mbrtoc32 (&mbc->wc, &mbf->buf[mbf->bufcount], new_bufcount - mbf->bufcount, &mbf->state);
 
       if (bytes == (size_t) -1)
         {
           /* An invalid multibyte sequence was encountered.  */
+          mbf->bufcount = new_bufcount;
           /* Return a single byte.  */
           bytes = 1;
           mbc->wc_valid = false;
+          /* Allow the next invocation to continue from a sane state.  */
+          mbszero (&mbf->state);
           break;
         }
       else if (bytes == (size_t) -2)
         {
           /* An incomplete multibyte character.  */
-          mbf->state = backup_state;
+          mbf->bufcount = new_bufcount;
           if (mbf->bufcount == MBCHAR_BUF_SIZE)
             {
               /* An overlong incomplete multibyte sequence was encountered.  */
@@ -160,33 +176,43 @@ mbfile_multi_getc (struct mbchar *mbc, struct mbfile_multi *mbf)
             }
           else
             {
-              /* Read one more byte and retry mbrtowc.  */
+              /* Read one more byte and retry mbrtoc32.  */
               int c = getc (mbf->fp);
               if (c == EOF)
                 {
                   /* An incomplete multibyte character at the end.  */
                   mbf->eof_seen = true;
-                  bytes = mbf->bufcount;
+                  bytes = new_bufcount;
                   mbc->wc_valid = false;
                   break;
                 }
-              mbf->buf[mbf->bufcount] = (unsigned char) c;
-              mbf->bufcount++;
+              mbf->buf[new_bufcount] = (unsigned char) c;
+              new_bufcount++;
             }
         }
       else
         {
-          if (bytes == 0)
+          #if !GNULIB_MBRTOC32_REGULAR
+          if (bytes == (size_t) -3)
             {
-              /* A null 32-bit wide character was encountered.  */
-              bytes = 1;
-              assert (mbf->buf[0] == '\0');
-              assert (mbc->wc == 0);
+              /* The previous multibyte sequence produced an additional 32-bit
+                 wide character.  */
+              mbf->bufcount = new_bufcount;
+              bytes = 0;
             }
-          else if (bytes == (size_t) -3)
-            /* The previous multibyte sequence produced an additional 32-bit
-               wide character.  */
-            bytes = 0;
+          else
+          #endif
+            {
+              bytes = mbf->bufcount + bytes;
+              mbf->bufcount = new_bufcount;
+              if (bytes == 0)
+                {
+                  /* A null 32-bit wide character was encountered.  */
+                  bytes = 1;
+                  assert (mbf->buf[0] == '\0');
+                  assert (mbc->wc == 0);
+                }
+            }
           mbc->wc_valid = true;
           break;
         }
@@ -224,8 +250,10 @@ eof:
 MBFILE_INLINE void
 mbfile_multi_ungetc (const struct mbchar *mbc, struct mbfile_multi *mbf)
 {
-  mb_copy (&mbf->pushback, mbc);
-  mbf->have_pushback = true;
+  if (mbf->pushback_count == MBFILE_MAX_PUSHBACK)
+    abort ();
+  mb_copy (&mbf->pushback[mbf->pushback_count], mbc);
+  mbf->pushback_count++;
 }
 
 typedef struct mbfile_multi mb_file_t;
@@ -235,8 +263,8 @@ typedef mbchar_t mbf_char_t;
 #define mbf_init(mbf, stream)                                           \
   ((mbf).fp = (stream),                                                 \
    (mbf).eof_seen = false,                                              \
-   (mbf).have_pushback = false,                                         \
-   memset (&(mbf).state, '\0', sizeof (mbstate_t)),                     \
+   (mbf).pushback_count = 0,                                            \
+   mbszero (&(mbf).state),                                              \
    (mbf).bufcount = 0)
 
 #define mbf_getc(mbc, mbf) mbfile_multi_getc (&(mbc), &(mbf))
@@ -244,6 +272,11 @@ typedef mbchar_t mbf_char_t;
 #define mbf_ungetc(mbc, mbf) mbfile_multi_ungetc (&(mbc), &(mbf))
 
 #define mb_iseof(mbc) ((mbc).bytes == 0)
+
+
+#ifdef __cplusplus
+}
+#endif
 
 _GL_INLINE_HEADER_END
 

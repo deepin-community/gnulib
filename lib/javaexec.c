@@ -1,5 +1,5 @@
 /* Execute a Java program.
-   Copyright (C) 2001-2003, 2006-2023 Free Software Foundation, Inc.
+   Copyright (C) 2001-2003, 2006-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2001.
 
    This program is free software: you can redistribute it and/or modify
@@ -32,10 +32,10 @@
 #include "concat-filename.h"
 #include "xalloc.h"
 #include "xmalloca.h"
-#include "error.h"
+#include <error.h>
 #include "gettext.h"
 
-#define _(str) gettext (str)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 
 /* Survey of Java virtual machines.
@@ -205,7 +205,7 @@ execute_java_class (const char *class_name,
         argv[0] = "java";
         argv[1] = "-version";
         argv[2] = NULL;
-        exitstatus = execute ("java", "java", argv, NULL,
+        exitstatus = execute ("java", "java", argv, NULL, NULL,
                               false, false, true, true,
                               true, false, NULL);
         java_present = (exitstatus == 0);
@@ -261,7 +261,7 @@ execute_java_class (const char *class_name,
 
         argv[0] = "jre";
         argv[1] = NULL;
-        exitstatus = execute ("jre", "jre", argv, NULL,
+        exitstatus = execute ("jre", "jre", argv, NULL, NULL,
                               false, false, true, true,
                               true, false, NULL);
         jre_present = (exitstatus == 0 || exitstatus == 1);

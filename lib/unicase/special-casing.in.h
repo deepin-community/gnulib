@@ -1,5 +1,5 @@
 /* Special casing table.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This file is free software.
@@ -24,6 +24,11 @@
    program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 #include <stddef.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* A special casing context.
    A context is negated through x -> -x.  */
@@ -67,3 +72,8 @@ struct special_casing_rule
 
 extern const struct special_casing_rule *
        gl_unicase_special_lookup (const char *str, size_t len);
+
+
+#ifdef __cplusplus
+}
+#endif

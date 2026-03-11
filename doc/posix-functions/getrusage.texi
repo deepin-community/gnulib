@@ -1,10 +1,11 @@
 @node getrusage
-@section @code{getrusage}
+@subsection @code{getrusage}
 @findex getrusage
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getrusage.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getrusage.html}
 
 Gnulib module: getrusage
+@mindex getrusage
 
 Portability problems fixed by Gnulib:
 @itemize

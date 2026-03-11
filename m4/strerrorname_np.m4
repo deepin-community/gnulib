@@ -1,16 +1,40 @@
-# strerrorname_np.m4 serial 3
-dnl Copyright (C) 2020-2023 Free Software Foundation, Inc.
+# strerrorname_np.m4
+# serial 8
+dnl Copyright (C) 2020-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_STRERRORNAME_NP],
+[
+  AC_REQUIRE([gl_STRING_H_DEFAULTS])
+
+  AC_REQUIRE([gl_CHECK_STRERRORNAME_NP])
+  if test $ac_cv_func_strerrorname_np = yes; then
+    case "$gl_cv_func_strerrorname_np_works" in
+      *yes) ;;
+      *) REPLACE_STRERRORNAME_NP=1 ;;
+    esac
+  else
+    HAVE_STRERRORNAME_NP=0
+    case "$gl_cv_onwards_func_strerrorname_np" in
+      future*) REPLACE_STRERRORNAME_NP=1 ;;
+    esac
+  fi
+])
+
+# Check for a working strerrorname_np function.
+# Sets ac_cv_func_strerrorname_np, gl_cv_onwards_func_strerrorname_np,
+# gl_cv_func_strerrorname_np_works.
+AC_DEFUN([gl_CHECK_STRERRORNAME_NP],
 [
   dnl Persuade glibc <string.h> to declare strerrorname_np().
   AC_REQUIRE([AC_USE_SYSTEM_EXTENSIONS])
 
-  AC_REQUIRE([gl_STRING_H_DEFAULTS])
-  AC_CHECK_FUNCS([strerrorname_np])
+  AC_REQUIRE([AC_CANONICAL_HOST]) dnl for cross-compiles
+
+  gl_CHECK_FUNCS_ANDROID([strerrorname_np], [[#include <string.h>]])
   if test $ac_cv_func_strerrorname_np = yes; then
     dnl In glibc 2.32, strerrorname_np returns English error descriptions, not
     dnl error names.
@@ -18,6 +42,12 @@ AC_DEFUN([gl_FUNC_STRERRORNAME_NP],
     dnl In glibc 2.36, strerrorname_np returns NULL for EDEADLOCK on powerpc and
     dnl sparc platforms.
     dnl See <https://sourceware.org/bugzilla/show_bug.cgi?id=29545>.
+    dnl In glibc 2.37, strerrorname_np returns NULL for ENOSYM and
+    dnl EREMOTERELEASE on hppa platforms.
+    dnl See <https://sourceware.org/bugzilla/show_bug.cgi?id=31080>.
+    dnl In Solaris 11 OmniOS, strerrorname_np returns NULL for ERESTART
+    dnl and ESTRPIPE.
+    dnl see <https://www.illumos.org/issues/17134>.
     AC_CACHE_CHECK([whether strerrorname_np works],
       [gl_cv_func_strerrorname_np_works],
       [AC_RUN_IFELSE(
@@ -29,6 +59,15 @@ AC_DEFUN([gl_FUNC_STRERRORNAME_NP],
                 strcmp (strerrorname_np (EINVAL), "EINVAL") != 0
                 #ifdef EDEADLOCK
                 || strerrorname_np (EDEADLOCK) == NULL
+                #endif
+                #ifdef ENOSYM
+                || strerrorname_np (ENOSYM) == NULL
+                #endif
+                #ifdef ERESTART
+                || strerrorname_np (ERESTART) == NULL
+                #endif
+                #ifdef ESTRPIPE
+                || strerrorname_np (ESTRPIPE) == NULL
                 #endif
                 ;
             ]])],
@@ -44,11 +83,19 @@ AC_DEFUN([gl_FUNC_STRERRORNAME_NP],
           esac
          ])
       ])
+  fi
+])
+
+# Prerequisite for using strerrorname_np when available.
+AC_DEFUN_ONCE([gl_OPTIONAL_STRERRORNAME_NP],
+[
+  AC_REQUIRE([gl_CHECK_STRERRORNAME_NP])
+  if test $ac_cv_func_strerrorname_np = yes; then
     case "$gl_cv_func_strerrorname_np_works" in
-      *yes) ;;
-      *) REPLACE_STRERRORNAME_NP=1 ;;
+      *yes)
+        AC_DEFINE([HAVE_WORKING_STRERRORNAME_NP], [1],
+          [Define to 1 if the function strerrorname_np exists and works.])
+        ;;
     esac
-  else
-    HAVE_STRERRORNAME_NP=0
   fi
 ])

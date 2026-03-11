@@ -9,7 +9,7 @@ lib/at-func.c
 Depends-on:
 selinux-h
 at-internal
-errno
+errno-h
 extensions
 fchdir
 fcntl-h
@@ -17,7 +17,7 @@ filename
 openat-die
 openat-h
 save-cwd
-unistd
+unistd-h
 
 configure.ac:
 AC_CHECK_HEADERS([selinux/flask.h])

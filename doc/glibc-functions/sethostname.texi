@@ -18,6 +18,7 @@ Documentation:
 @end itemize
 
 Gnulib module: sethostname
+@mindex sethostname
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -39,5 +40,9 @@ Solaris 11 2010-11.
 @item
 The second parameter is @code{int} instead of @code{size_t}
 on some platforms:
-macOS 11.1, MidnightBSD 2.0, Solaris 11 2010-11.
+macOS 14, FreeBSD 14.0, MidnightBSD 3.0, Solaris 11 2010-11, Solaris 11 OpenIndiana, Solaris 11 OmniOS.
+@item
+This function does not reject a too long host name on some platforms:
+@c https://cygwin.com/pipermail/cygwin/2024-May/255986.html
+Cygwin 3.5.3.
 @end itemize

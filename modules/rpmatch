@@ -6,10 +6,11 @@ lib/rpmatch.c
 m4/rpmatch.m4
 
 Depends-on:
-stdlib
+stdlib-h
 extensions
-stdbool         [test $HAVE_RPMATCH = 0]
+bool            [test $HAVE_RPMATCH = 0]
 gettext-h       [test $HAVE_RPMATCH = 0]
+gnulib-i18n     [test $HAVE_RPMATCH = 0]
 regex           [test $HAVE_RPMATCH = 0]
 strdup          [test $HAVE_RPMATCH = 0]
 

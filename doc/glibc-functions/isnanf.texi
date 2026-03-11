@@ -16,12 +16,13 @@ Documentation:
 @end itemize
 
 Gnulib module: isnanf
+@mindex isnanf
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-macOS 11.1, Minix 3.1.8, AIX 5.1, HP-UX 11, MSVC 14.
+macOS 14, Minix 3.1.8, AIX 5.1, HP-UX 11, MSVC 14.
 @end itemize
 
 Portability problems not fixed by Gnulib:

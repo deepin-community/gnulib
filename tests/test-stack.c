@@ -1,5 +1,5 @@
 /* Test of the type-safe stack data type.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -69,5 +69,5 @@ main (void)
   ASSERT (string_stack_empty (string_stack));
   string_stack_destroy (string_stack);
 
-  return EXIT_SUCCESS;
+  return test_exit_status;
 }

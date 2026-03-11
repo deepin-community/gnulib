@@ -1,5 +1,5 @@
 /* Test nullptr in C++ mode.
-   Copyright 2023 Free Software Foundation, Inc.
+   Copyright 2023-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,4 +54,6 @@ int
 main ()
 {
   varargs_callee ("type", nullptr, "foo", nullptr);
+
+  return test_exit_status;
 }

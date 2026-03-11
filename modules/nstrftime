@@ -4,18 +4,20 @@ nstrftime() function: convert date and time to string, with GNU extensions.
 Files:
 lib/strftime.h
 lib/nstrftime.c
-m4/tm_gmtoff.m4
+lib/strftime.c
 m4/nstrftime.m4
+m4/tm_gmtoff.m4
 
 Depends-on:
 attribute
 c99
-errno
+errno-h
 extensions
 intprops
 libc-config
-stdbool
-stdckdint
+localename-unsafe-limited
+bool
+stdckdint-h
 time_rz
 
 configure.ac:

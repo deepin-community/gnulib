@@ -1,5 +1,5 @@
 /* Conversion between the current locale's character encoding and Unicode.
-   Copyright (C) 2023 Free Software Foundation, Inc.
+   Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -36,7 +36,7 @@
 
 # include "localcharset.h"
 # include "streq.h"
-# include "glthread/lock.h"
+# include "glthread/once.h"
 # include "glthread/tls.h"
 # include "unistr.h"
 
@@ -107,6 +107,7 @@ get_converters (const char *encoding)
           return NULL;
         }
       strcpy (conv->encoding, encoding);
+      gl_tls_set (converters_key, conv);
     }
   else if (strcmp (conv->encoding, encoding) != 0)
     {
@@ -158,7 +159,8 @@ locale_encoding_to_unicode (wchar_t wc)
   char mbbuf[64];
   size_t mbcnt;
   {
-    mbstate_t state = { 0 };
+    mbstate_t state;
+    mbszero (&state);
     mbcnt = wcrtomb (mbbuf, wc, &state);
     if (mbcnt > sizeof (mbbuf))
       /* wcrtomb did not recognize the wide character wc.  */
@@ -173,7 +175,7 @@ locale_encoding_to_unicode (wchar_t wc)
     char *utf8ptr = utf8buf;
     size_t utf8size = sizeof (utf8buf);
     size_t ret = iconv (conv->cd_locale_to_utf8,
-                        &mbptr, &mbsize,
+                        (ICONV_CONST char **) &mbptr, &mbsize,
                         &utf8ptr, &utf8size);
     if (ret == (size_t)(-1))
       /* Conversion error.  */
@@ -232,7 +234,7 @@ unicode_to_locale_encoding (char32_t uc)
     char *mbptr = mbbuf;
     size_t mbsize = sizeof (mbbuf);
     size_t ret = iconv (conv->cd_utf8_to_locale,
-                        &utf8ptr, &utf8size,
+                        (ICONV_CONST char **) &utf8ptr, &utf8size,
                         &mbptr, &mbsize);
     if (ret == (size_t)(-1))
       /* Conversion error.  */
@@ -248,7 +250,8 @@ unicode_to_locale_encoding (char32_t uc)
 
   wchar_t wc;
   {
-    mbstate_t state = { 0 };
+    mbstate_t state;
+    mbszero (&state);
     if (mbrtowc (&wc, mbbuf, mbcnt, &state) != mbcnt)
       /* iconv produced an invalid multibyte sequence.  */
       return 0;

@@ -1,5 +1,5 @@
 /* Ensure that stdin, stdout, stderr are open.
-   Copyright (C) 2019-2023 Free Software Foundation, Inc.
+   Copyright (C) 2019-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,16 +20,20 @@
 #include "xstdopen.h"
 
 #include "stdopen.h"
-#include "error.h"
+#include <error.h>
 #include "exitfail.h"
 
 #include "gettext.h"
-#define _(msgid) gettext (msgid)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 void
 xstdopen (void)
 {
   int stdopen_errno = stdopen ();
   if (stdopen_errno != 0)
-    error (exit_failure, stdopen_errno, _("standard file descriptors"));
+    /* Ignore stdopen_errno in the error message, since it may be misleading
+       (see stdopen.c).  */
+    error (exit_failure, 0,
+           _("failed to open all three standard file descriptors; maybe %s or %s are not working right?"),
+           "/dev/null", "/dev/full");
 }

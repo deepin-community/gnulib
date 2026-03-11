@@ -6,10 +6,10 @@ lib/tmpfile.c
 m4/tmpfile.m4
 
 Depends-on:
-stdio
+stdio-h
 largefile
 pathmax         [test $REPLACE_TMPFILE = 1]
-stdbool         [test $REPLACE_TMPFILE = 1]
+bool            [test $REPLACE_TMPFILE = 1]
 tempname        [test $REPLACE_TMPFILE = 1]
 tmpdir          [test $REPLACE_TMPFILE = 1]
 

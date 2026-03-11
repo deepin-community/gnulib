@@ -8,7 +8,7 @@ m4/utimens.m4
 m4/utimes.m4
 
 Depends-on:
-errno
+errno-h
 extern-inline
 fcntl-h
 fstat
@@ -17,9 +17,9 @@ gettime
 msvc-nothrow
 stat
 stat-time
-stdbool
-sys_stat
-sys_time
+bool
+sys_stat-h
+sys_time-h
 time-h
 utime
 utime-h

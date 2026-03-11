@@ -1,8 +1,8 @@
 @node ftok
-@section @code{ftok}
+@subsection @code{ftok}
 @findex ftok
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/ftok.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/ftok.html}
 
 Gnulib module: ---
 

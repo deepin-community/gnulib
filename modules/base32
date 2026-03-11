@@ -7,9 +7,11 @@ lib/base32.c
 m4/base32.m4
 
 Depends-on:
+extern-inline
 ialloc
-stdbool
+bool
 memchr
+stdckdint-h
 
 configure.ac:
 gl_FUNC_BASE32

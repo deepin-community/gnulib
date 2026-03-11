@@ -4,10 +4,10 @@ tests/signature.h
 tests/macros.h
 
 Depends-on:
-netinet_in
-arpa_inet
+netinet_in-h
+arpa_inet-h
 inet_pton
-errno
+errno-h
 perror
 sockets
 socket

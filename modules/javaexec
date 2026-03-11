@@ -6,7 +6,7 @@ lib/javaexec.h
 lib/javaexec.c
 
 Depends-on:
-stdbool
+bool
 execute
 classpath
 xsetenv
@@ -16,6 +16,7 @@ xalloc
 xmalloca
 error
 gettext-h
+gnulib-i18n
 javaexec-script
 sh-filename
 

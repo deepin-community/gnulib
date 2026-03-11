@@ -1,10 +1,11 @@
 @node wcsncpy
-@section @code{wcsncpy}
+@subsection @code{wcsncpy}
 @findex wcsncpy
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcsncpy.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/wcsncpy.html}
 
 Gnulib module: wcsncpy
+@mindex wcsncpy
 
 Portability problems fixed by Gnulib:
 @itemize

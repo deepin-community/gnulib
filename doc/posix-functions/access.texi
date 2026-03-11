@@ -1,16 +1,21 @@
 @node access
-@section @code{access}
+@subsection @code{access}
 @findex access
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/access.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/access.html}
 
 Gnulib module: access
+@mindex access
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function does not support the @code{X_OK} mode on some platforms:
 MSVC 14.
+@item
+This function does not reject trailing slashes on symlinks to non-directories
+on some platforms:
+Mac OS X 10.5.
 @end itemize
 
 Portability problems not fixed by Gnulib:
@@ -31,6 +36,9 @@ this function, especially in a set-uid or set-gid program.
 This function does not have an option for not following symbolic links
 (like @code{stat} versus @code{lstat}).  If you need this option, use
 the Gnulib module @code{faccessat} with the @code{AT_EACCESS} flag.
+@item
+On Solaris, for the root user, any file is @code{X_OK} even if the file
+does not have the @code{x} permission bit set.
 @item
 On native Windows, files whose basename does not contain a @samp{.}
 cannot be executed through @code{execlp} or @code{execvp}.  Nevertheless,

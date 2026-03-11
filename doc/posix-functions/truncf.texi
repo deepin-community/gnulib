@@ -1,10 +1,12 @@
 @node truncf
-@section @code{truncf}
+@subsection @code{truncf}
 @findex truncf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/truncf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/truncf.html}
 
 Gnulib module: truncf or truncf-ieee
+@mindex truncf
+@mindex truncf-ieee
 
 Portability problems fixed by either Gnulib module @code{truncf} or @code{truncf-ieee}:
 @itemize

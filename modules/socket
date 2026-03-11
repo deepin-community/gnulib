@@ -6,9 +6,9 @@ lib/socket.c
 lib/w32sock.h
 
 Depends-on:
-sys_socket
+sys_socket-h
 socketlib
-errno           [test "$ac_cv_header_winsock2_h" = yes]
+errno-h         [test "$ac_cv_header_winsock2_h" = yes]
 sockets         [test "$ac_cv_header_winsock2_h" = yes]
 msvc-nothrow    [test "$ac_cv_header_winsock2_h" = yes]
 
@@ -25,6 +25,7 @@ if test "$ac_cv_header_winsock2_h" = yes; then
   SYS_IOCTL_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS=1
 fi
 gl_SYS_SOCKET_MODULE_INDICATOR([socket])
+gl_MODULE_INDICATOR([socket])
 
 Makefile.am:
 if GL_COND_OBJ_SOCKET

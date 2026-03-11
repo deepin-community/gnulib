@@ -6,8 +6,10 @@ Depends-on:
 pthread-thread
 pthread-mutex
 sched_yield
+random
 
 configure.ac:
+AC_CHECK_DECLS_ONCE([alarm])
 
 Makefile.am:
 TESTS += test-pthread-tss

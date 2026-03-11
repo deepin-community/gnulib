@@ -1,6 +1,6 @@
 @c GNU xstdopen and *-safer modules documentation
 
-@c Copyright (C) 2019--2023 Free Software Foundation, Inc.
+@c Copyright (C) 2019--2025 Free Software Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document
 @c under the terms of the GNU Free Documentation License, Version 1.3 or
@@ -13,18 +13,18 @@
 @node Closed standard fds
 @section Handling closed standard file descriptors
 
-@cindex xstdopen
+@mindex xstdopen
 @cindex stdopen
-@cindex dirent-safer
-@cindex fcntl-safer
-@cindex fopen-safer
-@cindex freopen-safer
-@cindex openat-safer
-@cindex pipe2-safer
-@cindex popen-safer
-@cindex stdlib-safer
-@cindex tmpfile-safer
-@cindex unistd-safer
+@mindex dirent-safer
+@mindex fcntl-safer
+@mindex fopen-safer
+@mindex freopen-safer
+@mindex openat-safer
+@mindex pipe2-safer
+@mindex popen-safer
+@mindex stdlib-safer
+@mindex tmpfile-safer
+@mindex unistd-safer
 
 Usually, when a program gets invoked, its file descriptors
 0 (for standard input), 1 (for standard output), and 2 (for standard error)
@@ -143,9 +143,12 @@ The @code{*-safer} modules:
 @code{stdlib-safer}.
 @end itemize
 
-The approach with the @code{xstdopen} module is simpler, but it adds three
+The approach with the @code{xstdopen} module is simple, but it adds three
 system calls to program startup.  Whereas the approach with the @code{*-safer}
-modules is more complex, but adds no overhead (no additional system calls)
+modules is more complicated and error-prone,
+and does not fix the problem if system library functions call one
+of the affected functions,
+but adds no overhead (no additional system calls)
 in the normal case.
 
 To use the approach with the @code{xstdopen} module:

@@ -1,8 +1,8 @@
 @node atoi
-@section @code{atoi}
+@subsection @code{atoi}
 @findex atoi
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/atoi.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/atoi.html}
 
 Gnulib module: ---
 

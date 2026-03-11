@@ -1,5 +1,5 @@
-/* Test of POSIX compatible vfprintf() function.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+/* Test of POSIX compatible vprintf() function.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ SIGNATURE_CHECK (vprintf, int, (char const *, va_list));
 
 #include "macros.h"
 
+#define RETTYPE int
 #include "test-printf-posix.h"
 
 static int
@@ -48,5 +49,5 @@ int
 main (int argc, char *argv[])
 {
   test_function (my_printf);
-  return 0;
+  return test_exit_status;
 }

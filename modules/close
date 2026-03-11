@@ -6,7 +6,7 @@ lib/close.c
 m4/close.m4
 
 Depends-on:
-unistd
+unistd-h
 fd-hook         [test $REPLACE_CLOSE = 1]
 msvc-inval      [test $REPLACE_CLOSE = 1]
 
@@ -14,6 +14,7 @@ configure.ac:
 gl_FUNC_CLOSE
 gl_CONDITIONAL([GL_COND_OBJ_CLOSE], [test $REPLACE_CLOSE = 1])
 gl_UNISTD_MODULE_INDICATOR([close])
+gl_MODULE_INDICATOR([close])
 
 Makefile.am:
 if GL_COND_OBJ_CLOSE

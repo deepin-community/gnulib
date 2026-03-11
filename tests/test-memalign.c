@@ -1,6 +1,6 @@
 /* Test of allocating memory with given alignment.
 
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ main (int argc, char *argv[])
       free (aligned64_blocks[i]);
     }
 
-  return 0;
+  return test_exit_status;
 }
 
 #else

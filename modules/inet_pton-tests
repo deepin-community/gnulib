@@ -4,8 +4,8 @@ tests/signature.h
 tests/macros.h
 
 Depends-on:
-netinet_in
-sys_socket
+netinet_in-h
+sys_socket-h
 
 configure.ac:
 AC_C_BIGENDIAN

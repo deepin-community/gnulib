@@ -1,5 +1,5 @@
 /* check-version.h --- Check version string compatibility.
-   Copyright (C) 2005, 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2009-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -19,7 +19,17 @@
 #ifndef CHECK_VERSION_H
 # define CHECK_VERSION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 extern const char *
 check_version (const char *req_version);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CHECK_VERSION_H */

@@ -1,8 +1,8 @@
 @node wait
-@section @code{wait}
+@subsection @code{wait}
 @findex wait
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/wait.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/wait.html}
 
 Gnulib module: ---
 

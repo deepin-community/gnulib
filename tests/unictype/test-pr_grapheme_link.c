@@ -1,6 +1,6 @@
 /* DO NOT EDIT! GENERATED AUTOMATICALLY! */
 /* Test the Unicode character type functions.
-   Copyright (C) 2007-2022 Free Software Foundation, Inc.
+   Copyright (C) 2007-2024 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published
@@ -57,6 +57,7 @@
     { 0x11235, 0x11235 },
     { 0x112EA, 0x112EA },
     { 0x1134D, 0x1134D },
+    { 0x113CE, 0x113D0 },
     { 0x11442, 0x11442 },
     { 0x114C2, 0x114C2 },
     { 0x115BF, 0x115BF },
@@ -72,7 +73,8 @@
     { 0x11C3F, 0x11C3F },
     { 0x11D44, 0x11D45 },
     { 0x11D97, 0x11D97 },
-    { 0x11F41, 0x11F42 }
+    { 0x11F41, 0x11F42 },
+    { 0x1612F, 0x1612F }
 
 #define PREDICATE(c) uc_is_property_grapheme_link (c)
 #include "test-predicate-part2.h"

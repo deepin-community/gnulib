@@ -7,12 +7,12 @@ m4/libunistring-base.m4
 
 Depends-on:
 gen-header
-unitypes
-stdbool
+unitypes-h
+bool
 inline
 
 configure.ac:
-gl_LIBUNISTRING_LIBHEADER([0.9.11], [unistr.h])
+gl_LIBUNISTRING_LIBHEADER([1.2], [unistr.h])
 AC_PROG_MKDIR_P
 
 Makefile.am:

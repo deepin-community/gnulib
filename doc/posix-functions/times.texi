@@ -1,10 +1,11 @@
 @node times
-@section @code{times}
+@subsection @code{times}
 @findex times
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/times.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/times.html}
 
 Gnulib module: times
+@mindex times
 
 Portability problems fixed by Gnulib:
 @itemize

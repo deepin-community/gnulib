@@ -1,8 +1,10 @@
-# floorl.m4 serial 11
-dnl Copyright (C) 2007, 2009-2023 Free Software Foundation, Inc.
+# floorl.m4
+# serial 12
+dnl Copyright (C) 2007, 2009-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_FLOORL],
 [
@@ -54,7 +56,7 @@ AC_DEFUN([gl_FUNC_FLOORL_LIBS],
          [[x = funcptr (x) + floorl(x);]])],
       [gl_cv_func_floorl_libm=])
     if test "$gl_cv_func_floorl_libm" = "?"; then
-      save_LIBS="$LIBS"
+      saved_LIBS="$LIBS"
       LIBS="$LIBS -lm"
       AC_LINK_IFELSE(
         [AC_LANG_PROGRAM(
@@ -66,7 +68,7 @@ AC_DEFUN([gl_FUNC_FLOORL_LIBS],
              long double x;]],
            [[x = funcptr (x) + floorl(x);]])],
         [gl_cv_func_floorl_libm="-lm"])
-      LIBS="$save_LIBS"
+      LIBS="$saved_LIBS"
     fi
   ])
   FLOORL_LIBM="$gl_cv_func_floorl_libm"

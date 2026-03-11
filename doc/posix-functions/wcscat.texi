@@ -1,10 +1,11 @@
 @node wcscat
-@section @code{wcscat}
+@subsection @code{wcscat}
 @findex wcscat
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcscat.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/wcscat.html}
 
 Gnulib module: wcscat
+@mindex wcscat
 
 Portability problems fixed by Gnulib:
 @itemize

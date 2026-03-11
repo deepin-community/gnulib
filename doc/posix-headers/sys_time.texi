@@ -1,9 +1,10 @@
 @node sys/time.h
 @section @file{sys/time.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_time.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/sys_time.h.html}
 
-Gnulib module: sys_time
+Gnulib module: sys_time-h
+@mindex sys_time-h
 
 Portability problems fixed by Gnulib:
 @itemize

@@ -7,8 +7,8 @@ lib/forkpty.c
 m4/pty.m4
 
 Depends-on:
-pty
-unistd
+pty-h
+unistd-h
 openpty
 login_tty
 

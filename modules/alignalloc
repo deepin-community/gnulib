@@ -13,8 +13,8 @@ extensions
 extern-inline
 idx
 posix_memalign
-stdckdint
-stdint
+stdckdint-h
+stdint-h
 
 configure.ac:
 gl_ALIGNALLOC

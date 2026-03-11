@@ -9,8 +9,8 @@ m4/fsusage.m4
 Depends-on:
 c99
 largefile
-stdbool
-stdint
+bool
+stdint-h
 
 configure.ac:
 gl_FSUSAGE

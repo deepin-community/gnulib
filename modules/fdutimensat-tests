@@ -12,10 +12,12 @@ fcntl-h
 ignore-value
 nanosleep
 openat
-stdckdint
+stdckdint-h
 timespec
 dup
 utimecmp
+xconcat-filename
+xgetcwd-lgpl
 
 configure.ac:
 

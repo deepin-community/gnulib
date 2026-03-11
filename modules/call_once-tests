@@ -6,7 +6,8 @@ tests/macros.h
 Depends-on:
 thrd
 lock
-stdint
+mtx
+stdint-h
 
 configure.ac:
 AC_CHECK_DECLS_ONCE([alarm])

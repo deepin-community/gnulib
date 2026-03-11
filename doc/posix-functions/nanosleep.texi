@@ -1,10 +1,11 @@
 @node nanosleep
-@section @code{nanosleep}
+@subsection @code{nanosleep}
 @findex nanosleep
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/nanosleep.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/nanosleep.html}
 
 Gnulib module: nanosleep
+@mindex nanosleep
 
 Portability problems fixed by Gnulib:
 @itemize

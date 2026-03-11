@@ -1,5 +1,5 @@
 /* Test of casefolding mapping for UTF-32 strings.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -197,5 +197,5 @@ main ()
     ASSERT (check (input, SIZEOF (input), NULL, UNINORM_NFC, casefolded_normalized, SIZEOF (casefolded_normalized)) == 0);
   }
 
-  return 0;
+  return test_exit_status;
 }

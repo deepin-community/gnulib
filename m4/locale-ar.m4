@@ -1,8 +1,10 @@
-# locale-ar.m4 serial 10
-dnl Copyright (C) 2003, 2005-2023 Free Software Foundation, Inc.
+# locale-ar.m4
+# serial 12
+dnl Copyright (C) 2003, 2005-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 dnl From Ben Pfaff, based on locale-fr.m4 by Bruno Haible.
 
@@ -64,12 +66,13 @@ int main () {
     if AC_TRY_EVAL([ac_link]) && test -s conftest$ac_exeext; then
       case "$host_os" in
         # Handle native Windows specially, because there setlocale() interprets
-        # "ar" as "Arabic" or "Arabic_Saudi Arabia.1256",
+        # "ar" or "ara" as "Arabic" or "Arabic_Saudi Arabia.1256",
+        # "en" or "eng" as "English" or "English_United States.1252",
         # "fr" or "fra" as "French" or "French_France.1252",
         # "ge"(!) or "deu"(!) as "German" or "German_Germany.1252",
-        # "ja" as "Japanese" or "Japanese_Japan.932",
+        # "ja" or "jpn" as "Japanese" or "Japanese_Japan.932",
         # and similar.
-        mingw*)
+        mingw* | windows*)
           # Note that on native Windows, the Arabic locale is
           # "Arabic_Saudi Arabia.1256", and CP1256 is very different from
           # ISO-8859-6, so we cannot use it here.
@@ -84,7 +87,7 @@ int main () {
           #   - The usual locale name:                         ar_SA
           #   - The locale name with explicit encoding suffix: ar_SA.ISO-8859-6
           #   - The HP-UX locale name:                         ar_SA.iso88596
-          #   - The Solaris 7 locale name:                     ar
+          #   - The Solaris 10 locale name:                    ar
           # Also try ar_EG instead of ar_SA because Egypt is a large country too.
           for gt_cv_locale_ar in ar_SA ar_SA.ISO-8859-6 ar_SA.iso88596 ar_EG ar_EG.ISO-8859-6 ar_EG.iso88596 ar none; do
             if test $gt_cv_locale_ar = none; then
@@ -100,5 +103,11 @@ int main () {
     rm -fr conftest*
   ])
   LOCALE_AR=$gt_cv_locale_ar
+  case $LOCALE_AR in #(
+    '' | *[[[:space:]\"\$\'*@<:@]]*)
+      dnl This locale name might cause trouble with sh or make.
+      AC_MSG_WARN([invalid locale "$LOCALE_AR"; assuming "none"])
+      LOCALE_AR=none;;
+  esac
   AC_SUBST([LOCALE_AR])
 ])

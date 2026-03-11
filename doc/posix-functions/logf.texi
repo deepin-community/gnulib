@@ -1,10 +1,12 @@
 @node logf
-@section @code{logf}
+@subsection @code{logf}
 @findex logf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/logf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/logf.html}
 
 Gnulib module: logf or logf-ieee
+@mindex logf
+@mindex logf-ieee
 
 Portability problems fixed by either Gnulib module @code{logf} or @code{logf-ieee}:
 @itemize

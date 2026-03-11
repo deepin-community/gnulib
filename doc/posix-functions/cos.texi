@@ -1,10 +1,11 @@
 @node cos
-@section @code{cos}
+@subsection @code{cos}
 @findex cos
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/cos.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/cos.html}
 
 Gnulib module: cos
+@mindex cos
 
 Portability problems fixed by Gnulib:
 @itemize

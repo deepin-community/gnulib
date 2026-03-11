@@ -6,8 +6,8 @@ lib/fwriteerror.h
 lib/fwriteerror.c
 
 Depends-on:
-errno
-stdbool
+errno-h
+bool
 
 configure.ac:
 gl_MODULE_INDICATOR([fwriteerror])

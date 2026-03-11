@@ -1,16 +1,18 @@
 @node sqrtl
-@section @code{sqrtl}
+@subsection @code{sqrtl}
 @findex sqrtl
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/sqrtl.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/sqrtl.html}
 
-Gnulib module: sqrtl
+Gnulib module: sqrtl or sqrtl-ieee
+@mindex sqrtl
+@mindex sqrtl-ieee
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-FreeBSD 6.0, NetBSD 5.0, OpenBSD 3.8, Minix 3.1.8, HP-UX 11, IRIX 6.5, Solaris 9, Cygwin 1.7.x, Android 4.4.
+FreeBSD 6.0, NetBSD 5.0, OpenBSD 3.8, Minix 3.1.8, HP-UX 11, Solaris 9, Cygwin 1.7.x, Android 4.4.
 @item
 This function is only defined as a macro with arguments on some platforms:
 MSVC 14.

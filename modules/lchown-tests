@@ -6,14 +6,16 @@ tests/signature.h
 tests/macros.h
 
 Depends-on:
-errno
+errno-h
 ignore-value
 mgetgroups
 nanosleep
-stdckdint
+stdckdint-h
 stat-time
-stdbool
+bool
 symlink
+xconcat-filename
+xgetcwd-lgpl
 
 configure.ac:
 AC_CHECK_FUNCS_ONCE([getgid getegid])
@@ -21,4 +23,4 @@ AC_CHECK_FUNCS_ONCE([getgid getegid])
 Makefile.am:
 TESTS += test-lchown
 check_PROGRAMS += test-lchown
-test_lchown_LDADD = $(LDADD) $(NANOSLEEP_LIB)
+test_lchown_LDADD = $(LDADD) $(NANOSLEEP_LIB) @LIBINTL@

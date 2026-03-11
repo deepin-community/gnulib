@@ -1,13 +1,19 @@
 @node socket
-@section @code{socket}
+@subsection @code{socket}
 @findex socket
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/socket.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/socket.html}
 
 Gnulib module: socket
+@mindex socket
 
 Portability problems fixed by Gnulib:
 @itemize
+@item
+This function is declared in @code{<winsock2.h>}
+instead of @code{<sys/socket.h>}
+on some platforms:
+mingw, MSVC 14.
 @item
 On Windows platforms (excluding Cygwin), the descriptors returned by
 the @code{socket} function cannot be used in calls to @code{read},

@@ -1,10 +1,11 @@
 @node mkfifo
-@section @code{mkfifo}
+@subsection @code{mkfifo}
 @findex mkfifo
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/mkfifo.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/mkfifo.html}
 
 Gnulib module: mkfifo
+@mindex mkfifo
 
 Portability problems fixed by Gnulib:
 @itemize

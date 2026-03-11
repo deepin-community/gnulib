@@ -1,10 +1,12 @@
 @node expm1
-@section @code{expm1}
+@subsection @code{expm1}
 @findex expm1
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/expm1.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/expm1.html}
 
 Gnulib module: expm1 or expm1-ieee
+@mindex expm1
+@mindex expm1-ieee
 
 Portability problems fixed by either Gnulib module @code{expm1} or @code{expm1-ieee}:
 @itemize

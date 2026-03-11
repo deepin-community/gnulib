@@ -1,16 +1,17 @@
 @node wmemchr
-@section @code{wmemchr}
+@subsection @code{wmemchr}
 @findex wmemchr
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/wmemchr.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/wmemchr.html}
 
 Gnulib module: wmemchr
+@mindex wmemchr
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-HP-UX 11.00, IRIX 6.5, MSVC 14.
+HP-UX 11.00, MSVC 14.
 @end itemize
 
 Portability problems not fixed by Gnulib:

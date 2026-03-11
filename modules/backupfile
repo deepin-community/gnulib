@@ -20,11 +20,10 @@ ialloc
 memcmp
 opendirat
 readdir
-realloc-gnu
 renameatu
-stdbool
-stdckdint
-stdint
+bool
+stdckdint-h
+stdint-h
 xalloc-die
 
 configure.ac:

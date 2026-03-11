@@ -11,7 +11,6 @@ lib/regex_internal.c
 lib/regex_internal.h
 lib/regexec.c
 lib/regcomp.c
-m4/eealloc.m4
 m4/regex.m4
 m4/mbstate_t.m4
 
@@ -24,22 +23,24 @@ attribute               [test $ac_use_included_regex = yes]
 btowc                   [test $ac_use_included_regex = yes]
 builtin-expect          [test $ac_use_included_regex = yes]
 glibc-internal/dynarray [test $ac_use_included_regex = yes]
+gnulib-i18n             [test $ac_use_included_regex = yes]
 intprops                [test $ac_use_included_regex = yes]
 iswctype                [test $ac_use_included_regex = yes]
-langinfo                [test $ac_use_included_regex = yes]
+langinfo-h              [test $ac_use_included_regex = yes]
 libc-config             [test $ac_use_included_regex = yes]
 limits-h                [test $ac_use_included_regex = yes]
 lock                    [test $ac_use_included_regex = yes]
+malloc-gnu              [test $ac_use_included_regex = yes]
 memcmp                  [test $ac_use_included_regex = yes]
 memmove                 [test $ac_use_included_regex = yes]
 mbrtowc                 [test $ac_use_included_regex = yes]
 mbsinit                 [test $ac_use_included_regex = yes]
 nl_langinfo             [test $ac_use_included_regex = yes]
-stdbool                 [test $ac_use_included_regex = yes]
-stdckdint               [test $ac_use_included_regex = yes]
-stdint                  [test $ac_use_included_regex = yes]
+bool                    [test $ac_use_included_regex = yes]
+stdckdint-h             [test $ac_use_included_regex = yes]
+stdint-h                [test $ac_use_included_regex = yes]
 verify                  [test $ac_use_included_regex = yes]
-wchar                   [test $ac_use_included_regex = yes]
+wchar-h                 [test $ac_use_included_regex = yes]
 wcrtomb                 [test $ac_use_included_regex = yes]
 wctype-h                [test $ac_use_included_regex = yes]
 wctype                  [test $ac_use_included_regex = yes]

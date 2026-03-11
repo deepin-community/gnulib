@@ -5,8 +5,8 @@ Files:
 lib/mbssep.c
 
 Depends-on:
-mbuiter
-string
+mbuiterf
+string-h
 mbspbrk
 strsep
 

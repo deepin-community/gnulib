@@ -1,10 +1,11 @@
 @node pthread_condattr_destroy
-@section @code{pthread_condattr_destroy}
+@subsection @code{pthread_condattr_destroy}
 @findex pthread_condattr_destroy
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_condattr_destroy.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_condattr_destroy.html}
 
 Gnulib module: pthread-cond
+@mindex pthread-cond
 
 Portability problems fixed by Gnulib:
 @itemize

@@ -1,10 +1,11 @@
 @node erf
-@section @code{erf}
+@subsection @code{erf}
 @findex erf
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/erf.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/erf.html}
 
 Gnulib module: erf
+@mindex erf
 
 Portability problems fixed by Gnulib:
 @itemize

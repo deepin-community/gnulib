@@ -8,9 +8,9 @@ m4/getloadavg.m4
 Depends-on:
 extensions
 intprops  [test $HAVE_GETLOADAVG = 0 || test $REPLACE_GETLOADAVG = 1]
-open      [case $host_os in mingw*) false;; *) test $HAVE_GETLOADAVG = 0 || test $REPLACE_GETLOADAVG = 1;; esac]
-stdbool   [test $HAVE_GETLOADAVG = 0 || test $REPLACE_GETLOADAVG = 1]
-stdlib    [test $HAVE_GETLOADAVG = 0 || test $REPLACE_GETLOADAVG = 1]
+open      [case $host_os in mingw* | windows*) false;; *) test $HAVE_GETLOADAVG = 0 || test $REPLACE_GETLOADAVG = 1;; esac]
+bool      [test $HAVE_GETLOADAVG = 0 || test $REPLACE_GETLOADAVG = 1]
+stdlib-h  [test $HAVE_GETLOADAVG = 0 || test $REPLACE_GETLOADAVG = 1]
 
 configure.ac:
 AC_REQUIRE([AC_CANONICAL_HOST])

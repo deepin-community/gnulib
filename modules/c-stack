@@ -8,18 +8,19 @@ m4/c-stack.m4
 
 Depends-on:
 c99
-errno
+errno-h
 exitfail
 getprogname
 gettext-h
+gnulib-i18n
 idx
 ignore-value
-inttypes
+inttypes-h
 mempcpy
 raise
 sigsegv
-stddef
-unistd
+stddef-h
+unistd-h
 
 configure.ac:
 gl_C_STACK

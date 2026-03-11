@@ -1,8 +1,10 @@
-# log2l.m4 serial 6
-dnl Copyright (C) 2010-2023 Free Software Foundation, Inc.
+# log2l.m4
+# serial 9
+dnl Copyright (C) 2010-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 
 AC_DEFUN([gl_FUNC_LOG2L],
 [
@@ -15,10 +17,10 @@ AC_DEFUN([gl_FUNC_LOG2L],
 
   dnl Test whether log2l() exists. Assume that log2l(), if it exists, is
   dnl defined in the same library as log2().
-  save_LIBS="$LIBS"
+  saved_LIBS="$LIBS"
   LIBS="$LIBS $LOG2_LIBM"
   gl_CHECK_FUNCS_ANDROID([log2l], [[#include <math.h>]])
-  LIBS="$save_LIBS"
+  LIBS="$saved_LIBS"
   if test $ac_cv_func_log2l = yes; then
     LOG2L_LIBM="$LOG2_LIBM"
     HAVE_LOG2L=1
@@ -26,10 +28,10 @@ AC_DEFUN([gl_FUNC_LOG2L],
     dnl IRIX 6.5 has log2l() in libm but doesn't declare it in <math.h>.
     AC_CHECK_DECL([log2l], , [HAVE_DECL_LOG2L=0], [[#include <math.h>]])
 
-    save_LIBS="$LIBS"
+    saved_LIBS="$LIBS"
     LIBS="$LIBS $LOG2L_LIBM"
     gl_FUNC_LOG2L_WORKS
-    LIBS="$save_LIBS"
+    LIBS="$saved_LIBS"
     case "$gl_cv_func_log2l_works" in
       *yes) ;;
       *) REPLACE_LOG2L=1 ;;
@@ -73,6 +75,8 @@ AC_DEFUN([gl_FUNC_LOG2L],
 dnl Test whether log2l() works.
 dnl On OSF/1 5.1, log2l(-0.0) is NaN.
 dnl On musl 1.2.2/{arm64,s390x}, the result is accurate to only 16 digits.
+dnl On musl 1.2.2/{arm64,s390x} and NetBSD 10.0, the result is Infinity for
+dnl some large finite arguments.
 AC_DEFUN([gl_FUNC_LOG2L_WORKS],
 [
   AC_REQUIRE([AC_PROG_CC])
@@ -151,7 +155,7 @@ int main (int argc, char *argv[])
     if (!(err >= -10000.0L && err <= 10000.0L))
       result |= 2;
   }
-  /* This test fails on musl 1.2.2/arm64, musl 1.2.2/s390x.  */
+  /* This test fails on musl 1.2.2/arm64, musl 1.2.2/s390x, NetBSD 10.0.  */
   if (DBL_MAX_EXP < LDBL_MAX_EXP)
     {
       long double x = ldexpl (1.0L, DBL_MAX_EXP); /* finite! */
@@ -169,10 +173,10 @@ int main (int argc, char *argv[])
            *-gnu* | gnu*)      gl_cv_func_log2l_works="guessing yes" ;;
                                # Guess no on musl systems.
            *-musl* | midipix*) gl_cv_func_log2l_works="guessing no" ;;
-                               # Guess no on OSF/1.
-           osf*)               gl_cv_func_log2l_works="guessing no" ;;
+                               # Guess no on NetBSD and OSF/1.
+           netbsd* | osf*)     gl_cv_func_log2l_works="guessing no" ;;
                                # Guess yes on native Windows.
-           mingw*)             gl_cv_func_log2l_works="guessing yes" ;;
+           mingw* | windows*)  gl_cv_func_log2l_works="guessing yes" ;;
                                # If we don't know, obey --enable-cross-guesses.
            *)                  gl_cv_func_log2l_works="$gl_cross_guess_normal" ;;
          esac

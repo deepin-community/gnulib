@@ -11,7 +11,8 @@ error
 exitfail
 extern-inline
 gettext-h
-stdbool
+gnulib-i18n
+bool
 verify
 
 configure.ac:

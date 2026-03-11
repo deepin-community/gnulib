@@ -1,18 +1,18 @@
 @node stdnoreturn.h
 @section @file{stdnoreturn.h}
 
-POSIX specification:@* Not in POSIX yet, but we expect it will be.
-ISO C11 (latest free draft
-@url{http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf})
-sections 7.23.
+ISO C23 specification:@* @url{https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3220.pdf} section 7.25.
 
-Gnulib module: stdnoreturn
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/stdnoreturn.h.html}
+
+Gnulib module: stdnoreturn-h
+@mindex stdnoreturn-h
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This header file is missing on many platforms:
-FreeBSD 6.4, NetBSD 7.1, OpenBSD 6.7, Minix 3.3.0, AIX 7.1, HP-UX 11.31, IRIX 6.5, Solaris 11.3, Cygwin 2.9.0, mingw, MSVC 14, Android 9.0.
+FreeBSD 6.4, NetBSD 7.1, OpenBSD 7.5, Minix 3.3.0, AIX 7.1, HP-UX 11.31, Solaris 11.3, Cygwin 2.9.0, mingw, MSVC 14, Android 9.0.
 @item
 This file conflicts with some system header files, such as @code{<stdlib.h>} and
 @code{<process.h>}, on some platforms:

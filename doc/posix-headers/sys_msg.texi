@@ -1,9 +1,10 @@
 @node sys/msg.h
 @section @file{sys/msg.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/sys_msg.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/sys_msg.h.html}
 
-Gnulib module: sys_msg
+Gnulib module: sys_msg-h
+@mindex sys_msg-h
 
 Portability problems fixed by Gnulib:
 @itemize

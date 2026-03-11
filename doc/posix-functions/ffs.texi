@@ -1,10 +1,11 @@
 @node ffs
-@section @code{ffs}
+@subsection @code{ffs}
 @findex ffs
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/ffs.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/ffs.html}
 
 Gnulib module: ffs
+@mindex ffs
 
 Portability problems fixed by Gnulib:
 @itemize

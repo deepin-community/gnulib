@@ -1,10 +1,11 @@
 @node popen
-@section @code{popen}
+@subsection @code{popen}
 @findex popen
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/popen.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/popen.html}
 
 Gnulib module: popen
+@mindex popen
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -15,6 +16,9 @@ MSVC 14.
 Some platforms start the child with closed stdin or stdout if the
 standard descriptors were closed in the parent:
 Cygwin 1.5.x.
+@item
+This function hangs if called with closed stdin or stdout on some platforms:
+OS/2 kLIBC.
 @end itemize
 
 Portability problems not fixed by Gnulib:

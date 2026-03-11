@@ -3,7 +3,7 @@
 @setfilename standards.info
 @settitle GNU Coding Standards
 @c This date is automagically updated when you save this file:
-@set lastupdate August 17, 2021
+@set lastupdate November 13, 2024
 @c %**end of header
 
 @dircategory GNU organization
@@ -390,38 +390,28 @@ compiler, then no one can compile them without having them installed
 already.  That would be extremely troublesome in certain cases.
 
 @node Standard C
-@section Standard C and Pre-Standard C
+@section Standard C
 @cindex ANSI C standard
 
-1989 Standard C is widespread enough now that it is ok to use its
+ISO C99 is widespread enough now that it is ok to use its
 features in programs.  There is one exception: do not ever use the
-``trigraph'' feature of Standard C.
+``trigraph'' misfeature introduced by C89 and not removed until C23.
 
-The 1999 and 2011 editions of Standard C are not fully supported
-on all platforms.  If you aim to support compilation by
-compilers other than GCC, you should not require these C
-features in your programs.  It is ok to use these features
-conditionally when the compiler supports them.
+Not all features of recent Standard C are fully supported on all
+platforms.  If you aim to support compilation by compilers other than
+GCC, you should generally not require newer Standard C features in
+your programs, or else use them conditionally on whether the compiler
+supports them.  The same goes for GNU C extensions such as variable
+length arrays.
 
-If your program is only meant to compile with GCC, then you can
-use these features if GCC supports them, when they give substantial
-benefit.
-
-However, it is easy to support pre-standard compilers in most programs,
-so if you know how to do that, feel free.
+If your program is only meant to compile with GCC, then you can use
+these features if GCC supports them.  Don't use features that GCC does
+not support, except conditionally as a way to use equivalent features
+to those that are used when compiling with GCC.
 
 @cindex function prototypes
-To support pre-standard C, instead of writing function definitions in
-standard prototype form,
-
-@example
-int
-foo (int x, int y)
-@dots{}
-@end example
-
-@noindent
-write the definition in pre-standard style like this,
+Before C89, functions needed to be written in the K&R style, like
+this:
 
 @example
 int
@@ -431,42 +421,24 @@ foo (x, y)
 @end example
 
 @noindent
-and use a separate declaration to specify the argument prototype:
+with a separate declaration to specify the argument prototype:
 
 @example
 int foo (int, int);
 @end example
 
-You need such a declaration anyway, in a header file, to get the benefit
-of prototypes in all the files where the function is called.  And once
-you have the declaration, you normally lose nothing by writing the
-function definition in the pre-standard style.
+Until the 2020s, that was the way to get the most portability to
+different compilers.  But not any more.
 
-This technique does not work for integer types narrower than @code{int}.
-If you think of an argument as being of a type narrower than @code{int},
-declare it as @code{int} instead.
+Nowadays, it is rare to find a C compiler which fails to support the
+prototype style of function definition.  It is more common to run into
+a compiler that has dropped support for the old K&R style.  Thus, to
+maximize portability, write function definitions in the Standard C
+style.
 
-There are a few special cases where this technique is hard to use.  For
-example, if a function argument needs to hold the system type
-@code{dev_t}, you run into trouble, because @code{dev_t} is shorter than
-@code{int} on some machines; but you cannot use @code{int} instead,
-because @code{dev_t} is wider than @code{int} on some machines.  There
-is no type you can safely use on all machines in a non-standard
-definition.  The only way to support non-standard C and pass such an
-argument is to check the width of @code{dev_t} using Autoconf and choose
-the argument type accordingly.  This may not be worth the trouble.
-
-In order to support pre-standard compilers that do not recognize
-prototypes, you may want to use a preprocessor macro like this:
-
-@example
-/* Declare the prototype for a general external function.  */
-#if defined (__STDC__) || defined (WINDOWSNT)
-#define P_(proto) proto
-#else
-#define P_(proto) ()
-#endif
-@end example
+You generally need a declaration for the function in addition to iss
+definition, usually in a header file, to get the benefit of prototypes
+in all the files where the function is called.
 
 @node Conditional Compilation
 @section Conditional Compilation
@@ -557,7 +529,7 @@ users---it means that their programs or scripts will work more
 portably.  For instance, GCC implements nearly all the features of
 Standard C as specified by that standard.  C program developers would
 be unhappy if it did not.  And GNU utilities mostly follow
-specifications of POSIX.2; shell script writers and users would be
+specifications of POSIX; shell script writers and users would be
 unhappy if our programs were incompatible.
 
 But we do not follow either of these specifications rigidly, and there
@@ -572,16 +544,16 @@ you must specify @samp{--pedantic}, which was implemented only so that
 we can say ``GCC is a 100% implementation of the standard'', not
 because there is any reason to actually use it.
 
-POSIX.2 specifies that @samp{df} and @samp{du} must output sizes by
+POSIX specifies that @samp{df} and @samp{du} must output sizes by
 default in units of 512 bytes.  What users want is units of 1k, so
 that is what we do by default.  If you want the ridiculous behavior
 ``required'' by POSIX, you must set the environment variable
 @samp{POSIXLY_CORRECT} (which was originally going to be named
 @samp{POSIX_ME_HARDER}).
 
-GNU utilities also depart from the letter of the POSIX.2 specification
+GNU utilities also depart from the letter of the POSIX specification
 when they support long-named command-line options, and intermixing
-options with ordinary arguments.  This minor incompatibility with
+of options with ordinary arguments.  This minor incompatibility with
 POSIX is never a problem in practice, and it is very useful.
 
 In particular, don't reject a new feature, or remove an old one,
@@ -1007,8 +979,8 @@ output the same information as invoking @samp{p.cgi --help} from the
 command line.
 
 @menu
-* --version::       The standard output for --version.
-* --help::          The standard output for --help.
+* --version::       The standard output for @option{--version}.
+* --help::          The standard output for @option{--help}.
 @end menu
 
 @node --version
@@ -1066,7 +1038,7 @@ copyright notice.  If more than one copyright notice is called for, put
 each on a separate line.
 
 Next should follow a line stating the license, preferably using one of
-abbreviations below, and a brief statement that the program is free
+the abbreviations below, and a brief statement that the program is free
 software, and that users are free to copy and change it.  Also mention
 that there is no warranty, to the extent permitted by law.  See
 recommended wording below.
@@ -2137,7 +2109,7 @@ Used in GDB.
 @samp{-s} in @code{tac}.
 
 @item sequence
-Used by @code{recode} to chose files or pipes for sequencing passes.
+Used by @code{recode} to choose files or pipes for sequencing passes.
 
 @item shell
 @samp{-s} in @code{su}.
@@ -2484,20 +2456,7 @@ concat (char *s1, char *s2)
 @}
 @end example
 
-@noindent
-or, if you want to use traditional C syntax, format the definition like
-this:
-
-@example
-static char *
-concat (s1, s2)        /* Name starts in column one here */
-     char *s1, *s2;
-@{                     /* Open brace in column one here */
-  @dots{}
-@}
-@end example
-
-In Standard C, if the arguments don't fit nicely on one line,
+If the arguments don't fit nicely on one line,
 split it like this:
 
 @example
@@ -3082,9 +3041,10 @@ from zero.
 
 Historically, C implementations differed substantially, and many
 systems lacked a full implementation of ANSI/ISO C89.  Nowadays,
-however, all practical systems have a C89 compiler and GNU C supports
-almost all of C99 and some of C11.  Similarly, most systems implement
-POSIX.1-2001 libraries and tools, and many have POSIX.1-2008.
+however, all practical systems have a C89-or-later compiler and GNU C
+supports almost all of C23 (with options to select older versions of
+the standard).  Similarly, most systems implement POSIX.1-2008
+libraries and tools, and many have POSIX.1-2017.
 
 Hence, there is little reason to support old C or non-POSIX systems,
 and you may want to take advantage of standard C and POSIX to write
@@ -3118,7 +3078,7 @@ On Windows, @code{errno} is not set on failure.
 this regard.  Gnulib provides implementations of standard interfaces
 on many of the systems that lack them, including portable
 implementations of enhanced GNU interfaces, thereby making their use
-portable, and of POSIX-1.2008 interfaces, some of which are missing
+portable, and of POSIX interfaces, some of which are missing
 even on up-to-date GNU systems.
 
 @findex xmalloc, in Gnulib
@@ -3126,7 +3086,7 @@ even on up-to-date GNU systems.
 @findex data structures, in Gnulib
 Gnulib also provides many useful non-standard interfaces; for example,
 C implementations of standard data structures (hash tables, binary
-trees), error-checking type-safe wrappers for memory allocation
+trees), error-checking wrappers for memory allocation
 functions (@code{xmalloc}, @code{xrealloc}), and output of error
 messages.
 

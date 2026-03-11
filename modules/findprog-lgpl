@@ -9,13 +9,13 @@ m4/findprog.m4
 m4/eaccess.m4
 
 Depends-on:
-stdbool
-sys_stat
+bool
+sys_stat-h
 strdup
 concat-filename
 access
 stat
-unistd
+unistd-h
 
 configure.ac:
 gl_FINDPROG

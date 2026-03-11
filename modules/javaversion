@@ -9,11 +9,12 @@ lib/javaversion.class
 
 Depends-on:
 javaexec
-stdbool
+bool
 spawn-pipe
 wait-process
 getline
 gettext-h
+gnulib-i18n
 configmake
 
 configure.ac:

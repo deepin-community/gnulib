@@ -1,5 +1,5 @@
 /* Test of buffer that accumulates a string by piecewise concatenation.
-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
+   Copyright (C) 2021-2025 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,7 +20,9 @@
 
 #include "string-buffer.h"
 
+#include <errno.h>
 #include <string.h>
+#include <wchar.h>
 
 #include "macros.h"
 
@@ -42,12 +44,50 @@ char invalid_format_string_2[] = "%^";
 int
 main ()
 {
+  /* Test accumulation.  */
+  {
+    struct string_buffer buffer;
+
+    sb_init (&buffer);
+    sb_append1 (&buffer, 'x');
+    sb_append1 (&buffer, '\377');
+    char *s = sb_dupfree_c (&buffer);
+    ASSERT (s != NULL && strcmp (s, "x\377") == 0);
+    free (s);
+  }
+  {
+    struct string_buffer buffer;
+
+    sb_init (&buffer);
+    sb_append1 (&buffer, 'x');
+    sb_append1 (&buffer, '\377');
+    {
+      string_desc_t sd = sb_contents (&buffer);
+      ASSERT (string_desc_length (sd) == 2);
+      ASSERT (string_desc_char_at (sd, 0) == 'x');
+      ASSERT (string_desc_char_at (sd, 1) == '\377');
+    }
+    sb_append1 (&buffer, '\0');
+    sb_append1 (&buffer, 'z');
+    {
+      string_desc_t sd = sb_contents (&buffer);
+      ASSERT (string_desc_length (sd) == 4);
+      ASSERT (string_desc_char_at (sd, 0) == 'x');
+      ASSERT (string_desc_char_at (sd, 1) == '\377');
+      ASSERT (string_desc_char_at (sd, 2) == '\0');
+      ASSERT (string_desc_char_at (sd, 3) == 'z');
+    }
+    char *s = sb_dupfree_c (&buffer);
+    ASSERT (s != NULL && memcmp (s, "x\377\0z\0", 5) == 0);
+    free (s);
+  }
+
   /* Test simple string concatenation.  */
   {
     struct string_buffer buffer;
 
     sb_init (&buffer);
-    char *s = sb_dupfree (&buffer);
+    char *s = sb_dupfree_c (&buffer);
     ASSERT (s != NULL && strcmp (s, "") == 0);
     free (s);
   }
@@ -56,11 +96,23 @@ main ()
     struct string_buffer buffer;
 
     sb_init (&buffer);
-    sb_append (&buffer, "abc");
-    sb_append (&buffer, "");
-    sb_append (&buffer, "defg");
-    char *s = sb_dupfree (&buffer);
+    sb_append_c (&buffer, "abc");
+    sb_append_c (&buffer, "");
+    sb_append_c (&buffer, "defg");
+    char *s = sb_dupfree_c (&buffer);
     ASSERT (s != NULL && strcmp (s, "abcdefg") == 0);
+    free (s);
+  }
+
+  {
+    struct string_buffer buffer;
+
+    sb_init (&buffer);
+    sb_append_c (&buffer, "abc");
+    sb_append_desc (&buffer, string_desc_new_addr (5, "de\0fg"));
+    sb_append_c (&buffer, "hij");
+    char *s = sb_dupfree_c (&buffer);
+    ASSERT (s != NULL && memcmp (s, "abcde\0fghij", 12) == 0);
     free (s);
   }
 
@@ -69,10 +121,10 @@ main ()
     struct string_buffer buffer;
 
     sb_init (&buffer);
-    sb_append (&buffer, "<");
+    sb_append_c (&buffer, "<");
     sb_appendf (&buffer, "%x", 3735928559U);
-    sb_append (&buffer, ">");
-    char *s = sb_dupfree (&buffer);
+    sb_append_c (&buffer, ">");
+    char *s = sb_dupfree_c (&buffer);
     ASSERT (s != NULL && strcmp (s, "<deadbeef>") == 0);
     free (s);
   }
@@ -82,10 +134,10 @@ main ()
     struct string_buffer buffer;
 
     sb_init (&buffer);
-    sb_append (&buffer, "<");
+    sb_append_c (&buffer, "<");
     my_appendf (&buffer, "%x", 3735928559U);
-    sb_append (&buffer, ">");
-    char *s = sb_dupfree (&buffer);
+    sb_append_c (&buffer, ">");
+    char *s = sb_dupfree_c (&buffer);
     ASSERT (s != NULL && strcmp (s, "<deadbeef>") == 0);
     free (s);
   }
@@ -93,23 +145,37 @@ main ()
   /* Test printf-like formatting failure.
      On all systems except AIX, trying to convert the wide-character 0x76543210
      to a multibyte string (in the "C" locale) fails.
-     On all systems where REPLACE_VSNPRINTF=1 (this includes AIX), i.e. where
-     the Gnulib implementation of vsnprintf() is used), invalid format
-     directives make the *printf call fail.  */
+     On all systems, invalid format directives make the vsnzprintf() call
+     fail.  */
   {
     struct string_buffer buffer;
+    int ret;
 
     sb_init (&buffer);
-    sb_append (&buffer, "<");
-    sb_appendf (&buffer, "%lc", 0x76543210);
-    sb_append (&buffer, "|");
-    sb_appendf (&buffer, invalid_format_string_1, 1);
-    sb_append (&buffer, "|");
-    sb_appendf (&buffer, invalid_format_string_2, 2);
-    sb_append (&buffer, ">");
-    char *s = sb_dupfree (&buffer);
+    sb_append_c (&buffer, "<");
+
+    ret = sb_appendf (&buffer, "%lc", (wint_t) 0x76543210);
+    #if !(defined _AIX || (defined _WIN32 && !defined __CYGWIN__))
+    ASSERT (ret < 0);
+    ASSERT (errno == EILSEQ);
+    #endif
+
+    sb_append_c (&buffer, "|");
+
+    ret = sb_appendf (&buffer, invalid_format_string_1, 1);
+    ASSERT (ret < 0);
+    ASSERT (errno == EINVAL);
+
+    sb_append_c (&buffer, "|");
+
+    ret = sb_appendf (&buffer, invalid_format_string_2, 2);
+    ASSERT (ret < 0);
+    ASSERT (errno == EINVAL);
+
+    sb_append_c (&buffer, ">");
+    char *s = sb_dupfree_c (&buffer);
     ASSERT (s == NULL);
   }
 
-  return 0;
+  return test_exit_status;
 }

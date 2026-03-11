@@ -11,6 +11,8 @@ lib/mbtowc-lock.h
 lib/mbtowc-lock.c
 lib/windows-initguard.h
 m4/mbrtoc32.m4
+m4/c32rtomb.m4
+m4/locale-en.m4
 m4/locale-fr.m4
 m4/locale-zh.m4
 m4/codeset.m4
@@ -20,11 +22,13 @@ m4/threadlib.m4
 m4/visibility.m4
 
 Depends-on:
-uchar
+uchar-h
 attribute       [test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1]
 c99             [{ test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1; } && test $REPLACE_MBSTATE_T = 0]
 hard-locale     [{ test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1; } && test $REPLACE_MBSTATE_T = 0]
 mbrtowc         [{ test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1; } && test $REPLACE_MBSTATE_T = 0]
+mbsinit         [{ test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1; } && test $REPLACE_MBSTATE_T = 0]
+mbszero         [{ test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1; } && test $REPLACE_MBSTATE_T = 0]
 assert-h        [test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1]
 localcharset    [test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1]
 streq           [test $HAVE_MBRTOC32 = 0 || test $REPLACE_MBRTOC32 = 1]

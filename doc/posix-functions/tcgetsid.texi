@@ -1,10 +1,11 @@
 @node tcgetsid
-@section @code{tcgetsid}
+@subsection @code{tcgetsid}
 @findex tcgetsid
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/tcgetsid.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/tcgetsid.html}
 
 Gnulib module: tcgetsid
+@mindex tcgetsid
 
 Portability problems fixed by Gnulib:
 @itemize

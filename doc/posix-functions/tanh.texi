@@ -1,10 +1,11 @@
 @node tanh
-@section @code{tanh}
+@subsection @code{tanh}
 @findex tanh
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/tanh.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/tanh.html}
 
 Gnulib module: tanh
+@mindex tanh
 
 Portability problems fixed by Gnulib:
 @itemize

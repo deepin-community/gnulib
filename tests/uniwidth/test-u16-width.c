@@ -1,5 +1,5 @@
 /* Test of u16_width() function.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -60,5 +60,5 @@ main ()
     ASSERT (u16_width (input + INPUT4_OFFSET, INPUT4_LENGTH, "GB2312") == 6);
   }
 
-  return 0;
+  return test_exit_status;
 }

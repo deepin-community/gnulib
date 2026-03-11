@@ -1,6 +1,6 @@
 /* A substitute <strings.h>.
 
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -61,7 +61,7 @@ extern "C" {
   /* Find the index of the least-significant set bit.  */
 #if @GNULIB_FFS@
 # if !@HAVE_FFS@
-_GL_FUNCDECL_SYS (ffs, int, (int i));
+_GL_FUNCDECL_SYS (ffs, int, (int i), );
 # endif
 _GL_CXXALIAS_SYS (ffs, int, (int i));
 _GL_CXXALIASWARN (ffs);

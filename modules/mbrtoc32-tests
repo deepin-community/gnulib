@@ -5,16 +5,17 @@ tests/test-mbrtoc32-3.sh
 tests/test-mbrtoc32-4.sh
 tests/test-mbrtoc32-5.sh
 tests/test-mbrtoc32.c
-tests/test-mbrtoc32-w32-1.sh
 tests/test-mbrtoc32-w32-2.sh
 tests/test-mbrtoc32-w32-3.sh
 tests/test-mbrtoc32-w32-4.sh
 tests/test-mbrtoc32-w32-5.sh
 tests/test-mbrtoc32-w32-6.sh
 tests/test-mbrtoc32-w32-7.sh
+tests/test-mbrtoc32-w32-8.sh
 tests/test-mbrtoc32-w32.c
 tests/signature.h
 tests/macros.h
+m4/locale-en.m4
 m4/locale-fr.m4
 m4/locale-ja.m4
 m4/locale-zh.m4
@@ -28,6 +29,7 @@ setlocale
 localcharset
 
 configure.ac:
+gt_LOCALE_EN_UTF8
 gt_LOCALE_FR
 gt_LOCALE_FR_UTF8
 gt_LOCALE_JA
@@ -37,10 +39,11 @@ Makefile.am:
 TESTS += \
   test-mbrtoc32-1.sh test-mbrtoc32-2.sh test-mbrtoc32-3.sh test-mbrtoc32-4.sh \
   test-mbrtoc32-5.sh \
-  test-mbrtoc32-w32-1.sh test-mbrtoc32-w32-2.sh test-mbrtoc32-w32-3.sh \
-  test-mbrtoc32-w32-4.sh test-mbrtoc32-w32-5.sh test-mbrtoc32-w32-6.sh \
-  test-mbrtoc32-w32-7.sh
+  test-mbrtoc32-w32-2.sh test-mbrtoc32-w32-3.sh test-mbrtoc32-w32-4.sh \
+  test-mbrtoc32-w32-5.sh test-mbrtoc32-w32-6.sh test-mbrtoc32-w32-7.sh \
+  test-mbrtoc32-w32-8.sh
 TESTS_ENVIRONMENT += \
+  LOCALE_EN_UTF8='@LOCALE_EN_UTF8@' \
   LOCALE_FR='@LOCALE_FR@' \
   LOCALE_FR_UTF8='@LOCALE_FR_UTF8@' \
   LOCALE_JA='@LOCALE_JA@' \

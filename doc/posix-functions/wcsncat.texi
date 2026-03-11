@@ -1,13 +1,18 @@
 @node wcsncat
-@section @code{wcsncat}
+@subsection @code{wcsncat}
 @findex wcsncat
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcsncat.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/wcsncat.html}
 
 Gnulib module: wcsncat
+@mindex wcsncat
 
 Portability problems fixed by Gnulib:
 @itemize
+@item
+This function does not support zero-length operations on NULL pointers
+on some platforms:
+macOS 15, NetBSD 10.0, OpenBSD 7.6, Solaris 11.4, Cygwin 3.5.4.
 @end itemize
 
 Portability problems not fixed by Gnulib:

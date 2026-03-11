@@ -1,5 +1,5 @@
 /* Tokenizing a string.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2007.
 
    This file is free software: you can redistribute it and/or modify
@@ -22,7 +22,11 @@
 
 #include <stdlib.h>
 
-#include "mbuiter.h"
+#if GNULIB_MCEL_PREFER
+# include "mcel.h"
+#else
+# include "mbuiterf.h"
+#endif
 
 char *
 mbssep (char **stringp, const char *delim)
@@ -30,7 +34,6 @@ mbssep (char **stringp, const char *delim)
   if (MB_CUR_MAX > 1)
     {
       char *start = *stringp;
-      char *ptr;
 
       if (start == NULL)
         return NULL;
@@ -38,25 +41,25 @@ mbssep (char **stringp, const char *delim)
       /* No need to optimize the cases of 0 or 1 delimiters specially,
          since mbspbrk already optimizes them.  */
 
-      ptr = mbspbrk (start, delim);
+      char *ptr = mbspbrk (start, delim);
 
       if (ptr == NULL)
-        {
-          *stringp = NULL;
-          return start;
-        }
+        *stringp = NULL;
       else
         {
-          mbui_iterator_t iter;
-
-          mbui_init (iter, ptr);
-          if (!mbui_avail (iter))
+#if GNULIB_MCEL_PREFER
+          *stringp = ptr + mcel_scanz (ptr).len;
+#else
+          mbuif_state_t state;
+          mbuif_init (state);
+          if (!mbuif_avail (state, ptr))
             abort ();
-          mbui_advance (iter);
+          mbchar_t cur = mbuif_next (state, ptr);
+          *stringp = ptr + mb_len (cur);
+#endif
           *ptr = '\0';
-          *stringp = (char *) mbui_cur_ptr (iter);
-          return start;
         }
+      return start;
     }
   else
     return strsep (stringp, delim);

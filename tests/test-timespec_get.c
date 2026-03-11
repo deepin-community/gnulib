@@ -1,5 +1,5 @@
 /* Test of timespec_get() function.
-   Copyright (C) 2021-2023 Free Software Foundation, Inc.
+   Copyright (C) 2021-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,5 +53,5 @@ main (void)
   ASSERT (tt2 <= ts3.tv_sec);
   ASSERT (ts3.tv_sec <= tt4);
 
-  return 0;
+  return test_exit_status;
 }

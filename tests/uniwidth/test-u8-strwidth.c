@@ -1,5 +1,5 @@
 /* Test of u8_strwidth() function.
-   Copyright (C) 2007-2023 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,5 +49,5 @@ main ()
     ASSERT (u8_strwidth (input, "GB2312") == 6);
   }
 
-  return 0;
+  return test_exit_status;
 }

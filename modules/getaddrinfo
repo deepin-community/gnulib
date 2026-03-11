@@ -7,13 +7,14 @@ lib/gai_strerror.c
 m4/getaddrinfo.m4
 
 Depends-on:
-netdb
-sys_socket
+netdb-h
+sys_socket-h
 extensions
 gettext-h       [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1 || test $HAVE_DECL_GAI_STRERROR = 0 || test $REPLACE_GAI_STRERROR = 1]
+gnulib-i18n     [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1 || test $HAVE_DECL_GAI_STRERROR = 0 || test $REPLACE_GAI_STRERROR = 1]
 inet_ntop       [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1]
 snprintf        [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1]
-stdbool         [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1]
+bool            [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1]
 strdup          [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1]
 servent         [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1]
 hostent         [test $HAVE_GETADDRINFO = 0 || test $REPLACE_GETADDRINFO = 1]

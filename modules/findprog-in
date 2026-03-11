@@ -8,15 +8,15 @@ m4/findprog-in.m4
 m4/eaccess.m4
 
 Depends-on:
-stdbool
-sys_stat
+bool
+sys_stat-h
 filename
 concat-filename
 access
 stat
 strdup-posix
 malloc-posix
-unistd
+unistd-h
 
 configure.ac:
 gl_FINDPROG_IN

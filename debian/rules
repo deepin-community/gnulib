@@ -12,6 +12,7 @@ export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 # # package maintainers to append LDFLAGS
 # export DEB_LDFLAGS_MAINT_APPEND =
 
+include /usr/share/dpkg/pkg-info.mk
 
 GNULIB_DESTDIR=$(CURDIR)/debian/gnulib/
 
@@ -30,12 +31,12 @@ override_dh_auto_configure-arch:
 	dh_auto_configure --sourcedir debian/git-merge-changelog.src
 
 override_dh_auto_build-indep:
-	$(MAKE) -C doc info
-	$(MAKE) -C doc html
+	$(MAKE) -C doc info NEWEST_GNULIB_TEXI_FILE=../debian/copyright
+	$(MAKE) -C doc html NEWEST_GNULIB_TEXI_FILE=../debian/copyright
 
 override_dh_auto_build-arch:
 	dh_auto_build --sourcedir debian/git-merge-changelog.src
-	pod2man --section=1 debian/git-merge-changelog.pod debian/git-merge-changelog.1
+	pod2man --section=1 --center "Gnulib" --release $(DEB_VERSION) debian/git-merge-changelog.pod debian/git-merge-changelog.1
 
 override_dh_auto_install-arch:
 	dh_auto_install --sourcedir=debian/git-merge-changelog.src --destdir=debian/git-merge-changelog
@@ -43,9 +44,15 @@ override_dh_auto_install-arch:
 override_dh_auto_install-indep:
 	mkdir -p debian/gnulib/usr/bin
 	cp -a check-module debian/gnulib/usr/bin
-	mkdir -p debian/gnulib/usr/share/gnulib
+	cp -v debian/local/dh_gnulib_patch debian/gnulib/usr/bin/
+	mkdir -p debian/gnulib/usr/share/gnulib/debian/patches.d/00-gnulib-tool-version/
+	cp -v debian/local/gnulib-dpkg.mk debian/gnulib/usr/share/gnulib/debian/
+	cp -v debian/patches/00*-gnulib-tool-version.patch debian/gnulib/usr/share/gnulib/debian/patches.d/00-gnulib-tool-version/
+	mkdir -p debian/gnulib/usr/share/man/man1
+	pod2man --section=1 --center "Gnulib" --release $(DEB_VERSION) debian/local/dh_gnulib_patch.pod debian/gnulib/usr/share/man/man1/dh_gnulib_patch.1
 	cp -a build-aux posix-modules config doc lib m4 modules top tests \
-	      MODULES.html.sh Makefile gnulib-tool cfg.mk check-copyright \
+	      MODULES.html.sh Makefile cfg.mk check-copyright \
+	      gnulib-tool* .gnulib-tool.py pygnulib gnulib.bundle \
 	      debian/gnulib/usr/share/gnulib
 	ln -s ../share/gnulib/gnulib-tool debian/gnulib/usr/bin
 	# Fix permissions
@@ -69,7 +76,8 @@ override_dh_auto_install-indep:
 	rm -f debian/gnulib/usr/share/gnulib/*/.cvsignore debian/gnulib/usr/share/gnulib/.cvsignore
 	rm -f debian/gnulib/usr/share/gnulib/*/.gitignore debian/gnulib/usr/share/gnulib/.gitignore
 	rm -f debian/gnulib/usr/share/gnulib/*/.gitattributes debian/gnulib/usr/share/gnulib/.gitattributes
-
+	# Show differences between source gnulib and /usr/share/gnulib
+	-env LANG=C diff -ur . debian/gnulib/usr/share/gnulib | grep -e '^diff' -e '^Only in' | grep -v '^Only in ./debian'
 
 # Run tests here.
 override_dh_auto_test-indep:

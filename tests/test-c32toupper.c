@@ -1,5 +1,5 @@
 /* Test of c32toupper() function.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -154,7 +154,7 @@ main (int argc, char *argv[])
       {
       case '0':
         /* C locale; tested above.  */
-        return 0;
+        return test_exit_status;
 
       case '1':
         /* Locale encoding is ISO-8859-1 or ISO-8859-15.  */
@@ -163,7 +163,7 @@ main (int argc, char *argv[])
           mb = for_character ("\262", 1);
           ASSERT (mb.nbytes == 1);
           ASSERT (memcmp (mb.buf, "\262", 1) == 0);
-        #if !(defined __GLIBC__ || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __NetBSD__ || defined __sun || defined __CYGWIN__)
+        #if !(defined __GLIBC__ || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __NetBSD__ || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__))
           /* U+00B5 MICRO SIGN */
           mb = for_character ("\265", 1);
           ASSERT (mb.nbytes == 1);
@@ -188,7 +188,7 @@ main (int argc, char *argv[])
           ASSERT (memcmp (mb.buf, "\377", 1) == 0);
         #endif
         }
-        return 0;
+        return test_exit_status;
 
       case '2':
         /* Locale encoding is EUC-JP.  */
@@ -250,7 +250,7 @@ main (int argc, char *argv[])
           ASSERT (memcmp (mb.buf, "\243\307", 2) == 0);
         #endif
         }
-        return 0;
+        return test_exit_status;
 
       case '3':
         /* Locale encoding is UTF-8.  */
@@ -259,7 +259,7 @@ main (int argc, char *argv[])
           mb = for_character ("\302\262", 2);
           ASSERT (mb.nbytes == 2);
           ASSERT (memcmp (mb.buf, "\302\262", 2) == 0);
-        #if !(defined __GLIBC__ || defined MUSL_LIBC || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined _AIX || defined __sun || defined __CYGWIN__)
+        #if !(defined __GLIBC__ || defined MUSL_LIBC || (defined __APPLE__ && defined __MACH__) || defined __FreeBSD__ || defined __DragonFly__ || defined __NetBSD__ || defined __OpenBSD__ || defined _AIX || defined __sun || defined __CYGWIN__ || (defined _WIN32 && !defined __CYGWIN__) || defined __ANDROID__)
           /* U+00B5 MICRO SIGN */
           mb = for_character ("\302\265", 2);
           ASSERT (mb.nbytes == 2);
@@ -275,7 +275,6 @@ main (int argc, char *argv[])
           ASSERT (mb.nbytes == 2);
           ASSERT (memcmp (mb.buf, "\303\237", 2) == 0);
         #endif
-        #if !(defined _WIN32 && !defined __CYGWIN__)
           /* U+00E9 LATIN SMALL LETTER E WITH ACUTE */
           mb = for_character ("\303\251", 2);
           ASSERT (mb.nbytes == 2);
@@ -284,7 +283,6 @@ main (int argc, char *argv[])
           mb = for_character ("\303\277", 2);
           ASSERT (mb.nbytes == 2);
           ASSERT (memcmp (mb.buf, "\305\270", 2) == 0);
-        #endif
           /* U+0141 LATIN CAPITAL LETTER L WITH STROKE */
           mb = for_character ("\305\201", 2);
           ASSERT (mb.nbytes == 2);
@@ -344,11 +342,13 @@ main (int argc, char *argv[])
           ASSERT (mb.nbytes == 4);
           ASSERT (memcmp (mb.buf, "\363\240\201\241", 4) == 0);
         }
-        return 0;
+        return test_exit_status;
 
       case '4':
         /* Locale encoding is GB18030.  */
-        #if GL_CHAR32_T_IS_UNICODE && (defined __NetBSD__ || defined __sun)
+        #if (defined __GLIBC__ && __GLIBC__ == 2 && __GLIBC_MINOR__ >= 13 && __GLIBC_MINOR__ <= 15) || (GL_CHAR32_T_IS_UNICODE && (defined __FreeBSD__ || defined __NetBSD__ || defined __sun))
+        if (test_exit_status != EXIT_SUCCESS)
+          return test_exit_status;
         fputs ("Skipping test: The GB18030 converter in this system's iconv is broken.\n", stderr);
         return 77;
         #endif
@@ -357,7 +357,7 @@ main (int argc, char *argv[])
           mb = for_character ("\201\060\205\065", 4);
           ASSERT (mb.nbytes == 4);
           ASSERT (memcmp (mb.buf, "\201\060\205\065", 4) == 0);
-        #if !(defined __GLIBC__ || defined __FreeBSD__ || (defined __APPLE__ && defined __MACH__) || defined __NetBSD__)
+        #if !(defined __GLIBC__ || defined __FreeBSD__ || (defined __APPLE__ && defined __MACH__) || defined __NetBSD__ || defined __CYGWIN__)
           /* U+00B5 MICRO SIGN */
           mb = for_character ("\201\060\205\070", 4);
           ASSERT (mb.nbytes == 4);
@@ -446,7 +446,7 @@ main (int argc, char *argv[])
           ASSERT (mb.nbytes == 4);
           ASSERT (memcmp (mb.buf, "\323\066\237\065", 4) == 0);
         }
-        return 0;
+        return test_exit_status;
 
       }
 

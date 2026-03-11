@@ -4,15 +4,15 @@ tests/test-fma1.h
 tests/test-fmaf2.c
 tests/test-fma2.h
 tests/infinity.h
-tests/nan.h
 tests/signature.h
 tests/macros.h
 lib/float+.h
 
 Depends-on:
-float
+float-h
 isnanf-nolibm
 ldexpf
+nan
 
 configure.ac:
 

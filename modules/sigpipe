@@ -16,8 +16,8 @@ msvc-nothrow
 raise
 signal-h
 sigprocmask
-stdio
-unistd
+stdio-h
+unistd-h
 
 configure.ac:
 gl_SIGNAL_SIGPIPE

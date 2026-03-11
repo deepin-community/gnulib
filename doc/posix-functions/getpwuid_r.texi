@@ -1,10 +1,11 @@
 @node getpwuid_r
-@section @code{getpwuid_r}
+@subsection @code{getpwuid_r}
 @findex getpwuid_r
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getpwuid_r.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getpwuid_r.html}
 
 Gnulib module: extensions
+@mindex extensions
 
 Portability problems fixed by Gnulib:
 @itemize

@@ -74,6 +74,71 @@ User visible incompatible changes
 
 Date        Modules         Changes
 
+2024-12-25  xprintf         The functions x[v][f]printf now return an 'off64_t'
+                            instead of an 'int'.
+
+2024-11-05  eealloc         This module is deprecated.  Use malloc-gnu or
+                            realloc-posix instead.
+
+2024-10-22  spawn-pipe      The functions 'create_pipe_out', 'create_pipe_in',
+                            'create_pipe_bidi' now take a 4th argument
+                            'const char * const *dll_dirs'. To maintain the
+                            previous behaviour, insert NULL as additional 4th
+                            argument.
+
+2024-10-22  execute         The function 'execute' now takes a 4th argument
+                            'const char * const *dll_dirs'. To maintain the
+                            previous behaviour, insert NULL as additional 4th
+                            argument.
+
+2024-10-02  file-has-acl    The file_has_aclinfo function introduced 3 days ago
+                            now has a different signature.
+
+2024-09-25  string-buffer   The function sb_append is renamed to sb_append_c.
+                            The function sb_dupfree is renamed to sb_dupfree_c.
+
+2024-08-14  verror          The include file is changed from "verror.h"
+                            to <error.h>.
+
+2024-08-09  full-read       These modules now prefer signed types to size_t.
+            full-write      The preferred types are idx_t for object sizes and
+            safe-read       ptrdiff_t for values that are either a size or -1.
+            safe-write      SAFE_READ_ERROR and SAFE_WRITE_ERROR are now
+                            obsolescent; callers can just check for < 0.
+
+2024-06-22  xvasprintf      It is now the programmer's responsibility to pass
+            c-xvasprintf    a valid format string without %ls, %lc directives
+                            and that all widths are >= -INT_MAX and <= INT_MAX.
+
+2024-05-16  putenv          This module is renamed to 'putenv-gnu'.
+
+2024-02-21  *printf-posix   These modules no longer support the 'n' directive
+                            by default.  In order to keep the 'n' directive
+                            enabled, you need to additionally request the
+                            module 'printf-with-n-directive'.
+
+2024-02-09  strftime        This module, deprecated on 2017-07-23, is removed.
+                            Use module 'nstrftime' instead.
+
+2023-09-03  same-inode      SAME_INODE, ST_BLKSIZE and ST_NBLOCKS args
+            stat-size       must be addressable lvalues.
+
+2023-08-08  readutmp        The result element type of the function read_utmp,
+                            STRUCT_UTMP, is no longer the same as the result
+                            value type of the function getutxent, struct utmpx.
+
+2023-08-03  readutmp        Some STRUCT_UTMP members can be char *,
+2023-08-01                  rather than fixed-length char arrays.
+                            On some platforms, the timestamp is ut_ts of type
+                            struct timespec, not ut_tv of type struct timeval,
+                            and ut_session is pid_t not long.
+                            read_utmp's 2nd arg is now idx_t * not size_t *.
+                            Link additionally with $(READUTMP_LIB).
+
+2023-07-10  dfa             The signature of the function
+                            case_folded_counterparts, declared in localeinfo.h,
+                            has changed.
+
 2023-06-10  javacomp-script  These modules now compile the Java code with option
             javacomp          '-source 1.6' or higher. As a consequence, the
                              compiler may emit notes "... uses unchecked or
@@ -790,15 +855,15 @@ Date        Modules         Changes
 2009-06-25  fpurge          The include file is changed from "fpurge.h" to
                             <stdio.h>.
 
-2009-04-26  modules/uniconv/u8-conv-from-enc
-            modules/uniconv/u16-conv-from-enc
-            modules/uniconv/u32-conv-from-enc
+2009-04-26  uniconv/u8-conv-from-enc
+            uniconv/u16-conv-from-enc
+            uniconv/u32-conv-from-enc
                             The calling convention of the functions
                             u*_conv_from_encoding is changed.
 
-2009-04-26  modules/uniconv/u8-conv-to-enc
-            modules/uniconv/u16-conv-to-enc
-            modules/uniconv/u32-conv-to-enc
+2009-04-26  uniconv/u8-conv-to-enc
+            uniconv/u16-conv-to-enc
+            uniconv/u32-conv-to-enc
                             The calling convention of the functions
                             u*_conv_to_encoding is changed.
 

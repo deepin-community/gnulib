@@ -9,8 +9,8 @@ tests/test-nonblocking-misc.h
 tests/macros.h
 
 Depends-on:
-stdbool
-unistd
+bool
+unistd-h
 nonblocking
 wait-process
 pipe-posix

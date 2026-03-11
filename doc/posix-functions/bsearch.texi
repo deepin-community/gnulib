@@ -1,10 +1,11 @@
 @node bsearch
-@section @code{bsearch}
+@subsection @code{bsearch}
 @findex bsearch
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/bsearch.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/bsearch.html}
 
-Gnulib module: ---
+Gnulib module: bsearch
+@mindex bsearch
 
 Portability problems fixed by Gnulib:
 @itemize

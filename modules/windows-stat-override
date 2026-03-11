@@ -9,13 +9,13 @@ have side effects on the compilation of the main modules in lib/.
 Files:
 
 Depends-on:
-sys_stat
+sys_stat-h
 
 configure.ac:
 gl_SYS_STAT_H_REQUIRE_DEFAULTS
 AC_REQUIRE([AC_CANONICAL_HOST])
 case "$host_os" in
-  mingw*) gl_MODULE_INDICATOR_INIT_VARIABLE([GNULIB_OVERRIDES_STRUCT_STAT], [1]) ;;
+  mingw* | windows*) gl_MODULE_INDICATOR_INIT_VARIABLE([GNULIB_OVERRIDES_STRUCT_STAT], [1]) ;;
 esac
 
 Makefile.am:

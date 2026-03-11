@@ -1,21 +1,23 @@
 @node tzset
-@section @code{tzset}
+@subsection @code{tzset}
 @findex tzset
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/tzset.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/tzset.html}
 
 Gnulib module: tzset
+@mindex tzset
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 On native Windows platforms (mingw, MSVC), this function works incorrectly
-when the environment variable @code{TZ} has been set by Cygwin.
+when the environment variable @env{TZ} has been set by Cygwin.
 @end itemize
 
 Portability problems not fixed by Gnulib:
 @itemize
 @item
+@c https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/tzset
 Native Windows platforms (mingw, MSVC) support only a subset of
 POSIX-specified values for the @env{TZ} environment variable,
 consisting of a time zone abbreviation containing exactly three ASCII

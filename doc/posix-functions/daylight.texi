@@ -1,8 +1,8 @@
 @node daylight
-@section @code{daylight}
+@subsection @code{daylight}
 @findex daylight
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/daylight.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/daylight.html}
 
 Gnulib module: ---
 
@@ -13,15 +13,23 @@ Portability problems fixed by Gnulib:
 Portability problems not fixed by Gnulib:
 @itemize
 @item
+This variable's contents are unreliable if you use a geographical
+@env{TZ} setting like @code{TZ="America/Los_Angeles"}.
+@item
 This variable is missing on some platforms:
-FreeBSD 13.0, OpenBSD 3.8, IRIX 6.5.
+FreeBSD 14.0, OpenBSD 5.7.
+@item
+This variable is called @code{_daylight} on some platforms:
+mingw with @code{-DNO_OLDNAMES}, MSVC.
 @item
 The address of this variable is not a compile-time constant on some platforms:
-Cygwin, mingw.
+mingw, MSVC.
 @item
 Native Windows platforms (mingw, MSVC) support only a subset of time
 zones supported by GNU or specified by POSIX@.  @xref{tzset}.
 @end itemize
 
+This variable is vestigial: it is not needed and does not suffice in general.
+It is planned to be removed from a future version of POSIX@.
 A more portable way of getting the UTC offset is to use
 @code{strftime} with the @code{%z} format.  @xref{strftime}.

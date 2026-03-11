@@ -1,5 +1,5 @@
 /* execle() function: Execute a program, replacing the current process.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -73,7 +73,7 @@ execle (const char *program, const char *arg0, ...)
   va_end (args);
 
   /* Invoke execve.  */
-  execve (program, argv, env);
+  execve (program, (char * const *) argv, env);
 
   /* If execve returned, it must have failed.  */
   int saved_errno = errno;

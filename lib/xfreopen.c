@@ -1,5 +1,5 @@
 /* Open a file, reusing a given stream, with error checking.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@
 #include "xfreopen.h"
 
 #include <errno.h>
-#include "error.h"
+#include <error.h>
 #include "exitfail.h"
 #include "quote.h"
 
 #include "gettext.h"
-#define _(msgid) gettext (msgid)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 void
 xfreopen (char const *filename, char const *mode, FILE *fp)

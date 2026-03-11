@@ -1,5 +1,5 @@
 /* Test of posix_spawnp() function.
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -93,6 +93,8 @@ main ()
 #if defined _WIN32 && !defined __CYGWIN__
   /* On native Windows, scripts - even with '#!' marker - are not executable.
      Only .bat and .cmd files are.  */
+  if (test_exit_status != EXIT_SUCCESS)
+    return test_exit_status;
   fprintf (stderr, "Skipping test: scripts are not executable on this platform.\n");
   return 77;
 #else
@@ -152,5 +154,5 @@ main ()
   /* Clean up data file.  */
   unlink (DATA_FILENAME);
 
-  return 0;
+  return test_exit_status;
 }

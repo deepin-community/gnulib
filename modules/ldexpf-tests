@@ -3,7 +3,6 @@ tests/test-ldexpf.c
 tests/test-ldexp.h
 tests/minus-zero.h
 tests/infinity.h
-tests/nan.h
 tests/signature.h
 tests/macros.h
 tests/randomf.c
@@ -11,7 +10,8 @@ tests/randomf.c
 Depends-on:
 isnanf-nolibm
 signbit
-float
+float-h
+nan
 
 configure.ac:
 

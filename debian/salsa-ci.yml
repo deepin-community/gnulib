@@ -1,0 +1,9 @@
+include:
+ - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+ - https://jas.pages.debian.net/reverse-dependency-ci/gnulib.yml
+
+variables:
+  SALSA_CI_DISABLE_APTLY: 0
+  SALSA_CI_DISABLE_WRAP_AND_SORT: 0
+  SALSA_CI_WRAP_AND_SORT_ARGS: '-asbkt'
+  SALSA_CI_ENABLE_REVERSE_DEPENDENCY_BUILD: 1

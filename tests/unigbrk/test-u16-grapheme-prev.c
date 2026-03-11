@@ -1,5 +1,5 @@
 /* Previous grapheme cluster test.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify it
    under the terms of the GNU Lesser General Public License as published
@@ -59,11 +59,12 @@ test_u16_grapheme_prev (size_t len, ...)
       if (prev == NULL)
         fputs ("u16_grapheme_prev returned NULL", stderr);
       else
-        fprintf (stderr, "u16_grapheme_prev skipped %zu units", end - prev);
+        fprintf (stderr, "u16_grapheme_prev skipped %tu units", end - prev);
       fprintf (stderr, ", expected %zu:\n", len);
       for (i = 0; i < n; i++)
         fprintf (stderr, " %04x", s[i]);
       putc ('\n', stderr);
+      fflush (stderr);
       abort ();
     }
 }
@@ -100,5 +101,5 @@ main (void)
   test_u16_grapheme_prev (2, 0xd83d, 0xde10, -1); /* 😐: neutral face. */
   test_u16_grapheme_prev (3, 0xd83d, 0xde10, GRAVE, -1);
 
-  return 0;
+  return test_exit_status;
 }

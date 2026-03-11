@@ -1,5 +1,5 @@
 /* Test the Unicode character Arabic joining group functions.
-   Copyright (C) 2011 Free Software Foundation, Inc.
+   Copyright (C) 2011-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2011.
 
    This program is free software: you can redistribute it and/or modify it
@@ -48,5 +48,5 @@ main ()
   for (; c < 0x110000; c++)
     ASSERT (uc_joining_group (c) == UC_JOINING_GROUP_NONE);
 
-  return 0;
+  return test_exit_status;
 }

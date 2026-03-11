@@ -1,5 +1,5 @@
 /* Test of line breaking of UTF-8 strings.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -243,5 +243,5 @@ main ()
   test_function (u8_possible_linebreaks, 1);
 #endif
 
-  return 0;
+  return test_exit_status;
 }

@@ -1,8 +1,10 @@
-# gettext.m4 serial 77 (gettext-0.22)
-dnl Copyright (C) 1995-2014, 2016, 2018-2023 Free Software Foundation, Inc.
+# gettext.m4
+# serial 81 (gettext-0.23)
+dnl Copyright (C) 1995-2014, 2016, 2018-2025 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
+dnl This file is offered as-is, without any warranty.
 dnl
 dnl This file can be used in projects which are not available under
 dnl the GNU General Public License or the GNU Lesser General Public
@@ -15,7 +17,7 @@ dnl They are *not* in the public domain.
 
 dnl Authors:
 dnl   Ulrich Drepper <drepper@cygnus.com>, 1995-2000.
-dnl   Bruno Haible <haible@clisp.cons.org>, 2000-2006, 2008-2010.
+dnl   Bruno Haible <bruno@clisp.org>, 2000-2024.
 
 dnl Macro to add for using GNU gettext.
 
@@ -182,9 +184,9 @@ return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
           AC_LIB_LINKFLAGS_BODY([intl])
           AC_CACHE_CHECK([for GNU gettext in libintl],
             [$gt_func_gnugettext_libintl],
-           [gt_save_CPPFLAGS="$CPPFLAGS"
+           [gt_saved_CPPFLAGS="$CPPFLAGS"
             CPPFLAGS="$CPPFLAGS $INCINTL"
-            gt_save_LIBS="$LIBS"
+            gt_saved_LIBS="$LIBS"
             LIBS="$LIBS $LIBINTL"
             dnl Now see whether libintl exists and does not depend on libiconv.
             AC_LINK_IFELSE(
@@ -210,9 +212,16 @@ return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
                  ]])],
               [eval "$gt_func_gnugettext_libintl=yes"],
               [eval "$gt_func_gnugettext_libintl=no"])
-            dnl Now see whether libintl exists and depends on libiconv.
-            if { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" != yes; } && test -n "$LIBICONV"; then
-              LIBS="$LIBS $LIBICONV"
+            dnl Now see whether libintl exists and depends on libiconv or other
+            dnl OS dependent libraries, specifically on macOS and AIX.
+            gt_LIBINTL_EXTRA="$INTL_MACOSX_LIBS"
+            AC_REQUIRE([AC_CANONICAL_HOST])
+            case "$host_os" in
+              aix*) gt_LIBINTL_EXTRA="-lpthread" ;;
+            esac
+            if { eval "gt_val=\$$gt_func_gnugettext_libintl"; test "$gt_val" != yes; } \
+               && { test -n "$LIBICONV" || test -n "$gt_LIBINTL_EXTRA"; }; then
+              LIBS="$LIBS $LIBICONV $gt_LIBINTL_EXTRA"
               AC_LINK_IFELSE(
                 [AC_LANG_PROGRAM(
                    [[
@@ -234,13 +243,13 @@ $gt_revision_test_code
 bindtextdomain ("", "");
 return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
                    ]])],
-                [LIBINTL="$LIBINTL $LIBICONV"
-                 LTLIBINTL="$LTLIBINTL $LTLIBICONV"
+                [LIBINTL="$LIBINTL $LIBICONV $gt_LIBINTL_EXTRA"
+                 LTLIBINTL="$LTLIBINTL $LTLIBICONV $gt_LIBINTL_EXTRA"
                  eval "$gt_func_gnugettext_libintl=yes"
                 ])
             fi
-            CPPFLAGS="$gt_save_CPPFLAGS"
-            LIBS="$gt_save_LIBS"])
+            CPPFLAGS="$gt_saved_CPPFLAGS"
+            LIBS="$gt_saved_LIBS"])
         fi
 
         dnl If an already present or preinstalled GNU gettext() is found,
@@ -357,21 +366,7 @@ return * gettext ("")$gt_expression_test_code + __GNU_GETTEXT_SYMBOL_EXPRESSION
   AC_SUBST([POSUB])
 
   dnl Define localedir_c and localedir_c_make.
-  dnl Find the final value of localedir.
-  gt_save_prefix="${prefix}"
-  gt_save_datarootdir="${datarootdir}"
-  gt_save_localedir="${localedir}"
-  dnl Unfortunately, prefix gets only finally determined at the end of
-  dnl configure.
-  if test "X$prefix" = "XNONE"; then
-    prefix="$ac_default_prefix"
-  fi
-  eval datarootdir="$datarootdir"
-  eval localedir="$localedir"
-  gl_BUILD_TO_HOST([localedir])
-  localedir="${gt_save_localedir}"
-  datarootdir="${gt_save_datarootdir}"
-  prefix="${gt_save_prefix}"
+  gl_BUILD_TO_HOST_LOCALEDIR
 ])
 
 

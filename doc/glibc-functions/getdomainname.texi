@@ -18,6 +18,7 @@ Documentation:
 @end itemize
 
 Gnulib module: getdomainname
+@mindex getdomainname
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -30,7 +31,7 @@ some platforms:
 AIX 7.1.
 @item
 The second argument is of type @code{int}, not @code{size_t}, on some platforms:
-macOS 11.1, FreeBSD 13.0, AIX 7.1, IRIX 6.5.
+macOS 14, FreeBSD 14.0, AIX 7.1.
 @end itemize
 
 Portability problems not fixed by Gnulib:

@@ -1,10 +1,11 @@
 @node pthread_mutex_lock
-@section @code{pthread_mutex_lock}
+@subsection @code{pthread_mutex_lock}
 @findex pthread_mutex_lock
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/pthread_mutex_lock.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html}
 
 Gnulib module: pthread-mutex
+@mindex pthread-mutex
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -17,4 +18,9 @@ Minix 3.1.8.
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+This function does not behave as required by POSIX for mutexes of type
+NORMAL and ERRORCHECK, by allowing RECURSIVE locking,
+in programs linked without @code{-lpthread} on some platforms:
+FreeBSD 14.0, NetBSD 10.0.
 @end itemize

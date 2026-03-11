@@ -9,8 +9,8 @@ m4/tmpdir.m4
 Depends-on:
 secure_getenv
 stat
-stdbool
-sys_stat
+bool
+sys_stat-h
 pathmax
 
 configure.ac:

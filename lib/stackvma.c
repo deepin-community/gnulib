@@ -1,5 +1,5 @@
 /* Determine the virtual memory area of a given address.
-   Copyright (C) 2002-2023 Free Software Foundation, Inc.
+   Copyright (C) 2002-2025 Free Software Foundation, Inc.
    Copyright (C) 2003-2006  Paolo Bonzini <bonzini@gnu.org>
 
    This program is free software: you can redistribute it and/or modify
@@ -176,7 +176,7 @@ rof_open (struct rofile *rof, const char *filename)
       /* Attempt to read the contents in a single system call.  */
       if (size > MIN_LEFTOVER)
         {
-          int n = read (fd, rof->buffer, size);
+          ssize_t n = read (fd, rof->buffer, size);
           if (n < 0 && errno == EINTR)
             goto retry;
 # if defined __DragonFly__
@@ -186,7 +186,7 @@ rof_open (struct rofile *rof, const char *filename)
               if (n <= 0)
                 /* Empty file.  */
                 goto fail1;
-              if (n + MIN_LEFTOVER <= size)
+              if (MIN_LEFTOVER <= size - n)
                 {
                   /* The buffer was sufficiently large.  */
                   rof->filled = n;
@@ -201,15 +201,15 @@ rof_open (struct rofile *rof, const char *filename)
                       if (n < 0)
                         /* Some error.  */
                         goto fail1;
-                      if (n + MIN_LEFTOVER > size - rof->filled)
-                        /* Allocate a larger buffer.  */
-                        break;
                       if (n == 0)
                         {
                           /* Reached the end of file.  */
                           close (fd);
                           return 0;
                         }
+                      if (size - rof->filled - n < MIN_LEFTOVER)
+                        /* Allocate a larger buffer.  */
+                        break;
                       rof->filled += n;
                     }
 # else
@@ -405,7 +405,7 @@ vma_iterate_proc (struct callback_locals *locals)
      On NetBSD, there are two such files:
        - /proc/curproc/map in near-FreeBSD syntax,
        - /proc/curproc/maps in Linux syntax.
-       Cf. <http://cvsweb.netbsd.org/bsdweb.cgi/src/sys/miscfs/procfs/procfs_map.c?rev=HEAD> */
+       Cf. <https://cvsweb.netbsd.org/bsdweb.cgi/src/sys/miscfs/procfs/procfs_map.c?rev=HEAD> */
   if (rof_open (&rof, "/proc/curproc/map") >= 0)
     {
       uintptr_t auxmap_start = rof.auxmap_start;

@@ -1,5 +1,5 @@
 /* Test of once-only execution in multithreaded situations.
-   Copyright (C) 2005, 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -264,7 +264,7 @@ main ()
   test_once ();
   printf (" OK\n"); fflush (stdout);
 
-  return 0;
+  return test_exit_status;
 }
 
 #else

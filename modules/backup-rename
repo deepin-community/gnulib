@@ -21,9 +21,9 @@ memcmp
 opendirat
 readdir
 renameatu
-stdbool
-stdckdint
-stdint
+bool
+stdckdint-h
+stdint-h
 xalloc-oversized
 
 configure.ac:

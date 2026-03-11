@@ -1,10 +1,11 @@
 @node strtoull
-@section @code{strtoull}
+@subsection @code{strtoull}
 @findex strtoull
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/strtoull.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/strtoull.html}
 
 Gnulib module: strtoull
+@mindex strtoull
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -22,4 +23,9 @@ prefix) when the base is 2 or 0 on many platforms.
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+If no conversion could be performed, this function sets @code{errno}
+to @code{EINVAL} on some platforms.  Portable programs should check
+for no conversion by comparing @code{str} to @code{*endptr}, not by
+inspecting @code{errno}.
 @end itemize

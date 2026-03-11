@@ -1,8 +1,8 @@
 @node syslog
-@section @code{syslog}
+@subsection @code{syslog}
 @findex syslog
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/syslog.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/syslog.html}
 
 Gnulib module: ---
 

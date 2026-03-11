@@ -1,8 +1,8 @@
 @node catgets
-@section @code{catgets}
+@subsection @code{catgets}
 @findex catgets
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/catgets.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/catgets.html}
 
 Gnulib module: ---
 
@@ -14,5 +14,5 @@ Portability problems not fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-Minix 3.1.8, Cygwin 2.9, mingw, MSVC 14, Android 7.1.
+Minix 3.1.8, Cygwin 2.9.x, mingw, MSVC 14, Android 7.1.
 @end itemize

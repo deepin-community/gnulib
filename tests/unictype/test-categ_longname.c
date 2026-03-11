@@ -1,5 +1,5 @@
 /* Test the Unicode character type functions.
-   Copyright (C) 2007-2009, 2011 Free Software Foundation, Inc.
+   Copyright (C) 2007-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,5 +29,5 @@ main ()
   ASSERT (strcmp (uc_general_category_long_name (UC_CATEGORY_Nl), "Letter Number") == 0);
   ASSERT (uc_general_category_long_name (uc_general_category_or (UC_CATEGORY_Z, UC_CATEGORY_Nl)) == NULL);
 
-  return 0;
+  return test_exit_status;
 }

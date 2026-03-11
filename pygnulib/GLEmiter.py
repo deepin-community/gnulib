@@ -1,4 +1,4 @@
-# Copyright (C) 2002-2023 Free Software Foundation, Inc.
+# Copyright (C) 2002-2025 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,67 +13,111 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from __future__ import annotations
+
 #===============================================================================
 # Define global imports
 #===============================================================================
 import os
 import re
-import codecs
 import subprocess as sp
-from . import constants
+from collections.abc import Callable
+from .constants import (
+    UTILS,
+    joinpath,
+    lines_to_multiline,
+    combine_lines_matching,
+    substart,
+    relinverse,
+)
 from .GLInfo import GLInfo
 from .GLConfig import GLConfig
 from .GLModuleSystem import GLModule
 from .GLModuleSystem import GLModuleTable
 from .GLMakefileTable import GLMakefileTable
-from .GLFileSystem import GLFileAssistant
 
 
-#===============================================================================
-# Define module information
-#===============================================================================
-__author__ = constants.__author__
-__license__ = constants.__license__
-__copyright__ = constants.__copyright__
+# Regular expressions used to convert Automake conditionals to GNU Make syntax.
+# Each tuple is the arguments given to re.sub in the correct order.
+_CONVERT_TO_GNU_MAKE = [
+    (re.compile(r'^if (.*)', re.MULTILINE), r'ifneq (,$(\1_CONDITION))'),
+    (re.compile(r'%reldir%/'), r''),
+    (re.compile(r'%reldir%'), r'.')
+]
 
 
-#===============================================================================
-# Define global constants
-#===============================================================================
-TESTS = constants.TESTS
-joinpath = constants.joinpath
-relinverse = constants.relinverse
-isfile = os.path.isfile
-normpath = os.path.normpath
+def _convert_to_gnu_make(snippet: str) -> str:
+    '''Convert a Automake snippet to GNU Make syntax.'''
+    if type(snippet) is not str:
+        raise TypeError(f'snippet must be a str, not {type(snippet).__name__}')
+    for regexp in _CONVERT_TO_GNU_MAKE:
+        snippet = re.sub(regexp[0], regexp[1], snippet)
+    return snippet
+
+
+def _eliminate_NMD_from_line(line: str, automake_subdir: bool) -> str | None:
+    '''Eliminate occurrences of @NMD@ and @!NMD@ from the given line. The
+    modified line is returned or None if the line should be removed.
+
+    line is the current line in the snippet being operated on.
+    automake_subdir is a bool that is True if --automake-subdir is in use,
+      else False.'''
+    if automake_subdir:
+        clean = '@NMD@'
+        eliminate = '@!NMD@'
+    else:
+        clean = '@!NMD@'
+        eliminate = '@NMD@'
+    # Check if we should eliminate the line from the output.
+    if line.startswith(eliminate):
+        return None
+    # Check if we should clean the mark but keep the line.
+    if line.startswith(clean):
+        return line.replace(clean, '')
+    return line
+
+
+def _eliminate_NMD(snippet: str, automake_subdir: bool) -> str:
+    '''Return the Automake snippet with occurrences of @NMD@ and @!NMD@
+    removed.
+
+    snippet is the Automake snippet being operated on.
+    automake_subdir is a bool that is True if --automake-subdir is in use,
+      else False.'''
+    result = []
+    for line in snippet.splitlines():
+        line = _eliminate_NMD_from_line(line, automake_subdir)
+        if line != None:
+            result.append(line)
+    return lines_to_multiline(result)
 
 
 #===============================================================================
 # Define GLEmiter class
 #===============================================================================
-class GLEmiter(object):
+class GLEmiter:
     '''This class is used to emit the contents of necessary files.'''
 
-    def __init__(self, config):
-        '''GLEmiter.__init__(config) -> GLEmiter
+    info: GLInfo
+    config: GLConfig
 
-        Create GLEmiter instance.'''
+    def __init__(self, config: GLConfig) -> None:
+        '''Create GLEmiter instance.'''
         self.info = GLInfo()
         if type(config) is not GLConfig:
             raise TypeError('config must be a GLConfig, not %s'
                             % type(config).__name__)
         self.config = config
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         '''x.__repr__() <==> repr(x)'''
         result = '<pygnulib.GLEmiter %s>' % hex(id(self))
         return result
 
-    def copyright_notice(self):
-        '''GLEmiter.copyright_notice() -> str
-
-        Emit a header for a generated file.'''
-        emit = "# %s" % self.info.copyright()
-        emit += """
+    def copyright_notice(self) -> str:
+        '''Emit a header for a generated file.'''
+        emit = '# %s' % self.info.copyright_range()
+        emit += '''
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -93,15 +137,43 @@ class GLEmiter(object):
 # contains a configuration script generated by Autoconf, under
 # the same distribution terms as the rest of that program.
 #
-# Generated by gnulib-tool.\n"""
+# Generated by gnulib-tool.\n'''
         return emit
 
-    def autoconfSnippet(self, module, toplevel,
-                        disable_libtool, disable_gettext, replace_auxdir, indentation):
-        '''GLEmiter.autoconfSnippet(module, toplevel,
-          disable_libtool, disable_gettext, replace_auxdir, indentation) -> str
+    def shellvars_init(self, gentests: bool, base: str) -> str:
+        '''Emits some shell variable assignments.
 
-        Emit the autoconf snippet of a module.
+        gentests is a bool that is True if a tests Makefile.am is being
+          generated, False otherwise.
+        base is a string representing the base directory relative to the
+          top-level directory.'''
+        if type(gentests) is not bool:
+            raise TypeError(f'gentests must be a bool, not {type(gentests).__name__}')
+        if type(base) is not str:
+            raise TypeError(f'base must be a str, not {type(base).__name__}')
+        sourcebase = self.config['sourcebase']
+        testsbase = self.config['testsbase']
+        automake_subdir = self.config['automake_subdir']
+        automake_subdir_tests = self.config['automake_subdir_tests']
+        # Define the base directory, relative to the top-level directory.
+        emit = f'  gl_source_base=\'{base}\'\n'
+        # Define the prefix for the file name of generated files.
+        if gentests and automake_subdir_tests:
+            # When tests share the same Makefile as the whole project, they
+            # share the same base prefix.
+            if base == testsbase:
+                emit += f'  gl_source_base_prefix=\'$(top_build_prefix){sourcebase}/\'\n'
+            else:
+                emit += f'  gl_source_base_prefix=\'$(top_build_prefix){base}/\'\n'
+        elif not gentests and automake_subdir:
+            emit += f'  gl_source_base_prefix=\'$(top_build_prefix){base}/\'\n'
+        else:
+            emit += '  gl_source_base_prefix=\n'
+        return emit
+
+    def autoconfSnippet(self, module: GLModule, toplevel: bool, disable_libtool: bool,
+                        disable_gettext: bool, replace_auxdir: bool, indentation: str) -> str:
+        '''Emit the autoconf snippet of a module.
         GLConfig: include_guard_prefix.
 
         module is a GLModule instance, which is processed.
@@ -134,21 +206,19 @@ class GLEmiter(object):
         libtool = self.config['libtool']
         include_guard_prefix = self.config['include_guard_prefix']
         emit = ''
-        if str(module) in ['gnumakefile', 'maintainer-makefile']:
+        if module.name in ['gnumakefile', 'maintainer-makefile']:
             # These modules are meant to be used only in the top-level directory.
             flag = toplevel
-        else:  # if not str(module) in ['gnumakefile', 'maintainer-makefile']
+        else:  # if module.name not in ['gnumakefile', 'maintainer-makefile']
             flag = True
         if flag:
             snippet = module.getAutoconfSnippet()
             snippet = snippet.replace('${gl_include_guard_prefix}',
                                       include_guard_prefix)
-            lines = [ line
+            lines = [ f'{indentation}{line}'
                       for line in snippet.split('\n')
                       if line.strip() ]
-            snippet = '%s\n' % '\n'.join(lines)
-            pattern = re.compile('^(.*)$', re.M)
-            snippet = pattern.sub('%s\\1' % indentation, snippet)
+            snippet = lines_to_multiline(lines)
             if disable_libtool:
                 snippet = snippet.replace('$gl_cond_libtool', 'false')
                 snippet = snippet.replace('gl_libdeps', 'gltests_libdeps')
@@ -159,30 +229,28 @@ class GLEmiter(object):
             else:
                 # Don't indent AM_GNU_GETTEXT_VERSION line, as that confuses
                 # autopoint through at least GNU gettext version 0.18.2.
-                snippet = re.compile('^ *AM_GNU_GETTEXT_VERSION', re.M).sub('AM_GNU_GETTEXT_VERSION', snippet)
+                snippet = re.compile(r'^ *AM_GNU_GETTEXT_VERSION', re.M).sub(r'AM_GNU_GETTEXT_VERSION', snippet)
             emit += snippet
-            if str(module) == 'alloca' and libtool and not disable_libtool:
+            if module.name == 'alloca' and libtool and not disable_libtool:
                 emit += 'changequote(,)dnl\n'
                 emit += "LTALLOCA=`echo \"$ALLOCA\" | sed -e 's/\\.[^.]* /.lo /g;s/\\.[^.]*$/.lo/'`\n"
                 emit += 'changequote([, ])dnl\n'
                 emit += 'AC_SUBST([LTALLOCA])'
             if replace_auxdir:
-                regex = 'AC_CONFIG_FILES\\(\\[(.*)\\:build-aux/(.*)\\]\\)'
-                repl = 'AC_CONFIG_FILES([\\1:%s/\\2])' % auxdir
+                regex = r'AC_CONFIG_FILES\(\[(.*)\:build-aux/(.*)\]\)'
+                repl = r'AC_CONFIG_FILES([\1:%s/\2])' % auxdir
                 pattern = re.compile(regex, re.M)
                 emit = pattern.sub(repl, emit)
         lines = [ line
                   for line in emit.split('\n')
                   if line.strip() ]
-        emit = '%s\n' % '\n'.join(lines)
+        emit = lines_to_multiline(lines)
         return emit
 
-    def autoconfSnippets(self, modules, moduletable,
-                         verifier, toplevel, disable_libtool, disable_gettext, replace_auxdir):
-        '''GLEmiter.autoconfSnippets(modules,
-          verifier, toplevel, disable_libtool, disable_gettext, replace_auxdir) -> str
-
-        Collect and emit the autoconf snippets of a set of modules.
+    def autoconfSnippets(self, modules: list[GLModule], referenceable_modules: list[GLModule],
+                         moduletable: GLModuleTable, module_filter: Callable[[GLModule], bool], toplevel: bool,
+                         disable_libtool: bool, disable_gettext: bool, replace_auxdir: bool) -> str:
+        '''Collect and emit the autoconf snippets of a set of modules.
         GLConfig: conddeps.
 
         basemodules argument represents list of modules; every module in this list
@@ -190,12 +258,12 @@ class GLEmiter(object):
           modules after they were processed.
         modules argument represents list of modules; every module in this list must
           be a GLModule instance.
+        referenceable_modules is the list of modules which may be referenced as
+          dependencies.
         moduletable is a GLModuleTable instance, which contains necessary
           information about dependencies of the modules.
-        verifier is an integer, which can be 0, 1 or 2.
-          if verifier == 0, then process every module;
-          if verifier == 1, then process only non-tests modules;
-          if verifier == 2, then process only tests modules.
+        module_filter is a function that accepts a GLModule and returns a bool describing
+          whether or not Autoconf snippets should be emitted for it.
         toplevel is a bool variable, False means a subordinate use of pygnulib.
         disable_libtool is a bool variable; it tells whether to disable libtool
           handling even if it has been specified through the GLConfig class.
@@ -206,14 +274,15 @@ class GLEmiter(object):
         for module in modules:
             if type(module) is not GLModule:
                 raise TypeError('each module must be a GLModule instance')
+        for module in referenceable_modules:
+            if type(module) is not GLModule:
+                raise TypeError('each referenceable module must be a GLModule instance')
         if type(moduletable) is not GLModuleTable:
-            raise TypeError('moduletable must be a GLFileAssistant, not %s'
+            raise TypeError('moduletable must be a GLModuleTable, not %s'
                             % type(moduletable).__name__)
-        if type(verifier) is not int:
-            raise TypeError('verifier must be an int, not %s'
-                            % type(verifier).__name__)
-        if not (0 <= verifier <= 2):
-            raise ValueError('verifier must be 0, 1 or 2, not %d' % verifier)
+        if not callable(module_filter):
+            raise TypeError('module_filter must be a function, not %s'
+                            % type(module_filter).__name__)
         if type(toplevel) is not bool:
             raise TypeError('toplevel must be a bool, not %s'
                             % type(toplevel).__name__)
@@ -226,58 +295,32 @@ class GLEmiter(object):
         if type(replace_auxdir) is not bool:
             raise TypeError('replace_auxdir must be a bool, not %s'
                             % type(replace_auxdir).__name__)
-        auxdir = self.config['auxdir']
         conddeps = self.config['conddeps']
         macro_prefix = self.config['macro_prefix']
         emit = ''
         if not conddeps:
             # Ignore the conditions, and enable all modules unconditionally.
             for module in modules:
-                if verifier == 0:
-                    solution = True
-                elif verifier == 1:
-                    solution = module.isNonTests()
-                elif verifier == 2:
-                    solution = module.isTests()
-                if solution:
+                if module_filter(module):
                     emit += self.autoconfSnippet(module, toplevel,
                                                  disable_libtool, disable_gettext, replace_auxdir, '  ')
         else:  # if conddeps
             # Emit the autoconf code for the unconditional modules.
             for module in modules:
-                if verifier == 0:
-                    solution = True
-                elif verifier == 1:
-                    solution = module.isNonTests()
-                elif verifier == 2:
-                    solution = module.isTests()
-                if solution:
+                if module_filter(module):
                     if not moduletable.isConditional(module):
                         emit += self.autoconfSnippet(module, toplevel,
                                                      disable_libtool, disable_gettext, replace_auxdir, '  ')
             # Initialize the shell variables indicating that the modules are enabled.
             for module in modules:
-                if verifier == 0:
-                    solution = True
-                elif verifier == 1:
-                    solution = module.isNonTests()
-                elif verifier == 2:
-                    solution = module.isTests()
-                if solution:
+                if module_filter(module):
                     if moduletable.isConditional(module):
-                        shellvar = module.getShellVar()
                         emit += '  %s=false\n' % module.getShellVar()
             # Emit the autoconf code for the conditional modules, each in a separate
             # function. This makes it possible to support cycles among conditional
             # modules.
             for module in modules:
-                if verifier == 0:
-                    solution = True
-                elif verifier == 1:
-                    solution = module.isNonTests()
-                elif verifier == 2:
-                    solution = module.isTests()
-                if solution:
+                if module_filter(module):
                     if moduletable.isConditional(module):
                         shellfunc = module.getShellFunc()
                         shellvar = module.getShellVar()
@@ -289,19 +332,17 @@ class GLEmiter(object):
                         emit += '      %s=true\n' % shellvar
                         depmodules = module.getDependenciesWithoutConditions()
                         # Intersect dependencies with the modules list.
-                        depmodules = [ dep
-                                       for dep in depmodules
-                                       if dep in modules ]   # TODO should this be basemodules or modules?
+                        depmodules = sorted(set(depmodules).intersection(referenceable_modules))
                         for depmodule in depmodules:
                             if moduletable.isConditional(depmodule):
                                 shellfunc = depmodule.getShellFunc()
                                 condition = moduletable.getCondition(module, depmodule)
-                                if condition != None:
-                                    emit += '  if %s; then\n' % condition
-                                    emit += '    %s\n' % shellfunc
-                                    emit += '  fi\n'
-                                else:  # if condition == None
-                                    emit += '  %s\n' % shellfunc
+                                if condition != None and condition != True:
+                                    emit += '      if %s; then\n' % condition
+                                    emit += '        %s\n' % shellfunc
+                                    emit += '      fi\n'
+                                else:  # if condition == None or condition == True
+                                    emit += '      %s\n' % shellfunc
                             # if not moduletable.isConditional(depmodule)
                             else:
                                 # The autoconf code for $dep has already been emitted above and
@@ -311,28 +352,20 @@ class GLEmiter(object):
                         emit += '  }\n'
             # Emit the dependencies from the unconditional to the conditional modules.
             for module in modules:
-                if verifier == 0:
-                    solution = True
-                elif verifier == 1:
-                    solution = module.isNonTests()
-                elif verifier == 2:
-                    solution = module.isTests()
-                if solution:
+                if module_filter(module):
                     if not moduletable.isConditional(module):
                         depmodules = module.getDependenciesWithoutConditions()
                         # Intersect dependencies with the modules list.
-                        depmodules = [ dep
-                                       for dep in depmodules
-                                       if dep in modules ]   # TODO should this be basemodules or modules?
+                        depmodules = sorted(set(depmodules).intersection(referenceable_modules))
                         for depmodule in depmodules:
                             if moduletable.isConditional(depmodule):
                                 shellfunc = depmodule.getShellFunc()
                                 condition = moduletable.getCondition(module, depmodule)
-                                if condition != None:
+                                if condition != None and condition != True:
                                     emit += '  if %s; then\n' % condition
                                     emit += '    %s\n' % shellfunc
                                     emit += '  fi\n'
-                                else:  # if condition == None
+                                else:  # if condition == None or condition == True
                                     emit += '  %s\n' % shellfunc
                             # if not moduletable.isConditional(depmodule)
                             else:
@@ -342,13 +375,7 @@ class GLEmiter(object):
             # Define the Automake conditionals.
             emit += '  m4_pattern_allow([^%s_GNULIB_ENABLED_])\n' % macro_prefix
             for module in modules:
-                if verifier == 0:
-                    solution = True
-                elif verifier == 1:
-                    solution = module.isNonTests()
-                elif verifier == 2:
-                    solution = module.isTests()
-                if solution:
+                if module_filter(module):
                     if moduletable.isConditional(module):
                         condname = module.getConditionalName()
                         shellvar = module.getShellVar()
@@ -356,13 +383,11 @@ class GLEmiter(object):
         lines = [ line
                   for line in emit.split('\n')
                   if line.strip() ]
-        emit = '%s\n' % '\n'.join(lines)
+        emit = lines_to_multiline(lines)
         return emit
 
-    def preEarlyMacros(self, require, indentation, modules):
-        '''GLEmiter.preEarlyMacros(require, indentation, modules) -> str
-
-        Collect and emit the pre-early section.
+    def preEarlyMacros(self, require: bool, indentation: str, modules: list[GLModule]) -> str:
+        '''Collect and emit the pre-early section.
 
         require parameter can be True (AC_REQUIRE) or False (direct call).
         indentation parameter is a string.
@@ -371,7 +396,7 @@ class GLEmiter(object):
         emit = '\n' + indentation + '# Pre-early section.\n'
         # We need to call gl_USE_SYSTEM_EXTENSIONS before gl_PROG_AR_RANLIB.
         # Doing AC_REQUIRE in configure-ac.early is not early enough.
-        if any(str(module) == 'extensions' for module in modules):
+        if any(module.name == 'extensions' for module in modules):
             if require:
                 emit += indentation + 'AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])\n'
             else:
@@ -383,23 +408,21 @@ class GLEmiter(object):
         emit += '\n'
         return emit
 
-    def po_Makevars(self):
-        '''GLEmiter.po_Makevars() -> str
-
-        Emit the contents of po/ makefile parameterization.
+    def po_Makevars(self) -> str:
+        '''Emit the contents of po/ makefile parameterization.
         GLConfig: pobase, podomain.'''
         pobase = self.config['pobase']
         podomain = self.config['podomain']
         emit = ''
-        emit += "## DO NOT EDIT! GENERATED AUTOMATICALLY!\n"
-        emit += "%s\n" % self.copyright_notice()
-        emit += "# Usually the message domain is the same as the package name.\n"
+        emit += '## DO NOT EDIT! GENERATED AUTOMATICALLY!\n'
+        emit += '%s\n' % self.copyright_notice()
+        emit += '# Usually the message domain is the same as the package name.\n'
         emit += "# But here it has a '-gnulib' suffix.\n"
-        emit += "DOMAIN = %s-gnulib\n\n" % podomain
-        emit += "# These two variables depend on the location of this directory.\n"
-        emit += "subdir = %s\n" % pobase
-        emit += "top_builddir = %s\n" % relinverse(pobase)
-        emit += """
+        emit += 'DOMAIN = %s-gnulib\n\n' % podomain
+        emit += '# These two variables depend on the location of this directory.\n'
+        emit += 'subdir = %s\n' % pobase
+        emit += 'top_builddir = %s\n' % relinverse(pobase)
+        emit += '''
 # These options get passed to xgettext.
 XGETTEXT_OPTIONS = \\
   --keyword=_ --flag=_:1:pass-c-format \\
@@ -437,31 +460,34 @@ EXTRA_LOCALE_CATEGORIES =
 # context.  Possible values are "yes" and "no".  Set this to yes if the
 # package uses functions taking also a message context, like pgettext(), or
 # if in $(XGETTEXT_OPTIONS) you define keywords with a context argument.
-USE_MSGCTXT = no\n"""
+USE_MSGCTXT = no\n'''
         return emit
 
-    def po_POTFILES_in(self, files):
-        '''GLEmiter.po_POTFILES_in(files) -> str
-
-        Emit the file list to be passed to xgettext.
+    def po_POTFILES_in(self, files: list[str]) -> str:
+        '''Emit the file list to be passed to xgettext.
         GLConfig: sourcebase.'''
         sourcebase = self.config['sourcebase'] + os.path.sep
         emit = ''
-        emit += "## DO NOT EDIT! GENERATED AUTOMATICALLY!\n"
-        emit += "%s\n" % self.copyright_notice()
-        emit += "# List of files which contain translatable strings.\n"
+        emit += '## DO NOT EDIT! GENERATED AUTOMATICALLY!\n'
+        emit += '%s\n' % self.copyright_notice()
+        emit += '# List of files which contain translatable strings.\n'
         for file in files:
             if file.startswith('lib/'):
-                emit += '%s\n' % constants.substart('lib/', sourcebase, file)
+                emit += '%s\n' % substart('lib/', sourcebase, file)
         return emit
 
-    def initmacro_start(self, macro_prefix_arg):
-        '''GLEmiter.initmacro_start(macro_prefix_arg) -> str
+    def initmacro_start(self, macro_prefix_arg: str, gentests: bool) -> str:
+        '''Emit the first few statements of the gl_INIT macro.
 
-        Emit the first few statements of the gl_INIT macro.'''
+        macro_prefix_arg is the prefix of gl_EARLY and gl_INIT macros to use.
+        gentests is True if a tests Makefile.am is being generated, False
+          otherwise.'''
         if type(macro_prefix_arg) is not str:
             raise TypeError('macro_prefix_arg must be a string, not %s'
                             % type(macro_prefix_arg).__name__)
+        if type(gentests) is not bool:
+            raise TypeError('gentests must be a bool, not %s'
+                            % type(gentests).__name__)
         module_indicator_prefix = self.config.getModuleIndicatorPrefix()
         emit = ''
         # Overriding AC_LIBOBJ and AC_REPLACE_FUNCS has the effect of storing
@@ -472,47 +498,72 @@ USE_MSGCTXT = no\n"""
         # Furthermore it avoids an automake error like this when a Makefile.am
         # that uses pieces of gnulib also uses $(LIBOBJ):
         #   automatically discovered file `error.c' should not be explicitly mentioned.
-        emit += "  m4_pushdef([AC_LIBOBJ], m4_defn([%s_LIBOBJ]))\n" % macro_prefix_arg
-        emit += "  m4_pushdef([AC_REPLACE_FUNCS], m4_defn([%s_REPLACE_FUNCS]))\n" % macro_prefix_arg
+        emit += '  m4_pushdef([AC_LIBOBJ], m4_defn([%s_LIBOBJ]))\n' % macro_prefix_arg
+        emit += '  m4_pushdef([AC_REPLACE_FUNCS], m4_defn([%s_REPLACE_FUNCS]))\n' % macro_prefix_arg
         # Overriding AC_LIBSOURCES has the same purpose of avoiding the automake
         # error when a Makefile.am that uses pieces of gnulib also uses $(LIBOBJ):
         #   automatically discovered file `error.c' should not be explicitly mentioned
         # We let automake know about the files to be distributed through the
         # EXTRA_lib_SOURCES variable.
-        emit += "  m4_pushdef([AC_LIBSOURCES], m4_defn([%s_LIBSOURCES]))\n" % macro_prefix_arg
+        emit += '  m4_pushdef([AC_LIBSOURCES], m4_defn([%s_LIBSOURCES]))\n' % macro_prefix_arg
         # Create data variables for checking the presence of files that are
         # mentioned as AC_LIBSOURCES arguments. These are m4 variables, not shell
         # variables, because we want the check to happen when the configure file is
         # created, not when it is run. ${macro_prefix_arg}_LIBSOURCES_LIST is the
         # list of files to check for. ${macro_prefix_arg}_LIBSOURCES_DIR is the
         # subdirectory in which to expect them.
-        emit += "  m4_pushdef([%s_LIBSOURCES_LIST], [])\n" % macro_prefix_arg
-        emit += "  m4_pushdef([%s_LIBSOURCES_DIR], [])\n" % macro_prefix_arg
+        emit += '  m4_pushdef([%s_LIBSOURCES_LIST], [])\n' % macro_prefix_arg
+        emit += '  m4_pushdef([%s_LIBSOURCES_DIR], [])\n' % macro_prefix_arg
         # Scope for m4 macros.
-        emit += "  m4_pushdef([GL_MACRO_PREFIX], [%s])\n" % macro_prefix_arg
+        emit += '  m4_pushdef([GL_MACRO_PREFIX], [%s])\n' % macro_prefix_arg
         # Scope the GNULIB_<modulename> variables.
-        emit += "  m4_pushdef([GL_MODULE_INDICATOR_PREFIX], [%s])\n" % module_indicator_prefix
-        emit += "  gl_COMMON\n"
+        emit += '  m4_pushdef([GL_MODULE_INDICATOR_PREFIX], [%s])\n' % module_indicator_prefix
+        emit += '  gl_COMMON\n'
+        if gentests:
+            emit += '  AC_REQUIRE([gl_CC_ALLOW_WARNINGS])\n'
+            emit += '  AC_REQUIRE([gl_CXX_ALLOW_WARNINGS])\n'
         return emit
 
-    def initmacro_end(self, macro_prefix_arg):
-        '''GLEmiter.initmacro_end(macro_prefix_arg) -> str
+    def initmacro_end(self, macro_prefix_arg: str, gentests: bool) -> str:
+        '''Emit the last few statements of the gl_INIT macro.
 
-        Emit the last few statements of the gl_INIT macro.'''
+        macro_prefix_arg is the prefix of gl_EARLY, gl_INIT macros to use.
+        gentests is a bool that is True if a tests Makefile.am is being
+          generated, False otherwise.'''
         if type(macro_prefix_arg) is not str:
             raise TypeError('macro_prefix_arg must be a string, not %s'
                             % type(macro_prefix_arg).__name__)
+        if type(gentests) is not bool:
+            raise TypeError('gentests must be a bool, not %s'
+                            % type(gentests).__name__)
+        sourcebase = self.config['sourcebase']
+        testsbase = self.config['testsbase']
+        automake_subdir = self.config['automake_subdir']
+        automake_subdir_tests = self.config['automake_subdir_tests']
+        libname = self.config['libname']
+        libtool = self.config['libtool']
         emit = ''
         # Check the presence of files that are mentioned as AC_LIBSOURCES
         # arguments. The check is performed only when autoconf is run from the
         # directory where the configure.ac resides; if it is run from a different
         # directory, the check is skipped.
-        emit += r"""\
-  m4_ifval(%V1%_LIBSOURCES_LIST, [
-    m4_syscmd([test ! -d ]m4_defn([%V1%_LIBSOURCES_DIR])[ ||
-      for gl_file in ]%V1%_LIBSOURCES_LIST[ ; do
-        if test ! -r ]m4_defn([%V1%_LIBSOURCES_DIR])[/$gl_file ; then
-          echo "missing file ]m4_defn([%V1%_LIBSOURCES_DIR])[/$gl_file" >&2
+        if automake_subdir and not gentests and sourcebase != '' and sourcebase != '.':
+            subdir = f'{sourcebase}/'
+        elif automake_subdir_tests and gentests and testsbase != '' and testsbase != '.':
+            subdir = f'{testsbase}/'
+        else:
+            subdir = ''
+        if libtool:
+            libobjdeps_line1 = f'{macro_prefix_arg}_libobjdeps="${macro_prefix_arg}_libobjdeps {subdir}$i_dir\\$(DEPDIR)/$i_base.Plo"'
+            libobjdeps_line2 = f'{macro_prefix_arg}_{libname}_libobjdeps="${macro_prefix_arg}_{libname}_libobjdeps {subdir}$i_dir\\$(DEPDIR)/{libname}_la-$i_base.Plo"'
+        else:
+            libobjdeps_line1 = f'{macro_prefix_arg}_libobjdeps="${macro_prefix_arg}_libobjdeps {subdir}$i_dir\\$(DEPDIR)/$i_base.Po"'
+            libobjdeps_line2 = f'{macro_prefix_arg}_{libname}_libobjdeps="${macro_prefix_arg}_{libname}_libobjdeps {subdir}$i_dir\\$(DEPDIR)/{libname}_a-$i_base.Po"'
+        emit += fr'''  m4_ifval({macro_prefix_arg}_LIBSOURCES_LIST, [
+    m4_syscmd([test ! -d ]m4_defn([{macro_prefix_arg}_LIBSOURCES_DIR])[ ||
+      for gl_file in ]{macro_prefix_arg}_LIBSOURCES_LIST[ ; do
+        if test ! -r ]m4_defn([{macro_prefix_arg}_LIBSOURCES_DIR])[/$gl_file ; then
+          echo "missing file ]m4_defn([{macro_prefix_arg}_LIBSOURCES_DIR])[/$gl_file" >&2
           exit 1
         fi
       done])dnl
@@ -521,32 +572,50 @@ USE_MSGCTXT = no\n"""
   ])
   m4_popdef([GL_MODULE_INDICATOR_PREFIX])
   m4_popdef([GL_MACRO_PREFIX])
-  m4_popdef([%V1%_LIBSOURCES_DIR])
-  m4_popdef([%V1%_LIBSOURCES_LIST])
+  m4_popdef([{macro_prefix_arg}_LIBSOURCES_DIR])
+  m4_popdef([{macro_prefix_arg}_LIBSOURCES_LIST])
   m4_popdef([AC_LIBSOURCES])
   m4_popdef([AC_REPLACE_FUNCS])
   m4_popdef([AC_LIBOBJ])
   AC_CONFIG_COMMANDS_PRE([
-    %V1%_libobjs=
-    %V1%_ltlibobjs=
-    if test -n "$%V1%_LIBOBJS"; then
+    {macro_prefix_arg}_libobjs=
+    {macro_prefix_arg}_ltlibobjs=
+    {macro_prefix_arg}_libobjdeps=
+    {macro_prefix_arg}_{libname}_libobjs=
+    {macro_prefix_arg}_{libname}_ltlibobjs=
+    {macro_prefix_arg}_{libname}_libobjdeps=
+    if test -n "${macro_prefix_arg}_LIBOBJS"; then
       # Remove the extension.
+changequote(,)dnl
       sed_drop_objext='s/\.o$//;s/\.obj$//'
-      for i in `for i in $%V1%_LIBOBJS; do echo "$i"; done | sed -e "$sed_drop_objext" | sort | uniq`; do
-        %V1%_libobjs="$%V1%_libobjs $i.$ac_objext"
-        %V1%_ltlibobjs="$%V1%_ltlibobjs $i.lo"
+      sed_dirname1='s,//*,/,g'
+      sed_dirname2='s,\(.\)/$,\1,'
+      sed_dirname3='s,[^/]*$,,'
+      sed_basename1='s,.*/,,'
+changequote([, ])dnl
+      for i in `for i in ${macro_prefix_arg}_LIBOBJS; do echo "$i"; done | sed -e "$sed_drop_objext" | sort | uniq`; do
+        {macro_prefix_arg}_libobjs="${macro_prefix_arg}_libobjs {subdir}$i.$ac_objext"
+        {macro_prefix_arg}_ltlibobjs="${macro_prefix_arg}_ltlibobjs {subdir}$i.lo"
+        i_dir=`echo "$i" | sed -e "$sed_dirname1" -e "$sed_dirname2" -e "$sed_dirname3"`
+        i_base=`echo "$i" | sed -e "$sed_basename1"`
+        {macro_prefix_arg}_{libname}_libobjs="${macro_prefix_arg}_{libname}_libobjs {subdir}$i_dir""{libname}_a-$i_base.$ac_objext"
+        {macro_prefix_arg}_{libname}_ltlibobjs="${macro_prefix_arg}_{libname}_ltlibobjs {subdir}$i_dir""{libname}_la-$i_base.lo"
+        {libobjdeps_line1}
+        {libobjdeps_line2}
       done
     fi
-    AC_SUBST([%V1%_LIBOBJS], [$%V1%_libobjs])
-    AC_SUBST([%V1%_LTLIBOBJS], [$%V1%_ltlibobjs])
-  ])\n"""
-        emit = emit.replace('%V1%', macro_prefix_arg)
+    AC_SUBST([{macro_prefix_arg}_LIBOBJS], [${macro_prefix_arg}_libobjs])
+    AC_SUBST([{macro_prefix_arg}_LTLIBOBJS], [${macro_prefix_arg}_ltlibobjs])
+    AC_SUBST([{macro_prefix_arg}_LIBOBJDEPS], [${macro_prefix_arg}_libobjdeps])
+    AC_SUBST([{macro_prefix_arg}_{libname}_LIBOBJS], [${macro_prefix_arg}_{libname}_libobjs])
+    AC_SUBST([{macro_prefix_arg}_{libname}_LTLIBOBJS], [${macro_prefix_arg}_{libname}_ltlibobjs])
+    AC_SUBST([{macro_prefix_arg}_{libname}_LIBOBJDEPS], [${macro_prefix_arg}_{libname}_libobjdeps])
+  ])
+'''
         return emit
 
-    def initmacro_done(self, macro_prefix_arg, sourcebase_arg):
-        '''GLEmiter.initmacro_done(macro_prefix_arg, sourcebase_arg) -> str
-
-        Emit a few statements after the gl_INIT macro.
+    def initmacro_done(self, macro_prefix_arg: str, sourcebase_arg: str) -> str:
+        '''Emit a few statements after the gl_INIT macro.
         GLConfig: sourcebase.'''
         if type(macro_prefix_arg) is not str:
             raise TypeError('macro_prefix_arg must be a string, not %s'
@@ -555,7 +624,7 @@ USE_MSGCTXT = no\n"""
             raise TypeError('sourcebase_arg must be a string, not %s'
                             % type(sourcebase_arg).__name__)
         emit = ''
-        emit += """\
+        emit += '''\
 
 # Like AC_LIBOBJ, except that the module name goes
 # into %V1%_LIBOBJS instead of into LIBOBJS.
@@ -582,18 +651,14 @@ AC_DEFUN([%V1%_LIBSOURCES], [
       m4_append([%V1%_LIBSOURCES_LIST], _gl_NAME, [ ])
     ])
   ])
-])\n"""
+])\n'''
         emit = emit.replace('%V1%', macro_prefix_arg)
         emit = emit.replace('%V2%', sourcebase_arg)
         return emit
 
-    def lib_Makefile_am(self, destfile, modules,
-                        moduletable, makefiletable, actioncmd, for_test):
-        '''GLEmiter.lib_Makefile_am(destfile, modules, moduletable, makefiletable,
-             actioncmd, for_test) -> tuple of str and bool
-
-        Emit the contents of the library Makefile. Returns str and a bool
-        variable which shows if subdirectories are used.
+    def lib_Makefile_am(self, destfile: str, modules: list[GLModule], moduletable: GLModuleTable,
+                        makefiletable: GLMakefileTable, actioncmd: str, for_test: bool) -> str:
+        '''Emit the contents of the library Makefile. Returns it as a string.
         GLConfig: localpath, sourcebase, libname, pobase, auxdir, makefile_name, libtool,
         macro_prefix, podomain, conddeps, witness_c_macro.
 
@@ -627,7 +692,9 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         libname = self.config['libname']
         pobase = self.config['pobase']
         auxdir = self.config['auxdir']
+        gnu_make = self.config['gnu_make']
         makefile_name = self.config['makefile_name']
+        automake_subdir = self.config['automake_subdir']
         libtool = self.config['libtool']
         macro_prefix = self.config['macro_prefix']
         podomain = self.config['podomain']
@@ -635,22 +702,23 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         witness_c_macro = self.config['witness_c_macro']
         include_guard_prefix = self.config['include_guard_prefix']
         module_indicator_prefix = self.config.getModuleIndicatorPrefix()
-        ac_version = self.config['ac_version']
         destfile = os.path.normpath(destfile)
         emit = ''
 
-        # When creating an includable Makefile.am snippet, augment variables with
-        # += instead of assigning them.
-        if makefile_name:
+        # When using GNU make, or when creating an includable Makefile.am snippet,
+        # augment variables with += instead of assigning them.
+        if gnu_make or makefile_name:
             assign = '+='
         else:  # if not makefile_name
             assign = '='
         if libtool:
             libext = 'la'
+            objext = 'lo'
             perhapsLT = 'LT'
             eliminate_LDFLAGS = False
         else:  # if not libtool
             libext = 'a'
+            objext = 'o'
             perhapsLT = ''
             eliminate_LDFLAGS = True
         if for_test:
@@ -661,33 +729,35 @@ AC_DEFUN([%V1%_LIBSOURCES], [
             edit_check_PROGRAMS = True
         else:  # if not for_test
             edit_check_PROGRAMS = False
-        emit += "## DO NOT EDIT! GENERATED AUTOMATICALLY!\n"
-        emit += "## Process this file with automake to produce Makefile.in.\n"
+        emit += '## DO NOT EDIT! GENERATED AUTOMATICALLY!\n'
+        if not gnu_make:
+            emit += '## Process this file with automake to produce Makefile.in.\n'
         emit += self.copyright_notice()
         if actioncmd:
-            # The maximum line length (excluding the terminating newline) of
-            # any file that is to be preprocessed by config.status is 3070.
-            # config.status uses awk, and the HP-UX 11.00 awk fails if a line
-            # has length >= 3071; similarly, the IRIX 6.5 awk fails if a line
-            # has length >= 3072.
-            if len(actioncmd) <= 3000:
-                emit += "# Reproduce by: %s\n" % actioncmd
+            emit += '# Reproduce by:\n%s\n' % actioncmd
         emit += '\n'
         uses_subdirs = False
 
         # Compute allsnippets variable.
         allsnippets = ''
         for module in modules:
-            if not module.isTests():
+            if module.isNonTests():
                 # Get conditional snippet, edit it and save to amsnippet1.
                 amsnippet1 = module.getAutomakeSnippet_Conditional()
                 amsnippet1 = amsnippet1.replace('lib_LIBRARIES', 'lib%_LIBRARIES')
                 amsnippet1 = amsnippet1.replace('lib_LTLIBRARIES', 'lib%_LTLIBRARIES')
                 if eliminate_LDFLAGS:
-                    pattern = re.compile('^(lib_LDFLAGS[\t ]*\\+=.*$\n)', re.M)
-                    amsnippet1 = pattern.sub('', amsnippet1)
-                pattern = re.compile('lib_([A-Z][A-Z]*)', re.M)
-                amsnippet1 = pattern.sub('%s_%s_\\1' % (libname, libext),
+                    pattern = re.compile(r'^(lib_LDFLAGS[\t ]*\+=.*$\n)', re.M)
+                    amsnippet1 = pattern.sub(r'', amsnippet1)
+                # Replace NMD, so as to remove redundant "$(MKDIR_P) '.'" invocations.
+                # The logic is similar to how we define gl_source_base_prefix.
+                amsnippet1 = _eliminate_NMD(amsnippet1, automake_subdir)
+                # Replace @LT@, @la@, @lo@, depending on libtool.
+                amsnippet1 = amsnippet1.replace('@LT@', perhapsLT)
+                amsnippet1 = amsnippet1.replace('@la@', libext)
+                amsnippet1 = amsnippet1.replace('@lo@', objext)
+                pattern = re.compile(r'lib_([A-Z]+)', re.M)
+                amsnippet1 = pattern.sub(r'%s_%s_\1' % (libname, libext),
                                          amsnippet1)
                 amsnippet1 = amsnippet1.replace('$(GNULIB_', '$(' + module_indicator_prefix + '_GNULIB_')
                 amsnippet1 = amsnippet1.replace('lib%_LIBRARIES', 'lib_LIBRARIES')
@@ -696,32 +766,46 @@ AC_DEFUN([%V1%_LIBSOURCES], [
                     amsnippet1 = amsnippet1.replace('check_PROGRAMS', 'noinst_PROGRAMS')
                 amsnippet1 = amsnippet1.replace('${gl_include_guard_prefix}',
                                                 include_guard_prefix)
-                if str(module) == 'alloca':
+                if module.name == 'alloca':
                     amsnippet1 += '%s_%s_LIBADD += @%sALLOCA@\n' % (libname, libext, perhapsLT)
                     amsnippet1 += '%s_%s_DEPENDENCIES += @%sALLOCA@\n' % (libname, libext, perhapsLT)
-                amsnippet1 = constants.combine_lines_matching(re.compile('%s_%s_SOURCES' % (libname, libext)),
-                                                              amsnippet1)
+                amsnippet1 = combine_lines_matching(re.compile(r'%s_%s_SOURCES' % (libname, libext)),
+                                                    amsnippet1)
 
                 # Get unconditional snippet, edit it and save to amsnippet2.
                 amsnippet2 = module.getAutomakeSnippet_Unconditional()
-                pattern = re.compile('lib_([A-Z][A-Z]*)', re.M)
-                amsnippet2 = pattern.sub('%s_%s_\\1' % (libname, libext),
+                pattern = re.compile(r'lib_([A-Z]+)', re.M)
+                amsnippet2 = pattern.sub(r'%s_%s_\1' % (libname, libext),
                                          amsnippet2)
                 amsnippet2 = amsnippet2.replace('$(GNULIB_',
                                                 '$(' + module_indicator_prefix + '_GNULIB_')
                 # Skip the contents if it's entirely empty.
-                if not (amsnippet1 + amsnippet2).isspace():
-                    allsnippets += '## begin gnulib module %s\n\n' % str(module)
+                if (amsnippet1 + amsnippet2).strip() != '':
+                    allsnippets += '## begin gnulib module %s\n' % module.name
+                    if gnu_make:
+                        allsnippets += 'ifeq (,$(OMIT_GNULIB_MODULE_%s))\n' % module.name
+                    allsnippets += '\n'
                     if conddeps:
                         if moduletable.isConditional(module):
                             name = module.getConditionalName()
-                            allsnippets += 'if %s\n' % name
-                    allsnippets += amsnippet1
+                            if gnu_make:
+                                allsnippets += 'ifneq (,$(%s_CONDITION))\n' % name
+                            else:
+                                allsnippets += 'if %s\n' % name
+                    if gnu_make:
+                        allsnippets += _convert_to_gnu_make(amsnippet1)
+                    else:
+                        allsnippets += amsnippet1
                     if conddeps:
                         if moduletable.isConditional(module):
                             allsnippets += 'endif\n'
-                    allsnippets += amsnippet2
-                    allsnippets += '## end   gnulib module %s\n\n' % str(module)
+                    if gnu_make:
+                        allsnippets += _convert_to_gnu_make(amsnippet2)
+                    else:
+                        allsnippets += amsnippet2
+                    if gnu_make:
+                        allsnippets += 'endif\n'
+                    allsnippets += '## end   gnulib module %s\n\n' % module.name
 
                     # Test whether there are some source files in subdirectories.
                     for file in module.getFiles():
@@ -737,22 +821,14 @@ AC_DEFUN([%V1%_LIBSOURCES], [
             # object files (example: hash.c and libxml/hash.c).
             if uses_subdirs:
                 subdir_options = ' subdir-objects'
-            emit += 'AUTOMAKE_OPTIONS = 1.9.6 gnits%s\n' % subdir_options
+            emit += 'AUTOMAKE_OPTIONS = 1.14 gnits%s\n' % subdir_options
         emit += '\n'
         if not makefile_name:
             emit += 'SUBDIRS =\n'
             emit += 'noinst_HEADERS =\n'
             emit += 'noinst_LIBRARIES =\n'
             emit += 'noinst_LTLIBRARIES =\n'
-            # Automake versions < 1.11.4 create an empty pkgdatadir at
-            # installation time if you specify pkgdata_DATA to empty.
-            # See automake bugs #10997 and #11030:
-            #  * https://debbugs.gnu.org/10997
-            #  * https://debbugs.gnu.org/11030
-            # So we need this workaround.
-            pattern = re.compile('^pkgdata_DATA *\\+=', re.M)
-            if pattern.findall(allsnippets):
-                emit += 'pkgdata_DATA =\n'
+            emit += 'pkgdata_DATA =\n'
             emit += 'EXTRA_DIST =\n'
             emit += 'BUILT_SOURCES =\n'
             emit += 'SUFFIXES =\n'
@@ -763,13 +839,35 @@ AC_DEFUN([%V1%_LIBSOURCES], [
             emit += 'DISTCLEANFILES =\n'
             emit += 'MAINTAINERCLEANFILES =\n'
 
+        if gnu_make:
+            emit += '# Start of GNU Make output.\n'
+            result = sp.run([UTILS['autoconf'], '-t', 'AC_SUBST:$1 = @$1@',
+                             joinpath(self.config['destdir'], 'configure.ac')],
+                            capture_output=True)
+            if result.returncode == 0:
+                # sort -u
+                emit += lines_to_multiline(sorted({ x.strip()
+                                                    for x in result.stdout.decode(encoding='utf-8').splitlines() }))
+            else:
+                emit += '== gnulib-tool GNU Make output failed as follows ==\n'
+                emit += ['# stderr: ' + x + '\n' for x in
+                         result.stderr.decode(encoding='utf-8').splitlines()]
+            emit += '# End of GNU Make output.\n'
+        else:
+            emit += '# No GNU Make output.\n'
+
         # Execute edits that apply to the Makefile.am being generated.
         for current_edit in range(0, makefiletable.count()):
             dictionary = makefiletable[current_edit]
-            if dictionary['var']:
+            if 'var' in dictionary:
                 if destfile == joinpath(dictionary['dir'], 'Makefile.am'):
-                    emit += '%s += %s\n' % (dictionary['var'], dictionary['val'])
-                    dictionary.pop('var')
+                    val = dictionary['val']
+                    if dictionary['var'] == 'SUBDIRS' and dictionary['dotfirst']:
+                        # The added subdirectory ${val} needs to be mentioned after '.'.
+                        # Since we don't have '.' among SUBDIRS so far, add it now.
+                        val = f'. {val}'
+                    emit += '%s += %s\n' % (dictionary['var'], val)
+                    del dictionary['var']
 
         # Define two parts of cppflags variable.
         cppflags_part1 = ''
@@ -794,7 +892,7 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         # it should not be installed.
         # First test if allsnippets already specify an installation location.
         lib_gets_installed = False
-        regex = '^[a-zA-Z0-9_]*_%sLIBRARIES *\\+{0,1}= *%s\\.%s' % (perhapsLT, libname, libext)
+        regex = r'^[a-zA-Z0-9_]*_%sLIBRARIES *\+{0,1}= *%s\.%s' % (perhapsLT, libname, libext)
         pattern = re.compile(regex, re.M)
         if pattern.findall(allsnippets):
             lib_gets_installed = True
@@ -802,8 +900,8 @@ AC_DEFUN([%V1%_LIBSOURCES], [
             # Then test if $sourcebase/Makefile.am (if it exists) specifies it.
             if makefile_name:
                 path = joinpath(sourcebase, 'Makefile.am')
-                if isfile(path):
-                    with codecs.open(path, 'rb', 'UTF-8') as file:
+                if os.path.isfile(path):
+                    with open(path, mode='r', newline='\n', encoding='utf-8') as file:
                         data = file.read()
                     if pattern.findall(data):
                         lib_gets_installed = True
@@ -813,10 +911,19 @@ AC_DEFUN([%V1%_LIBSOURCES], [
 
         emit += '\n'
         emit += '%s_%s_SOURCES =\n' % (libname, libext)
+        if not for_test:
+            emit += '%s_%s_CFLAGS = $(AM_CFLAGS) $(GL_CFLAG_GNULIB_WARNINGS)\n' % (libname, libext)
         # Here we use $(LIBOBJS), not @LIBOBJS@. The value is the same. However,
         # automake during its analysis looks for $(LIBOBJS), not for @LIBOBJS@.
-        emit += '%s_%s_LIBADD = $(%s_%sLIBOBJS)\n' % (libname, libext, macro_prefix, perhapsLT)
-        emit += '%s_%s_DEPENDENCIES = $(%s_%sLIBOBJS)\n' % (libname, libext, macro_prefix, perhapsLT)
+        if not for_test:
+            # When there is a {libname}_{libext}_CFLAGS or {libname}_{libext}_CPPFLAGS
+            # definition, Automake emits rules for creating object files prefixed with
+            # "{libname}_{libext}-".
+            emit += '%s_%s_LIBADD = $(%s_%s_%sLIBOBJS)\n' % (libname, libext, macro_prefix, libname, perhapsLT)
+            emit += '%s_%s_DEPENDENCIES = $(%s_%s_%sLIBOBJS)\n' % (libname, libext, macro_prefix, libname, perhapsLT)
+        else:
+            emit += '%s_%s_LIBADD = $(%s_%sLIBOBJS)\n' % (libname, libext, macro_prefix, perhapsLT)
+            emit += '%s_%s_DEPENDENCIES = $(%s_%sLIBOBJS)\n' % (libname, libext, macro_prefix, perhapsLT)
         emit += 'EXTRA_%s_%s_SOURCES =\n' % (libname, libext)
         if libtool:
             emit += '%s_%s_LDFLAGS = $(AM_LDFLAGS)\n' % (libname, libext)
@@ -825,13 +932,13 @@ AC_DEFUN([%V1%_LIBSOURCES], [
             # the link dependencies of all modules.
             links = [ module.getLink()
                       for module in modules
-                      if not module.isTests() ]
+                      if module.isNonTests() ]
             lines = [ line
                       for link in links
                       for line in link.split('\n')
                       if line != '' ]
-            pattern = re.compile(' when linking with libtool.*')
-            lines = [ pattern.sub('', line)
+            pattern = re.compile(r' when linking with libtool.*')
+            lines = [ pattern.sub(r'', line)
                       for line in lines ]
             lines = sorted(set(lines))
             for line in lines:
@@ -851,16 +958,24 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         emit += '\t  fi; \\\n'
         emit += '\tdone; \\\n'
         emit += '\t:\n'
-        result = tuple([emit, uses_subdirs])
-        return result
+        # Emit rules to erase .Po and .Plo files for AC_LIBOBJ invocations.
+        # Extend the 'distclean' rule.
+        emit += 'distclean-local: distclean-gnulib-libobjs\n'
+        emit += 'distclean-gnulib-libobjs:\n'
+        if not for_test:
+            # When there is a {libname}_{libext}_CFLAGS or {libname}_{libext}_CPPFLAGS
+            # definition, Automake emits rules for creating object files prefixed with
+            # "{libname}_{libext}-".
+            emit += '\t-rm -f @%s_%s_LIBOBJDEPS@\n' % (macro_prefix, libname)
+        else:
+            emit += '\t-rm -f @%s_LIBOBJDEPS@\n' % (macro_prefix)
+        # Extend the 'maintainer-clean' rule.
+        emit += 'maintainer-clean-local: distclean-gnulib-libobjs\n'
+        return emit
 
-    def tests_Makefile_am(self, destfile, modules, makefiletable,
-                          witness_macro, for_test):
-        '''GLEmiter.tests_Makefile_am(destfile, modules, makefiletable,
-             witness_c_macro, for_test) -> tuple of string and bool
-
-        Emit the contents of the tests Makefile. Returns str and a bool variable
-        which shows if subdirectories are used.
+    def tests_Makefile_am(self, destfile: str, modules: list[GLModule], moduletable: GLModuleTable,
+                          makefiletable: GLMakefileTable, witness_macro: str, for_test: bool) -> str:
+        '''Emit the contents of the tests Makefile. Returns it as a string.
         GLConfig: localpath, modules, libname, auxdir, makefile_name, libtool,
         sourcebase, m4base, testsbase, macro_prefix, witness_c_macro,
         single_configure, libtests.
@@ -893,27 +1008,26 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         sourcebase = self.config['sourcebase']
         libname = self.config['libname']
         m4base = self.config['m4base']
-        pobase = self.config['pobase']
         testsbase = self.config['testsbase']
-        makefile_name = self.config['makefile_name']
+        gnu_make = self.config['gnu_make']
         libtool = self.config['libtool']
         macro_prefix = self.config['macro_prefix']
-        podomain = self.config['podomain']
         conddeps = self.config['conddeps']
         witness_c_macro = self.config['witness_c_macro']
         include_guard_prefix = self.config['include_guard_prefix']
         module_indicator_prefix = self.config.getModuleIndicatorPrefix()
-        ac_version = self.config['ac_version']
         libtests = self.config['libtests']
         single_configure = self.config['single_configure']
         emit = ''
 
         if libtool:
             libext = 'la'
+            objext = 'lo'
             perhapsLT = 'LT'
             eliminate_LDFLAGS = False
         else:  # if not libtool
             libext = 'a'
+            objext = 'o'
             perhapsLT = ''
             eliminate_LDFLAGS = True
         if for_test:
@@ -929,8 +1043,8 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         testsbase_inverse = relinverse(testsbase)
 
         # Begin the generation.
-        emit += "## DO NOT EDIT! GENERATED AUTOMATICALLY!\n"
-        emit += "## Process this file with automake to produce Makefile.in.\n"
+        emit += '## DO NOT EDIT! GENERATED AUTOMATICALLY!\n'
+        emit += '## Process this file with automake to produce Makefile.in.\n'
         emit += '%s\n' % self.copyright_notice()
 
         uses_subdirs = False
@@ -938,35 +1052,76 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         longrun_snippets = ''
         for module in modules:
             if for_test and not single_configure:
-                accept = module.isTests()
+                if module.repeatModuleInTests():
+                    accept = True
+                else:
+                    accept = module.isTests()
             else:  # if for_test and not single_configure
                 accept = True
             if accept:
-                snippet = module.getAutomakeSnippet()
-                snippet = snippet.replace('lib_LIBRARIES', 'lib%_LIBRARIES')
-                snippet = snippet.replace('lib_LTLIBRARIES', 'lib%_LTLIBRARIES')
+                amsnippet1 = module.getAutomakeSnippet_Conditional()
+                amsnippet1 = amsnippet1.replace('lib_LIBRARIES', 'lib%_LIBRARIES')
+                amsnippet1 = amsnippet1.replace('lib_LTLIBRARIES', 'lib%_LTLIBRARIES')
                 if eliminate_LDFLAGS:
-                    pattern = re.compile('^(lib_LDFLAGS[\t ]*\\+=.*$\n)', re.M)
-                    amsnippet1 = pattern.sub('', snippet)
-                pattern = re.compile('lib_([A-Z][A-Z]*)', re.M)
-                snippet = pattern.sub('libtests_a_\\1', snippet)
-                snippet = snippet.replace('$(GNULIB_', '$(' + module_indicator_prefix + '_GNULIB_')
-                snippet = snippet.replace('lib%_LIBRARIES', 'lib_LIBRARIES')
-                snippet = snippet.replace('lib%_LTLIBRARIES', 'lib_LTLIBRARIES')
+                    pattern = re.compile(r'^(lib_LDFLAGS[\t ]*\+=.*$\n)', re.M)
+                    amsnippet1 = pattern.sub(r'', amsnippet1)
+                # Replace NMD, so as to remove redundant "$(MKDIR_P) '.'" invocations.
+                # The logic is similar to how we define gl_source_base_prefix.
+                amsnippet1 = _eliminate_NMD(amsnippet1, False)
+                # Replace @LT@, @la@, @lo@, depending on libtool.
+                amsnippet1 = amsnippet1.replace('@LT@', perhapsLT)
+                amsnippet1 = amsnippet1.replace('@la@', libext)
+                amsnippet1 = amsnippet1.replace('@lo@', objext)
+                pattern = re.compile(r'lib_([A-Z]+)', re.M)
+                amsnippet1 = pattern.sub(r'libtests_a_\1', amsnippet1)
+                amsnippet1 = amsnippet1.replace('$(GNULIB_', '$(' + module_indicator_prefix + '_GNULIB_')
+                amsnippet1 = amsnippet1.replace('lib%_LIBRARIES', 'lib_LIBRARIES')
+                amsnippet1 = amsnippet1.replace('lib%_LTLIBRARIES', 'lib_LTLIBRARIES')
                 if edit_check_PROGRAMS:
-                    snippet = snippet.replace('check_PROGRAMS', 'noinst_PROGRAMS')
-                snippet = snippet.replace('${gl_include_guard_prefix}',
-                                          include_guard_prefix)
+                    amsnippet1 = amsnippet1.replace('check_PROGRAMS', 'noinst_PROGRAMS')
+                amsnippet1 = amsnippet1.replace('${gl_include_guard_prefix}',
+                                                include_guard_prefix)
                 # Check if module is 'alloca'.
-                if libtests and str(module) == 'alloca':
-                    snippet += 'libtests_a_LIBADD += @%sALLOCA@\n' % perhapsLT
-                    snippet += 'libtests_a_DEPENDENCIES += @%sALLOCA@\n' % perhapsLT
+                if libtests and module.name == 'alloca':
+                    amsnippet1 += 'libtests_a_LIBADD += @ALLOCA@\n'
+                    amsnippet1 += 'libtests_a_DEPENDENCIES += @ALLOCA@\n'
 
+                amsnippet1 = combine_lines_matching(re.compile(r'libtests_a_SOURCES'),
+                                                    amsnippet1)
+
+                # Get unconditional snippet, edit it and save to amsnippet2.
+                amsnippet2 = module.getAutomakeSnippet_Unconditional()
+                pattern = re.compile(r'lib_([A-Z]+)', re.M)
+                amsnippet2 = pattern.sub(r'libtests_a_\1', amsnippet2)
+                amsnippet2 = amsnippet2.replace('$(GNULIB_',
+                                                '$(' + module_indicator_prefix + '_GNULIB_')
                 # Skip the contents if it's entirely empty.
-                if not snippet.isspace():
-                    snippet = ('## begin gnulib module %s\n\n' % str(module)
-                               + snippet
-                               + '## end   gnulib module %s\n\n' % str(module))
+                if (amsnippet1 + amsnippet2).strip() != '':
+                    snippet = '## begin gnulib module %s\n' % module.name
+                    if gnu_make:
+                        snippet += 'ifeq (,$(OMIT_GNULIB_MODULE_%s))\n' % module.name
+                    snippet += '\n'
+                    if conddeps:
+                        if moduletable.isConditional(module):
+                            name = module.getConditionalName()
+                            if gnu_make:
+                                snippet += 'ifneq (,$(%s_CONDITION))\n' % name
+                            else:
+                                snippet += 'if %s\n' % name
+                    if gnu_make:
+                        snippet += _convert_to_gnu_make(amsnippet1)
+                    else:
+                        snippet += amsnippet1
+                    if conddeps:
+                        if moduletable.isConditional(module):
+                            snippet += 'endif\n'
+                    if gnu_make:
+                        snippet += _convert_to_gnu_make(amsnippet2)
+                    else:
+                        snippet += amsnippet2
+                    if gnu_make:
+                        snippet += 'endif\n'
+                    snippet += '## end   gnulib module %s\n\n' % module.name
                     # Mention long-running tests at the end.
                     if 'longrunning-test' in module.getStatuses():
                         longrun_snippets += snippet
@@ -987,7 +1142,7 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         subdir_options = ''
         if uses_subdirs:
             subdir_options = ' subdir-objects'
-        emit += 'AUTOMAKE_OPTIONS = 1.9.6 foreign%s\n\n' % subdir_options
+        emit += 'AUTOMAKE_OPTIONS = 1.14 foreign%s\n\n' % subdir_options
         if for_test and not single_configure:
             emit += 'ACLOCAL_AMFLAGS = -I %s/%s\n\n' % (testsbase_inverse, m4base)
 
@@ -1001,6 +1156,7 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         emit += 'noinst_PROGRAMS =\n'
         if not for_test:
             emit += 'check_PROGRAMS =\n'
+        emit += 'EXTRA_PROGRAMS =\n'
         emit += 'noinst_HEADERS =\n'
         emit += 'noinst_LIBRARIES =\n'
         if libtests:
@@ -1008,17 +1164,7 @@ AC_DEFUN([%V1%_LIBSOURCES], [
                 emit += 'noinst_LIBRARIES += libtests.a\n'
             else:  # if not for_test
                 emit += 'check_LIBRARIES = libtests.a\n'
-
-        # Automake versions < 1.11.4 create an empty pkgdatadir at
-        # installation time if you specify pkgdata_DATA to empty.
-        # See automake bugs #10997 and #11030:
-        #  * https://debbugs.gnu.org/10997
-        #  * https://debbugs.gnu.org/11030
-        # So we need this workaround.
-        pattern = re.compile('^pkgdata_DATA *\\+=', re.M)
-        if pattern.findall(main_snippets) or pattern.findall(longrun_snippets):
-            emit += 'pkgdata_DATA =\n'
-
+        emit += 'pkgdata_DATA =\n'
         emit += 'EXTRA_DIST =\n'
         emit += 'BUILT_SOURCES =\n'
         emit += 'SUFFIXES =\n'
@@ -1031,12 +1177,43 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         # Execute edits that apply to the Makefile.am being generated.
         for current_edit in range(0, makefiletable.count()):
             dictionary = makefiletable[current_edit]
-            if dictionary['var']:
+            if 'var' in dictionary:
                 if destfile == joinpath(dictionary['dir'], 'Makefile.am'):
-                    emit += '%s += %s\n' % (dictionary['var'], dictionary['val'])
-                    dictionary.pop('var')
+                    val = dictionary['val']
+                    if dictionary['var'] == 'SUBDIRS' and dictionary['dotfirst']:
+                        # The added subdirectory ${val} needs to be mentioned after '.'.
+                        # But we have '.' among SUBDIRS already, so do nothing.
+                        pass
+                    emit += '%s += %s\n' % (dictionary['var'], val)
+                    del dictionary['var']
 
-        emit += '\nAM_CPPFLAGS = \\\n'
+        emit += '\n'
+
+        # Insert a '-Wno-error' option in the compilation commands emitted by
+        # Automake, between $(AM_CPPFLAGS) and before the reference to @CFLAGS@.
+        # Why?
+        # 1) Because parts of the Gnulib tests exercise corner cases (invalid
+        #    arguments, endless recursions, etc.) that a compiler may warn about,
+        #    even with just the normal '-Wall' option.
+        # 2) Because every package maintainer has their preferred set of warnings
+        #    that they may want to enforce in the main source code of their package.
+        #    But Gnulib tests are maintained in Gnulib and don't end up in binaries
+        #    that that package installs; therefore it does not make sense for
+        #    package maintainers to enforce the absence of warnings on these tests.
+        # Why before @CFLAGS@?
+        # - Because "the user is always right": If a user adds '-Werror' to their
+        #   CFLAGS, they have asked for errors, they will get errors. But they have
+        #   no right to complain about these errors, because Gnulib does not support
+        #   '-Werror'.
+        cflags_for_gnulib_code = ''
+        if not for_test:
+            # Enable or disable warnings as suitable for the Gnulib coding style.
+            cflags_for_gnulib_code = ' $(GL_CFLAG_GNULIB_WARNINGS)'
+        emit += 'CFLAGS = @GL_CFLAG_ALLOW_WARNINGS@%s @CFLAGS@\n' % (cflags_for_gnulib_code)
+        emit += 'CXXFLAGS = @GL_CXXFLAG_ALLOW_WARNINGS@ @CXXFLAGS@\n'
+        emit += '\n'
+
+        emit += 'AM_CPPFLAGS = \\\n'
         if for_test:
             emit += '  -DGNULIB_STRICT_CHECKING=1 \\\n'
         if witness_c_macro:
@@ -1048,8 +1225,6 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         emit += '  -I%s/%s -I$(srcdir)/%s/%s\n' % (testsbase_inverse, sourcebase, testsbase_inverse, sourcebase)
         emit += '\n'
 
-        ldadd_before = ''
-        ldadd_after = ''
         if libtests:
             # All test programs need to be linked with libtests.a.
             # It needs to be passed to the linker before ${libname}.${libext},
@@ -1060,13 +1235,13 @@ AC_DEFUN([%V1%_LIBSOURCES], [
             # voluntarily omitted).
             # The LIBTESTS_LIBDEPS can be passed to the linker once or twice, it
             # does not matter.
-            ldadd_before = ' libtests.a'
-            ldadd_after = ' libtests.a $(LIBTESTS_LIBDEPS)'
-        emit += 'LDADD =%s %s/%s/%s.%s libtests.a %s/%s/%s.%s%s\n\n' \
-                % (ldadd_before,
-                   testsbase_inverse, sourcebase, libname, libext,
-                   testsbase_inverse, sourcebase, libname, libext,
-                   ldadd_after)
+            emit += ('LDADD = libtests.a %s/%s/%s.%s libtests.a %s/%s/%s.%s libtests.a $(LIBTESTS_LIBDEPS)\n'
+                     % (testsbase_inverse, sourcebase, libname, libext,
+                        testsbase_inverse, sourcebase, libname, libext))
+        else:
+            emit += ('LDADD = %s/%s/%s.%s\n'
+                     % (testsbase_inverse, sourcebase, libname, libext))
+        emit += '\n'
         if libtests:
             emit += 'libtests_a_SOURCES =\n'
             # Here we use $(LIBOBJS), not @LIBOBJS@. The value is the same. However,
@@ -1079,11 +1254,29 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         # Many test scripts use ${EXEEXT} or ${srcdir}.
         # EXEEXT is defined by AC_PROG_CC through autoconf.
         # srcdir is defined by autoconf and automake.
-        emit += "TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'\n\n"
+        emit += "TESTS_ENVIRONMENT += EXEEXT='@EXEEXT@' srcdir='$(srcdir)'\n"
+        # Omit logs of skipped tests from test-suite.log, if Automake ≥ 1.17 is used.
+        emit += 'IGNORE_SKIPPED_LOGS = 1\n\n'
         all_snippets = main_snippets + longrun_snippets
         all_snippets = all_snippets.replace('$(top_srcdir)/build-aux/',
                                             '$(top_srcdir)/%s/' % auxdir)
         emit += all_snippets
+        # Arrange to print a message before compiling the files in this directory.
+        emit += 'all: all-notice\n'
+        emit += 'all-notice:\n'
+        emit += '\t@echo \'## ---------------------------------------------------- ##\'\n'
+        emit += '\t@echo \'## ------------------- Gnulib tests ------------------- ##\'\n'
+        emit += '\t@echo \'## You can ignore compiler warnings in this directory.  ##\'\n'
+        emit += '\t@echo \'## ---------------------------------------------------- ##\'\n'
+        emit += '\n'
+        # Arrange to print a message before executing the tests in this directory.
+        emit += 'check-am: check-notice\n'
+        emit += 'check-notice:\n'
+        emit += '\t@echo \'## ---------------------------------------------------------------------- ##\'\n'
+        emit += '\t@echo \'## ---------------------------- Gnulib tests ---------------------------- ##\'\n'
+        emit += '\t@echo \'## Please report test failures in this directory to <bug-gnulib@gnu.org>. ##\'\n'
+        emit += '\t@echo \'## ---------------------------------------------------------------------- ##\'\n'
+        emit += '\n'
         emit += '# Clean up after Solaris cc.\n'
         emit += 'clean-local:\n'
         emit += '\trm -rf SunWS_cache\n\n'
@@ -1094,5 +1287,4 @@ AC_DEFUN([%V1%_LIBSOURCES], [
         emit += '\t  fi; \\\n'
         emit += '\tdone; \\\n'
         emit += '\t:\n'
-        result = tuple([emit, uses_subdirs])
-        return result
+        return emit

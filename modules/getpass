@@ -8,12 +8,12 @@ m4/getpass.m4
 m4/tcgetattr.m4
 
 Depends-on:
-unistd
+unistd-h
 extensions
 fopen-gnu
 fseeko
 getline
-stdbool
+bool
 strdup-posix
 
 configure.ac:

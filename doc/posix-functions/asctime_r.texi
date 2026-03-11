@@ -1,12 +1,12 @@
 @node asctime_r
-@section @code{asctime_r}
+@subsection @code{asctime_r}
 @findex asctime_r
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/asctime_r.html}
-
-Future POSIX removal:@* @url{https://www.austingroupbugs.net/view.php?id=1410}
+Removed in POSIX.1-2024.
+POSIX.1-2017 specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/asctime_r.html}
 
 Gnulib module: extensions
+@mindex extensions
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -21,6 +21,17 @@ Portability problems not fixed by Gnulib:
 This function is missing on some platforms:
 mingw, MSVC 14.
 @item
-This function may put more than 26 bytes into the argument buffer if an
-invalid year is passed.
+This function is removed in POSIX.1-2024.
+Use the function @code{strftime} (or even @code{sprintf}) instead.
+However, @code{strftime} is locale dependent.
+@item
+This function may overflow its output buffer if its argument
+specifies a year before 1000 or after 9999.
+@xref{ctime}.
+@item
+Although it is tempting to call this function on the value that
+functions like @code{localtime} return, this is typically a mistake.
+On most current platforms, these functions return a null pointer for
+timestamps out of range, and this function has undefined behavior in
+that case.
 @end itemize

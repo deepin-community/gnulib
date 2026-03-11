@@ -48,11 +48,14 @@ unictype/property-grapheme-extend
 unictype/property-grapheme-link
 unictype/property-hex-digit
 unictype/property-hyphen
+unictype/property-id-compat-math-continue
+unictype/property-id-compat-math-start
 unictype/property-id-continue
 unictype/property-id-start
 unictype/property-ideographic
 unictype/property-ids-binary-operator
 unictype/property-ids-trinary-operator
+unictype/property-ids-unary-operator
 unictype/property-ignorable-control
 unictype/property-iso-control
 unictype/property-join-control
@@ -61,6 +64,7 @@ unictype/property-line-separator
 unictype/property-logical-order-exception
 unictype/property-lowercase
 unictype/property-math
+unictype/property-modifier-combining-mark
 unictype/property-non-break
 unictype/property-not-a-character
 unictype/property-numeric
@@ -76,6 +80,7 @@ unictype/property-paired-punctuation
 unictype/property-paragraph-separator
 unictype/property-pattern-syntax
 unictype/property-pattern-white-space
+unictype/property-prepended-concatenation-mark
 unictype/property-private-use
 unictype/property-punctuation
 unictype/property-quotation-mark
@@ -97,7 +102,7 @@ unictype/property-zero-width
 gperf
 
 configure.ac:
-gl_LIBUNISTRING_MODULE([1.1], [unictype/property-byname])
+gl_LIBUNISTRING_MODULE([1.3], [unictype/property-byname])
 
 Makefile.am:
 if LIBUNISTRING_COMPILE_UNICTYPE_PROPERTY_BYNAME
@@ -106,7 +111,10 @@ endif
 
 $(srcdir)/unictype/pr_byname.h: $(srcdir)/unictype/pr_byname.gperf
 	$(V_GPERF)$(GPERF) -m 10 $(srcdir)/unictype/pr_byname.gperf > $(srcdir)/unictype/pr_byname.h-t1 \
-	&& sed -e 's/^const/static const/' < $(srcdir)/unictype/pr_byname.h-t1 > $(srcdir)/unictype/pr_byname.h-t2 \
+	&& sed -e 's/^const/static const/' \
+	       -e 's|\([ "]\)[^ "]*/unictype/pr_byname\.gperf\([ "]\)|\1unictype/pr_byname.gperf\2|' \
+	       < $(srcdir)/unictype/pr_byname.h-t1 > $(srcdir)/unictype/pr_byname.h-t2 \
+	&& rm -f $(srcdir)/unictype/pr_byname.h-t1 \
 	&& mv $(srcdir)/unictype/pr_byname.h-t2 $(srcdir)/unictype/pr_byname.h
 BUILT_SOURCES        += unictype/pr_byname.h
 MOSTLYCLEANFILES     += unictype/pr_byname.h-t1 unictype/pr_byname.h-t2

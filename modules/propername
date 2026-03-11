@@ -6,7 +6,8 @@ lib/propername.h
 lib/propername.c
 
 Depends-on:
-stdbool
+c32isalnum
+bool
 trim
 mbsstr
 mbchar

@@ -18,13 +18,15 @@ Documentation:
 @end itemize
 
 Gnulib module: strcasestr or strcasestr-simple
+@mindex strcasestr
+@mindex strcasestr-simple
 
 Portability problems fixed by either Gnulib module @code{strcasestr-simple}
 or @code{strcasestr}:
 @itemize
 @item
 This function is missing on some platforms:
-AIX 7.2, HP-UX 11, IRIX 6.5, Solaris 10, Cygwin 1.5.x, mingw, MSVC 14.
+AIX 7.2, HP-UX 11, Solaris 10, Cygwin 1.5.x, mingw, MSVC 14.
 @item
 This function can trigger memchr bugs on some platforms:
 glibc 2.10.
@@ -42,7 +44,7 @@ Portability problems fixed by Gnulib module @code{strcasestr}:
 @item
 This function has quadratic instead of linear worst-case complexity on some
 platforms:
-glibc 2.8, musl libc 1.2.3, macOS 12.5, FreeBSD 13.1, NetBSD 9.0, OpenBSD 7.2, Solaris 11.4.
+glibc 2.8, musl libc 1.2.3, macOS 14, FreeBSD 13.1, NetBSD 10.0, OpenBSD 7.2, Solaris 11.4.
 @end itemize
 
 Portability problems not fixed by Gnulib:

@@ -1,5 +1,5 @@
 /* String descriptors.
-   Copyright (C) 2023 Free Software Foundation, Inc.
+   Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -102,6 +102,12 @@ extern bool string_desc_endswith (string_desc_t s, string_desc_t suffix);
    'unsigned char'.  */
 extern int string_desc_cmp (string_desc_t a, string_desc_t b);
 
+/* Return > 0, == 0, or < 0 if A > B, A == B, A < B.
+   Either A or B must be entirely ASCII.
+   This uses a lexicographic ordering, where the bytes are compared as
+   'unsigned char', ignoring case, in the "C" locale.  */
+extern int string_desc_c_casecmp (string_desc_t a, string_desc_t b);
+
 /* Return the index of the first occurrence of C in S,
    or -1 if there is none.  */
 extern ptrdiff_t string_desc_index (string_desc_t s, char c);
@@ -116,6 +122,9 @@ extern ptrdiff_t string_desc_contains (string_desc_t haystack, string_desc_t nee
 
 /* Return an empty string.  */
 extern string_desc_t string_desc_new_empty (void);
+
+/* Construct and return a string of length N, at the given memory address.  */
+extern string_desc_t string_desc_new_addr (idx_t n, char *addr);
 
 /* Return a string that represents the C string S, of length strlen (S).  */
 extern string_desc_t string_desc_from_c (const char *s);
@@ -145,9 +154,6 @@ extern int string_desc_fwrite (FILE *fp, string_desc_t s);
    Upon error, return -1 with errno set.  */
 _GL_ATTRIBUTE_NODISCARD
 extern int string_desc_new (string_desc_t *resultp, idx_t n);
-
-/* Construct and return a string of length N, at the given memory address.  */
-extern string_desc_t string_desc_new_addr (idx_t n, char *addr);
 
 /* Construct a string of length N, filled with C.
    Return 0 if successful.

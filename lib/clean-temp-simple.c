@@ -1,5 +1,5 @@
 /* Temporary files with automatic cleanup.
-   Copyright (C) 2006-2023 Free Software Foundation, Inc.
+   Copyright (C) 2006-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2006.
 
    This file is free software: you can redistribute it and/or modify
@@ -28,16 +28,17 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "error.h"
+#include <error.h>
 #include "fatal-signal.h"
 #include "asyncsafe-spin.h"
 #include "glthread/lock.h"
+#include "glthread/once.h"
 #include "thread-optim.h"
 #include "gl_list.h"
 #include "gl_linkedhash_list.h"
 #include "gettext.h"
 
-#define _(str) gettext (str)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 
 /* Lock that protects the file_cleanup_list from concurrent modification in

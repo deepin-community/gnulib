@@ -10,7 +10,7 @@ m4/lstat.m4
 Depends-on:
 attribute
 double-slash-root
-errno
+errno-h
 extensions
 fcntl-h
 file-set
@@ -26,9 +26,10 @@ rawmemchr
 readlink
 glibc-internal/scratch_buffer
 stat
-stdbool
-sys_stat
-unistd
+bool
+stdlib-h
+sys_stat-h
+unistd-h
 xalloc-die
 
 configure.ac:

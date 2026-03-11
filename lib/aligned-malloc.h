@@ -1,6 +1,6 @@
 /* Allocate memory with indefinite extent and specified alignment.
 
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This file is free software: you can redistribute it and/or modify
    it under the terms of the GNU Lesser General Public License as
@@ -51,6 +51,11 @@
  #error "Please include config.h first."
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #if !defined ALIGNMENT
 # error "ALIGNMENT is not defined"
 #endif
@@ -59,7 +64,7 @@
 #endif
 #if ((ALIGNMENT) <= MALLOC_ALIGNMENT) || HAVE_POSIX_MEMALIGN || HAVE_ALIGNED_ALLOC || HAVE_MEMALIGN
 
-# if defined aligned_free || __GNUC__ >= 11
+# if defined aligned_free || (__GNUC__ >= 11 && !defined __clang__)
    /* The caller wants an inline function, not a macro,
       or we can use GCC's -Wmismatched-dealloc warning.  */
 static inline void
@@ -74,7 +79,7 @@ aligned_free (void *q)
 # if (ALIGNMENT) <= MALLOC_ALIGNMENT
 /* Simply use malloc.  */
 
-#  if defined aligned_malloc || __GNUC__ >= 11
+#  if defined aligned_malloc || (__GNUC__ >= 11 && !defined __clang__)
    /* The caller wants an inline function, not a macro,
       or GCC's -Wmismatched-dealloc warning might be in effect.  */
 static inline
@@ -184,4 +189,9 @@ aligned_malloc (size_t size)
   return NULL;
 }
 
+#endif
+
+
+#ifdef __cplusplus
+}
 #endif

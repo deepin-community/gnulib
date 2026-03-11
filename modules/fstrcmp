@@ -8,10 +8,10 @@ lib/fstrcmp.c
 Depends-on:
 c99
 diffseq
-lock
+once
 tls
 minmax
-stdint
+stdint-h
 xalloc
 
 configure.ac:

@@ -14,22 +14,15 @@ m4/printf.m4
 m4/math_h.m4
 
 Depends-on:
-stdio
+stdio-h
 nocrash
 printf-safe
 multiarch
-free-posix      [test $REPLACE_VFPRINTF = 1]
-fseterr         [test $REPLACE_VFPRINTF = 1]
-vasnprintf      [test $REPLACE_VFPRINTF = 1]
-isnand-nolibm   [test $REPLACE_VFPRINTF = 1]
-isnanl-nolibm   [test $REPLACE_VFPRINTF = 1]
-frexp-nolibm    [test $REPLACE_VFPRINTF = 1]
-frexpl-nolibm   [test $REPLACE_VFPRINTF = 1]
-printf-frexp    [test $REPLACE_VFPRINTF = 1]
-printf-frexpl   [test $REPLACE_VFPRINTF = 1]
-signbit         [test $REPLACE_VFPRINTF = 1]
-fpucw           [test $REPLACE_VFPRINTF = 1]
-errno           [test $REPLACE_VFPRINTF = 1]
+vfzprintf          [test $REPLACE_VFPRINTF = 1]
+mixin/printf-posix [test $REPLACE_VFPRINTF = 1]
+intprops           [test $REPLACE_VFPRINTF = 1]
+fseterr            [test $REPLACE_VFPRINTF = 1]
+errno-h            [test $REPLACE_VFPRINTF = 1]
 
 configure.ac:
 gl_FUNC_VFPRINTF_POSIX

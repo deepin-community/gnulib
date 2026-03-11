@@ -8,7 +8,7 @@ m4/chdir-long.m4
 m4/pathmax.m4
 
 Depends-on:
-unistd
+unistd-h
 pathmax
 chdir
 assure          [test $gl_cv_have_unlimited_file_name_length = no]
@@ -19,8 +19,8 @@ openat          [test $gl_cv_have_unlimited_file_name_length = no]
 memchr          [test $gl_cv_have_unlimited_file_name_length = no]
 mempcpy         [test $gl_cv_have_unlimited_file_name_length = no]
 memrchr         [test $gl_cv_have_unlimited_file_name_length = no]
-stdbool         [test $gl_cv_have_unlimited_file_name_length = no]
-stdlib          [test $gl_cv_have_unlimited_file_name_length = no]
+bool            [test $gl_cv_have_unlimited_file_name_length = no]
+stdlib-h        [test $gl_cv_have_unlimited_file_name_length = no]
 
 configure.ac:
 gl_FUNC_CHDIR_LONG

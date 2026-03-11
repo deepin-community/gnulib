@@ -1,9 +1,10 @@
 @node stdarg.h
 @section @file{stdarg.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdarg.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/stdarg.h.html}
 
-Gnulib module: stdarg
+Gnulib module: stdarg-h
+@mindex stdarg-h
 
 Portability problems fixed by Gnulib:
 @itemize

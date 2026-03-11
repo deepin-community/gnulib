@@ -9,9 +9,9 @@ Depends-on:
 count-one-bits
 extern-inline
 flexmember
-inttypes-incomplete
-stdbool
-stdint
+inttypes-h-incomplete
+bool
+stdint-h
 verify
 xalloc
 

@@ -16,9 +16,9 @@ c99
 builtin-expect
 gen-header
 libc-config
-stdbool
-stdckdint
-stddef
+bool
+stdckdint-h
+stddef-h
 
 configure.ac:
 AC_PROG_MKDIR_P

@@ -14,8 +14,8 @@ ftello
 malloc-posix
 memset_explicit
 realloc-posix
-stdint
-sys_stat
+stdint-h
+sys_stat-h
 
 configure.ac:
 gl_PREREQ_READ_FILE

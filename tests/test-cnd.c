@@ -1,5 +1,5 @@
 /* Test of condition variables in multithreaded situations.
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@
 # include <unistd.h>
 #endif
 
+#include "virtualbox.h"
 #include "macros.h"
 
 #if ENABLE_DEBUGGING
@@ -59,7 +60,10 @@
 /*
  * Condition check
  */
-static int cond_value = 0;
+
+/* Marked volatile so that different threads see the same value.  This is
+   good enough in practice, although in theory stdatomic.h should be used.  */
+static int volatile cond_value;
 static cnd_t condtest;
 static mtx_t lockcond;
 
@@ -67,9 +71,19 @@ static int
 cnd_wait_routine (void *arg)
 {
   ASSERT (mtx_lock (&lockcond) == thrd_success);
-  while (!cond_value)
+  if (cond_value)
     {
-      ASSERT (cnd_wait (&condtest, &lockcond) == thrd_success);
+      /* The main thread already slept, and nevertheless this thread comes
+         too late.  */
+      *(int *)arg = 1;
+    }
+  else
+    {
+      do
+        {
+          ASSERT (cnd_wait (&condtest, &lockcond) == thrd_success);
+        }
+      while (!cond_value);
     }
   ASSERT (mtx_unlock (&lockcond) == thrd_success);
 
@@ -78,28 +92,35 @@ cnd_wait_routine (void *arg)
   return 0;
 }
 
-static void
+static int
 test_cnd_wait ()
 {
-  struct timespec remain;
+  int skipped = 0;
   thrd_t thread;
   int ret;
 
-  remain.tv_sec = 2;
-  remain.tv_nsec = 0;
-
   cond_value = 0;
 
-  ASSERT (thrd_create (&thread, cnd_wait_routine, NULL) == thrd_success);
-  do
-    {
-      yield ();
-      ret = thrd_sleep (&remain, &remain);
-      ASSERT (ret >= -1);
-    }
-  while (ret == -1 && (remain.tv_sec != 0 || remain.tv_nsec != 0));
+  /* Create a separate thread.  */
+  ASSERT (thrd_create (&thread, cnd_wait_routine, &skipped) == thrd_success);
 
-  /* signal condition */
+  /* Sleep for 2 seconds.  */
+  {
+    struct timespec remaining;
+
+    remaining.tv_sec = 2;
+    remaining.tv_nsec = 0;
+
+    do
+      {
+        yield ();
+        ret = thrd_sleep (&remaining, &remaining);
+        ASSERT (ret >= -1);
+      }
+    while (ret == -1 && (remaining.tv_sec != 0 || remaining.tv_nsec != 0));
+  }
+
+  /* Tell one of the waiting threads (if any) to continue.  */
   ASSERT (mtx_lock (&lockcond) == thrd_success);
   cond_value = 1;
   ASSERT (cnd_signal (&condtest) == thrd_success);
@@ -109,14 +130,20 @@ test_cnd_wait ()
 
   if (cond_value != 2)
     abort ();
+
+  return skipped;
 }
 
 
 /*
  * Timed Condition check
  */
-static int cond_timeout;
 
+/* Marked volatile so that different threads see the same value.  This is
+   good enough in practice, although in theory stdatomic.h should be used.  */
+static int volatile cond_timed_out;
+
+/* Stores in *TS the current time plus 1 second.  */
 static void
 get_ts (struct timespec *ts)
 {
@@ -135,40 +162,58 @@ cnd_timedwait_routine (void *arg)
   struct timespec ts;
 
   ASSERT (mtx_lock (&lockcond) == thrd_success);
-  while (!cond_value)
+  if (cond_value)
     {
-      get_ts (&ts);
-      ret = cnd_timedwait (&condtest, &lockcond, &ts);
-      if (ret == thrd_timedout)
-        cond_timeout = 1;
+      /* The main thread already slept, and nevertheless this thread comes
+         too late.  */
+      *(int *)arg = 1;
+    }
+  else
+    {
+      do
+        {
+          get_ts (&ts);
+          ret = cnd_timedwait (&condtest, &lockcond, &ts);
+          if (ret == thrd_timedout)
+            cond_timed_out = 1;
+        }
+      while (!cond_value);
     }
   ASSERT (mtx_unlock (&lockcond) == thrd_success);
 
   return 0;
 }
 
-static void
+static int
 test_cnd_timedwait (void)
 {
-  struct timespec remain;
+  int skipped = 0;
   thrd_t thread;
   int ret;
 
-  remain.tv_sec = 2;
-  remain.tv_nsec = 0;
+  cond_value = cond_timed_out = 0;
 
-  cond_value = cond_timeout = 0;
+  /* Create a separate thread.  */
+  ASSERT (thrd_create (&thread, cnd_timedwait_routine, &skipped)
+          == thrd_success);
 
-  ASSERT (thrd_create (&thread, cnd_timedwait_routine, NULL) == thrd_success);
-  do
-    {
-      yield ();
-      ret = thrd_sleep (&remain, &remain);
-      ASSERT (ret >= -1);
-    }
-  while (ret == -1 && (remain.tv_sec != 0 || remain.tv_nsec != 0));
+  /* Sleep for 2 seconds.  */
+  {
+    struct timespec remaining;
 
-  /* signal condition */
+    remaining.tv_sec = 2;
+    remaining.tv_nsec = 0;
+
+    do
+      {
+        yield ();
+        ret = thrd_sleep (&remaining, &remaining);
+        ASSERT (ret >= -1);
+      }
+    while (ret == -1 && (remaining.tv_sec != 0 || remaining.tv_nsec != 0));
+  }
+
+  /* Tell one of the waiting threads (if any) to continue.  */
   ASSERT (mtx_lock (&lockcond) == thrd_success);
   cond_value = 1;
   ASSERT (cnd_signal (&condtest) == thrd_success);
@@ -176,13 +221,26 @@ test_cnd_timedwait (void)
 
   ASSERT (thrd_join (thread, NULL) == thrd_success);
 
-  if (!cond_timeout)
+  if (!cond_timed_out)
     abort ();
+
+  return skipped;
 }
+
 
 int
 main ()
 {
+  /* This test occasionally fails on Linux (glibc or musl libc), in a
+     VirtualBox VM with paravirtualization = Default or KVM, with ≥ 2 CPUs.
+     Skip the test in this situation.  */
+  if (is_running_under_virtualbox_kvm () && num_cpus () > 1)
+    {
+      fputs ("Skipping test: avoiding VirtualBox bug with KVM paravirtualization\n",
+             stderr);
+      return 77;
+    }
+
 #if HAVE_DECL_ALARM
   /* Declare failure if test takes too long, by using default abort
      caused by SIGALRM.  */
@@ -196,14 +254,18 @@ main ()
 
 #if DO_TEST_COND
   printf ("Starting test_cnd_wait ..."); fflush (stdout);
-  test_cnd_wait ();
-  printf (" OK\n"); fflush (stdout);
+  {
+    int skipped = test_cnd_wait ();
+    printf (skipped ? " SKIP\n" : " OK\n"); fflush (stdout);
+  }
 #endif
 #if DO_TEST_TIMEDCOND
   printf ("Starting test_cnd_timedwait ..."); fflush (stdout);
-  test_cnd_timedwait ();
-  printf (" OK\n"); fflush (stdout);
+  {
+    int skipped = test_cnd_timedwait ();
+    printf (skipped ? " SKIP\n" : " OK\n"); fflush (stdout);
+  }
 #endif
 
-  return 0;
+  return test_exit_status;
 }

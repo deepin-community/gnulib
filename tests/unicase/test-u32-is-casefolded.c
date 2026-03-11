@@ -1,5 +1,5 @@
 /* Test of test whether an UTF-32 string is already case-folded.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,5 +46,5 @@ main ()
   test_ascii (u32_is_casefolded);
   test_nonascii (u32_is_casefolded);
 
-  return 0;
+  return test_exit_status;
 }

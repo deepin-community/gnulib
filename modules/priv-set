@@ -7,9 +7,9 @@ lib/priv-set.c
 m4/priv-set.m4
 
 Depends-on:
-errno
+errno-h
 extern-inline
-stdbool
+bool
 
 configure.ac:
 gl_PRIV_SET

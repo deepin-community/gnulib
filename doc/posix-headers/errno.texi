@@ -1,9 +1,10 @@
 @node errno.h
 @section @file{errno.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/errno.h.html}
 
-Gnulib module: errno
+Gnulib module: errno-h
+@mindex errno-h
 
 Portability problems fixed by Gnulib:
 @itemize
@@ -14,11 +15,11 @@ OpenBSD 4.0, mingw, MSVC 9.
 @item
 The macro @code{ENOLINK} is not defined
 on some platforms:
-OpenBSD 6.7, mingw, MSVC 9.
+OpenBSD 7.5, mingw, MSVC 9.
 @item
 The macro @code{EMULTIHOP} is not defined
 on some platforms:
-OpenBSD 6.7, mingw, MSVC 14.
+OpenBSD 7.5, mingw, MSVC 14.
 @item
 The macro @code{ECANCELED} is not defined on some platforms:
 OpenBSD 4.0, Cygwin, mingw, MSVC 9.
@@ -49,12 +50,22 @@ mingw, MSVC 9.
 The macros @code{EOWNERDEAD}, @code{ENOTRECOVERABLE} are not defined on
 some platforms:
 glibc/Linux 2.3.6, glibc/Hurd 2.15, glibc/kFreeBSD 2.15,
-Mac OS X 10.5, FreeBSD 6.0, NetBSD 9.0, OpenBSD 6.0, Minix 3.1.8, AIX 5.1, HP-UX 11, IRIX 6.5, Cygwin, mingw without pthreads-win32, MSVC 9.
+Mac OS X 10.5, FreeBSD 6.0, NetBSD 9.3, OpenBSD 6.0, Minix 3.1.8, AIX 5.1, HP-UX 11, Cygwin, mingw without pthreads-win32, MSVC 9.
+@item
+The macro @code{ESOCKTNOSUPPORT} is not defined on some platforms:
+Haiku.
 @item
 The macro @code{EILSEQ} is not defined on some platforms:
 LynxOS 178 2.2.2.
+@item
+The macros @code{EEXIST} and @code{ENOTEMPTY} have the same value on
+some platforms:
+AIX 7.3.
 @end itemize
 
 Portability problems not fixed by Gnulib:
 @itemize
+@item
+All error numbers are negative on some platforms:
+Haiku.
 @end itemize

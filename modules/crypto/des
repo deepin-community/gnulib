@@ -6,8 +6,8 @@ lib/des.c
 lib/des.h
 
 Depends-on:
-stdint
-stdbool
+stdint-h
+bool
 memcmp
 
 configure.ac:

@@ -2,7 +2,9 @@
 @subsection @code{posix_spawn_file_actions_addchdir_np}
 @findex posix_spawn_file_actions_addchdir_np
 
-Future POSIX specification:@* @url{https://www.austingroupbugs.net/view.php?id=1208}
+@code{posix_spawn_file_actions_addchdir} is
+specified in POSIX.1-2024.
+Draft specification:@* @url{https://www.austingroupbugs.net/view.php?id=1208}
 
 Gnulib module: ---
 
@@ -13,9 +15,10 @@ Portability problems fixed by Gnulib:
 Portability problems not fixed by Gnulib:
 @itemize
 @item
-This function is missing on many non-glibc platforms:
-glibc 2.28, macOS 10.13, FreeBSD 13.0, NetBSD 9.0, OpenBSD 6.7, Minix 3.1.8, AIX 7.1, HP-UX 11.31, IRIX 6.5, Solaris 11.0, Cygwin 3.4.6, mingw, MSVC 14, Android 9.0.
+This function is missing on many platforms:
+glibc 2.28, macOS 10.14, FreeBSD 13.0, NetBSD 10.0, OpenBSD 7.5, Minix 3.1.8, AIX 7.1, HP-UX 11.31, Solaris 11.0, Cygwin 3.4.x, mingw, MSVC 14, Android API level 33.
 @end itemize
 
+@mindex posix_spawn_file_actions_addchdir
 Note: Gnulib has a module @code{posix_spawn_file_actions_addchdir} that
 provides equivalent functionality, just without the suffix @code{_np}.

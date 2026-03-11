@@ -12,8 +12,9 @@ extern-inline
 mbchar
 mbrtoc32
 mbsinit
-uchar
-stdbool
+mbszero
+uchar-h
+bool
 strnlen1
 
 configure.ac:

@@ -1,16 +1,17 @@
 @node mbsrtowcs
-@section @code{mbsrtowcs}
+@subsection @code{mbsrtowcs}
 @findex mbsrtowcs
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/mbsrtowcs.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/mbsrtowcs.html}
 
 Gnulib module: mbsrtowcs
+@mindex mbsrtowcs
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
-Minix 3.1.8, HP-UX 11.00, IRIX 6.5, mingw.
+Minix 3.1.8, HP-UX 11.00, mingw.
 @item
 This function does not work on some platforms:
 HP-UX 11, Solaris 11 2010-11.
@@ -30,6 +31,7 @@ Portability problems not fixed by Gnulib:
 @item
 On Windows and 32-bit AIX platforms, @code{wchar_t} is a 16-bit type and
 therefore cannot accommodate all Unicode characters.
+@mindex mbsrtoc32s
 However, the Gnulib function @code{mbsrtoc32s}, provided by Gnulib module
 @code{mbsrtoc32s}, operates on 32-bit wide characters and therefore does not
 have this limitation.

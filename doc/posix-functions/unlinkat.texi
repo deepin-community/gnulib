@@ -1,17 +1,18 @@
 @node unlinkat
-@section @code{unlinkat}
+@subsection @code{unlinkat}
 @findex unlinkat
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/unlinkat.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/unlinkat.html}
 
 Gnulib module: unlinkat
+@mindex unlinkat
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This function is missing on some platforms:
 glibc 2.3.6, Mac OS X 10.5, FreeBSD 6.0, NetBSD 5.0, OpenBSD 3.8, Minix 3.1.8,
-AIX 5.1, HP-UX 11, IRIX 6.5, Cygwin 1.5.x, mingw, MSVC 14.
+AIX 5.1, HP-UX 11, Cygwin 1.5.x, mingw, MSVC 14.
 But the replacement function is not safe to be used in libraries and is not multithread-safe.
 @item
 This function is declared in @code{<fcntl.h>}, not in @code{<unistd.h>},
@@ -44,6 +45,7 @@ not always the POSIX value of @code{EPERM}.  Meanwhile, if a process
 has the ability to unlink directories, POSIX requires that
 @code{unlinkat(fd,"symlink-to-dir/",0)} remove @file{dir} and leave
 @file{symlink-to-dir} dangling; this behavior is counter-intuitive.
+@mindex unlinkdir
 The gnulib module @code{unlinkdir} can help determine whether code must be
 cautious of unlinking directories.
 @item

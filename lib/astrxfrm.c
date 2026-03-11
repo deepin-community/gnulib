@@ -1,5 +1,5 @@
 /* Locale dependent string transformation for comparison.
-   Copyright (C) 2010-2023 Free Software Foundation, Inc.
+   Copyright (C) 2010-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2010.
 
    This program is free software: you can redistribute it and/or modify it
@@ -26,7 +26,7 @@
 
 /* Avoid false GCC warning "function may return address of local variable"
    regarding result and tmpbuf.  */
-#if __GNUC__ + (__GNUC_MINOR__ >= 8) > 4
+#if _GL_GNUC_PREREQ (4, 8)
 # pragma GCC diagnostic ignored "-Wreturn-local-addr"
 #endif
 

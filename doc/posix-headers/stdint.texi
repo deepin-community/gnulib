@@ -1,15 +1,16 @@
 @node stdint.h
 @section @file{stdint.h}
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdint.h.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/stdint.h.html}
 
-Gnulib module: stdint
+Gnulib module: stdint-h
+@mindex stdint-h
 
 Portability problems fixed by Gnulib:
 @itemize
 @item
 This header file is missing on some platforms:
-OpenBSD 3.8, AIX 5.1, HP-UX 11.11, IRIX 6.5, MSVC 14.
+OpenBSD 3.8, AIX 5.1, HP-UX 11.11, MSVC 9.
 @item
 This header file is very incomplete on some platforms.
 @item
@@ -44,7 +45,7 @@ albeit with the correct value:
 32-bit glibc 2.24 (on s390 architecture), Mac OS X 10.7.
 @item
 Macros like @code{INTMAX_WIDTH} are not defined on some platforms:
-glibc 2.24, NetBSD 9.0, many others.
+glibc 2.24, NetBSD 10.0, many others.
 @end itemize
 
 Portability problems not fixed by Gnulib:
@@ -68,7 +69,7 @@ To work around these problems, compute the value of expressions like
 @code{#if}-time.
 @end itemize
 
-The @code{stdint} module uses @code{#include_next}.  If you wish to install
+The @code{stdint-h} module uses @code{#include_next}.  If you wish to install
 the generated stdint.h file under another name, typically in order to
 be able to use some of the types defined by stdint.h in your public
 header file, you could use the following Makefile.am-snippet:

@@ -1,5 +1,5 @@
 /* Word break auxiliary table.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2009.
 
    This file is free software.
@@ -23,5 +23,13 @@
    License and of the GNU General Public License along with this
    program.  If not, see <https://www.gnu.org/licenses/>.  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern const int uniwbrk_prop_index[23];
 extern const unsigned char uniwbrk_table[12][12];
+
+#ifdef __cplusplus
+}
+#endif

@@ -7,8 +7,8 @@ lib/wcsnrtombs-impl.h
 lib/c32srtombs-state.c
 
 Depends-on:
-uchar
-wchar
+uchar-h
+wchar-h
 assert-h
 c32rtomb
 wcsnrtombs      [test $SMALL_WCHAR_T = 0]

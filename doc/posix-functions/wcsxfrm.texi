@@ -1,10 +1,11 @@
 @node wcsxfrm
-@section @code{wcsxfrm}
+@subsection @code{wcsxfrm}
 @findex wcsxfrm
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/wcsxfrm.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/wcsxfrm.html}
 
 Gnulib module: wcsxfrm
+@mindex wcsxfrm
 
 Portability problems fixed by Gnulib:
 @itemize

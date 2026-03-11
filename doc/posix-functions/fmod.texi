@@ -1,10 +1,12 @@
 @node fmod
-@section @code{fmod}
+@subsection @code{fmod}
 @findex fmod
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/fmod.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/fmod.html}
 
 Gnulib module: fmod or fmod-ieee
+@mindex fmod
+@mindex fmod-ieee
 
 Portability problems fixed by either Gnulib module @code{fmod} or @code{fmod-ieee}:
 @itemize

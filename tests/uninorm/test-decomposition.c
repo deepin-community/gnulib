@@ -1,5 +1,5 @@
 /* Test of decomposition of Unicode characters.
-   Copyright (C) 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -203,5 +203,5 @@ main ()
   ASSERT (decomposed[0] == 0x1100);
   ASSERT (decomposed[1] == 0x1173);
 
-  return 0;
+  return test_exit_status;
 }

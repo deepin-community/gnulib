@@ -1,5 +1,5 @@
 /* Test of string descriptors.
-   Copyright (C) 2023 Free Software Foundation, Inc.
+   Copyright (C) 2023-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -93,6 +93,23 @@ main (int argc, char *argv[])
   ASSERT (string_desc_cmp (s2, s0) > 0);
   ASSERT (string_desc_cmp (s2, s1) > 0);
   ASSERT (string_desc_cmp (s2, s2) == 0);
+
+  /* Test string_desc_c_casecmp.  */
+  ASSERT (string_desc_c_casecmp (s0, s0) == 0);
+  ASSERT (string_desc_c_casecmp (s0, s1) < 0);
+  ASSERT (string_desc_c_casecmp (s0, s2) < 0);
+  ASSERT (string_desc_c_casecmp (s1, s0) > 0);
+  ASSERT (string_desc_c_casecmp (s1, s1) == 0);
+  ASSERT (string_desc_c_casecmp (s1, s2) < 0);
+  ASSERT (string_desc_c_casecmp (s2, s0) > 0);
+  ASSERT (string_desc_c_casecmp (s2, s1) > 0);
+  ASSERT (string_desc_c_casecmp (s2, s2) == 0);
+  ASSERT (string_desc_c_casecmp (string_desc_from_c ("acab"), string_desc_from_c ("AcAB")) == 0);
+  ASSERT (string_desc_c_casecmp (string_desc_from_c ("AcAB"), string_desc_from_c ("acab")) == 0);
+  ASSERT (string_desc_c_casecmp (string_desc_from_c ("aca"), string_desc_from_c ("AcAB")) < 0);
+  ASSERT (string_desc_c_casecmp (string_desc_from_c ("AcAB"), string_desc_from_c ("aca")) > 0);
+  ASSERT (string_desc_c_casecmp (string_desc_from_c ("aca"), string_desc_from_c ("Aca\377")) < 0);
+  ASSERT (string_desc_c_casecmp (string_desc_from_c ("Aca\377"), string_desc_from_c ("aca")) > 0);
 
   /* Test string_desc_index.  */
   ASSERT (string_desc_index (s0, 'o') == -1);
@@ -190,5 +207,5 @@ main (int argc, char *argv[])
 
   close (fd3);
 
-  return 0;
+  return test_exit_status;
 }

@@ -1,5 +1,5 @@
 /* Parse a time duration and return a seconds count
-   Copyright (C) 2008-2023 Free Software Foundation, Inc.
+   Copyright (C) 2008-2025 Free Software Foundation, Inc.
    Written by Bruce Korb <bkorb@gnu.org>, 2008.
 
    This file is free software: you can redistribute it and/or modify
@@ -79,6 +79,11 @@
 
 #include <time.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /* Return value when a valid duration cannot be parsed.  */
 #define BAD_TIME        ((time_t)~0)
 
@@ -86,5 +91,10 @@
    this duration is returned.  Otherwise, the return value is BAD_TIME,
    and errno is set to either EINVAL (bad syntax) or ERANGE (out of range).  */
 extern time_t parse_duration (char const * in_pz);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GNULIB_PARSE_DURATION_H */

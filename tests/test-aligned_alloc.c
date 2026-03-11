@@ -1,6 +1,6 @@
 /* Test of allocating memory with given alignment.
 
-   Copyright (C) 2020-2023 Free Software Foundation, Inc.
+   Copyright (C) 2020-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,12 @@
 
 #include "macros.h"
 
+#if HAVE_ALIGNED_ALLOC
+void *(*volatile my_aligned_alloc) (size_t, size_t) = aligned_alloc;
+# undef aligned_alloc
+# define aligned_alloc my_aligned_alloc
+#endif
+
 #define ROUNDUP(x,y) (((x) + (y) - 1) & - (y))
 
 int
@@ -35,13 +41,17 @@ main (int argc, char *argv[])
 {
 #if HAVE_ALIGNED_ALLOC
   static size_t sizes[] =
-    { 13, 8, 17, 450, 320, 1, 99, 4, 15, 16, 2, 76, 37, 127, 2406, 641, 5781 };
-  void *volatile aligned2_blocks[SIZEOF (sizes)];
-  void *volatile aligned4_blocks[SIZEOF (sizes)];
-  void *volatile aligned8_blocks[SIZEOF (sizes)];
-  void *volatile aligned16_blocks[SIZEOF (sizes)];
-  void *volatile aligned32_blocks[SIZEOF (sizes)];
-  void *volatile aligned64_blocks[SIZEOF (sizes)];
+    {
+      13, 8, 17, 450, 320, 1, 99, 4, 15, 16, 2, 76, 37, 127, 2406, 641, 5781,
+      /* Test also a zero size.  */
+      0
+    };
+  void *aligned2_blocks[SIZEOF (sizes)];
+  void *aligned4_blocks[SIZEOF (sizes)];
+  void *aligned8_blocks[SIZEOF (sizes)];
+  void *aligned16_blocks[SIZEOF (sizes)];
+  void *aligned32_blocks[SIZEOF (sizes)];
+  void *aligned64_blocks[SIZEOF (sizes)];
   size_t i;
 
   for (i = 0; i < SIZEOF (sizes); i++)
@@ -89,7 +99,7 @@ main (int argc, char *argv[])
       free (aligned64_blocks[i]);
     }
 
-  return 0;
+  return test_exit_status;
 #else
   fputs ("Skipping test: function 'aligned_alloc' does not exist\n", stderr);
   return 77;

@@ -7,7 +7,7 @@ lib/close-stream.c
 
 Depends-on:
 fpending
-stdbool
+bool
 
 configure.ac:
 gl_MODULE_INDICATOR([close-stream])

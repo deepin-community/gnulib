@@ -1,6 +1,6 @@
 /* Memory allocation aligned to system page boundaries.
 
-   Copyright (C) 2005-2007, 2009-2023 Free Software Foundation, Inc.
+   Copyright (C) 2005-2007, 2009-2025 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,11 +31,11 @@
 # include <sys/mman.h>
 #endif
 
-#include "error.h"
+#include <error.h>
 #include "xalloc.h"
 #include "gettext.h"
 
-#define _(str) gettext (str)
+#define _(msgid) dgettext ("gnulib", msgid)
 
 #if HAVE_MMAP
 /* Define MAP_FILE when it isn't otherwise.  */

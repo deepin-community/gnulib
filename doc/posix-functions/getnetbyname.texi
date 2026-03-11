@@ -1,8 +1,8 @@
 @node getnetbyname
-@section @code{getnetbyname}
+@subsection @code{getnetbyname}
 @findex getnetbyname
 
-POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9699919799/functions/getnetbyname.html}
+POSIX specification:@* @url{https://pubs.opengroup.org/onlinepubs/9799919799/functions/getnetbyname.html}
 
 Gnulib module: ---
 
