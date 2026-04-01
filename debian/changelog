@@ -1,3 +1,12 @@
+gnulib (20250303-1deepin1) unstable; urgency=medium
+
+  * Add sw_64 (Sunway) architecture support to config.sub.
+    - Add sw_64 to the list of recognized CPU types in build-aux/config.sub
+    - Enables proper build configuration detection on sw_64 systems
+    - Fixes: "Invalid configuration 'sw_64-unknown-linux-gnu': machine not recognized"
+
+ -- lichenggang <lichenggang@uniontech.com>  Mon, 31 Mar 2026 16:35:00 +0800
+
 gnulib (20250303-1) unstable; urgency=medium
 
   * New upstream (branch stable-202501 master

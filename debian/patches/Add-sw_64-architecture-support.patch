@@ -1,0 +1,49 @@
+From: lichenggang <lichenggang@uniontech.com>
+Date: Mon, 31 Mar 2026 16:30:00 +0800
+Subject: Add sw_64 (Sunway) architecture support
+
+The sw_64 (Sunway) architecture is a Chinese processor architecture
+used in high-performance computing and servers. This patch adds
+sw_64 to the list of recognized CPU types in config.sub and adds
+detection support in config.guess, enabling proper build configuration
+on sw_64 systems.
+
+Without this patch, configuring packages that use gnulib's config.sub
+for sw_64-linux-gnu targets fails with:
+  "Invalid configuration 'sw_64-unknown-linux-gnu': machine 'sw_64-unknown' not recognized"
+
+Signed-off-by: lichenggang <lichenggang@uniontech.com>
+---
+ build-aux/config.guess | 4 ++++
+ build-aux/config.sub   | 1 +
+ 2 files changed, 5 insertions(+)
+
+--- gnulib-20250303.orig/build-aux/config.guess
++++ gnulib-20250303/build-aux/config.guess
+@@ -1024,6 +1024,10 @@ EOF
+ 	if test "$?" = 0 ; then LIBC=gnulibc1 ; fi
+ 	GUESS=$UNAME_MACHINE-unknown-linux-$LIBC
+ 	;;
++	sw_64:Linux:*:* | sw64:Linux:*:*)
++	UNAME_MACHINE=sw_64
++	GUESS=$UNAME_MACHINE-unknown-linux-$LIBC
++	;;
+     arc:Linux:*:* | arceb:Linux:*:* | arc32:Linux:*:* | arc64:Linux:*:*)
+ 	GUESS=$UNAME_MACHINE-unknown-linux-$LIBC
+ 	;;
+
+
+diff --git a/build-aux/config.sub b/build-aux/config.sub
+index fc5419ae..3b3c8d12 100644
+--- a/build-aux/config.sub
++++ b/build-aux/config.sub
+@@ -1430,6 +1430,7 @@ case $cpu-$vendor in
+ 			| sparcv9b \
+ 			| sparcv9v \
+ 			| spu \
++			| sw_64 \
+ 			| sv1 \
+ 			| sx* \
+ 			| tahoe \
+--
+2.43.0
