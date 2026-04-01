@@ -1,4 +1,5 @@
 00-gnulib-tool-version.patch
+Add-sw_64-architecture-support.patch
 # 00Z-gnulib-tool-version.patch
 # 00a-gnulib-tool-version.patch
 # 00b-gnulib-tool-version.patch
